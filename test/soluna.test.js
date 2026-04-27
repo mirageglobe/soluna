@@ -1,35 +1,3 @@
-/**
- * AVA Test Suite for YALC (Yet Another Lunar Calendar Converter)
- *
- * HOW TO RUN TESTS:
- * -----------------
- * 1. Install AVA if not already installed:
- *    npm install --save-dev ava
- *
- * 2. Run all tests:
- *    npm test
- *    or
- *    npx ava
- *
- * 3. Run tests in watch mode (auto-rerun on changes):
- *    npx ava --watch
- *
- * 4. Run specific test file:
- *    npx ava test.js
- *
- * 5. Run tests with verbose output:
- *    npx ava --verbose
- *
- * WHAT THESE TESTS COVER:
- * ------------------------
- * - Solar to Lunar conversions for known dates
- * - Lunar to Solar reverse conversions
- * - Leap month handling
- * - Chinese zodiac animals
- * - Time period (时辰) calculations
- * - Edge cases and special dates
- */
-
 const test = require('ava');
 const { solarToLunar, lunarToSolar, getTimePeriod } = require('../soluna.js');
 
@@ -158,17 +126,24 @@ test('Leap month: 2012 leap 4th month (different from regular 4th month)', t => 
 
 // ===== ZODIAC ANIMAL TESTS =====
 
-test('Zodiac animals: Verify 12-year cycle (using dates after LNY)', t => {
+test('Zodiac animals: Verify full 12-year cycle (using dates after LNY)', t => {
   const zodiacCycle = [
     { year: 2020, animal: '鼠' }, // Rat
     { year: 2021, animal: '牛' }, // Ox
     { year: 2022, animal: '虎' }, // Tiger
     { year: 2023, animal: '兔' }, // Rabbit
     { year: 2024, animal: '龙' }, // Dragon
+    { year: 2025, animal: '蛇' }, // Snake
+    { year: 2026, animal: '马' }, // Horse
+    { year: 2027, animal: '羊' }, // Goat
+    { year: 2028, animal: '猴' }, // Monkey
+    { year: 2029, animal: '鸡' }, // Rooster
+    { year: 2030, animal: '狗' }, // Dog
+    { year: 2031, animal: '猪' }, // Pig
   ];
 
   zodiacCycle.forEach(({ year, animal }) => {
-    // Using May 1st to ensure we are well past Lunar New Year
+    // using May 1st to ensure we are well past Lunar New Year
     const result = solarToLunar(new Date(`${year}-05-01`));
     t.is(result.lunar.zodiac, animal, `Year ${year} should be ${animal}`);
   });
@@ -202,12 +177,13 @@ test('Time period: Evening (18:30) is Rooster/酉时', t => {
   t.is(result.timePeriod.zodiac, '鸡', 'Should be Rooster (鸡)');
 });
 
-test('Time period: 23:00 (子时) belongs to next day', t => {
-  const result = solarToLunar(new Date('2023-12-25T23:30:00'));
+test('Time period: 23:30 (子时) advances lunar day to next day', t => {
+  const before = solarToLunar(new Date('2023-12-25T22:30:00')); // 亥时
+  const result = solarToLunar(new Date('2023-12-25T23:30:00')); // 子时 — same solar day
 
   t.is(result.timePeriod.name, '子时', 'Should be 子时');
   t.is(result.timePeriod.zodiac, '鼠', 'Should be Rat');
-  // Note: The lunar date should be adjusted to next day due to 子时 rule
+  t.is(result.lunar.day, before.lunar.day + 1, 'Lunar day should advance by 1 vs 22:30');
 });
 
 // ===== STEM-BRANCH (干支) TESTS =====
@@ -245,19 +221,19 @@ test('Lunar day names: Special formatting for specific days', t => {
 test('Edge case: Date at start of lunar calendar range (1900)', t => {
   const result = solarToLunar(new Date('1900-02-15'));
 
-  t.is(result.solar.year, 1900, 'Should handle year 1900');
-  t.truthy(result.lunar.year, 'Should have lunar year');
-  t.truthy(result.lunar.month, 'Should have lunar month');
-  t.truthy(result.lunar.day, 'Should have lunar day');
+  t.is(result.solar.year, 1900);
+  t.is(typeof result.lunar.year, 'number');
+  t.is(typeof result.lunar.month, 'number');
+  t.is(typeof result.lunar.day, 'number');
 });
 
 test('Edge case: Date near end of lunar calendar range (2049)', t => {
   const result = solarToLunar(new Date('2049-01-01'));
 
-  t.is(result.solar.year, 2049, 'Should handle year 2049');
-  t.truthy(result.lunar.year, 'Should have lunar year');
-  t.truthy(result.lunar.month, 'Should have lunar month');
-  t.truthy(result.lunar.day, 'Should have lunar day');
+  t.is(result.solar.year, 2049);
+  t.is(typeof result.lunar.year, 'number');
+  t.is(typeof result.lunar.month, 'number');
+  t.is(typeof result.lunar.day, 'number');
 });
 
 test('Regression: Solar to Lunar 2026-01-01 should be Lunar 2025-11-13', t => {
@@ -274,37 +250,165 @@ test('Regression: Solar to Lunar 2026-01-01 should be Lunar 2025-11-13', t => {
 test('Output structure: Solar to Lunar contains all required fields', t => {
   const result = solarToLunar(new Date('2024-12-26T12:30:00'));
 
-  // Check solar object
-  t.truthy(result.solar, 'Should have solar object');
-  t.truthy(result.solar.year, 'Should have solar year');
-  t.truthy(result.solar.month, 'Should have solar month');
-  t.truthy(result.solar.day, 'Should have solar day');
-  t.truthy(result.solar.weekDay, 'Should have week day');
-
-  // Check lunar object
-  t.truthy(result.lunar, 'Should have lunar object');
-  t.truthy(result.lunar.year, 'Should have lunar year');
-  t.truthy(result.lunar.month, 'Should have lunar month');
-  t.truthy(result.lunar.day, 'Should have lunar day');
-  t.is(typeof result.lunar.isLeapMonth, 'boolean', 'isLeapMonth should be boolean');
-  t.truthy(result.lunar.monthName, 'Should have month name');
-  t.truthy(result.lunar.dayName, 'Should have day name');
-  t.truthy(result.lunar.zodiac, 'Should have zodiac animal');
-
-  // Check stem-branch object
-  t.truthy(result.stemBranch, 'Should have stem-branch object');
-
-  // Check time period (if time provided)
-  t.truthy(result.timePeriod, 'Should have time period');
+  t.like(result, {
+    solar: { year: 2024, month: 12, day: 26 },
+    lunar: { year: 2024, month: 11, day: 26, isLeapMonth: false },
+  });
+  t.is(typeof result.solar.weekDay, 'string');
+  t.is(typeof result.lunar.monthName, 'string');
+  t.is(typeof result.lunar.dayName, 'string');
+  t.is(typeof result.lunar.zodiac, 'string');
+  t.truthy(result.stemBranch);
+  t.truthy(result.timePeriod);
 });
 
 test('Output structure: Lunar to Solar contains all required fields', t => {
   const result = lunarToSolar(new Date(2024, 0, 1), false);
 
-  t.truthy(result.solar, 'Should have solar object');
-  t.truthy(result.lunar, 'Should have lunar object');
-  t.truthy(result.stemBranch, 'Should have stem-branch object');
-  t.true(result.timePeriod === null, 'Time period should be null for date-only input');
+  t.truthy(result.solar);
+  t.truthy(result.lunar);
+  t.truthy(result.stemBranch);
+  t.is(result.timePeriod, null);
+});
+
+// ===== HISTORICAL DATE VERIFICATION (cross-referenced against HKO) =====
+
+test('Historical: Chinese New Year dates across decades', t => {
+  // source: Hong Kong Observatory perpetual calendar
+  const cnyDates = [
+    { solar: '1903-01-29', year: 1903 },
+    { solar: '1957-01-31', year: 1957 },
+    { solar: '1984-02-02', year: 1984 },
+    { solar: '2001-01-24', year: 2001 },
+    { solar: '2004-01-22', year: 2004 },
+    { solar: '2006-01-29', year: 2006 },
+    { solar: '2009-01-26', year: 2009 },
+    { solar: '2012-01-23', year: 2012 },
+    { solar: '2020-01-25', year: 2020 },
+    { solar: '2023-01-22', year: 2023 },
+    { solar: '2025-01-29', year: 2025 },
+  ];
+
+  cnyDates.forEach(({ solar, year }) => {
+    const r = solarToLunar(new Date(solar)).lunar;
+    t.is(r.year,        year,  `${solar}: lunar year`);
+    t.is(r.month,       1,     `${solar}: lunar month 1`);
+    t.is(r.day,         1,     `${solar}: lunar day 1`);
+    t.is(r.isLeapMonth, false, `${solar}: not leap`);
+  });
+});
+
+test('Historical: Year crossover — late December falls in prior lunar year', t => {
+  const r = solarToLunar(new Date('2022-12-31')).lunar;
+  t.is(r.year,  2022);
+  t.is(r.month, 12);
+  t.is(r.day,   9);
+  t.is(r.isLeapMonth, false);
+});
+
+test('Historical: Leap month boundaries — 1903 leap 5th month', t => {
+  // source: HKO
+  const cases = [
+    { solar: '1903-05-27', month: 5,  day: 1,  leap: false }, // regular 5/1
+    { solar: '1903-06-25', month: 5,  day: 1,  leap: true  }, // leap 5/1
+    { solar: '1903-07-23', month: 5,  day: 29, leap: true  }, // leap 5 last day
+    { solar: '1903-07-24', month: 6,  day: 1,  leap: false }, // regular 6/1
+  ];
+  cases.forEach(({ solar, month, day, leap }) => {
+    const r = solarToLunar(new Date(solar)).lunar;
+    t.is(r.month,       month, `${solar}: month`);
+    t.is(r.day,         day,   `${solar}: day`);
+    t.is(r.isLeapMonth, leap,  `${solar}: isLeapMonth`);
+  });
+});
+
+test('Historical: Leap month boundaries — 2001 leap 4th month', t => {
+  const cases = [
+    { solar: '2001-05-22', month: 4, day: 30, leap: false }, // regular 4 last day
+    { solar: '2001-05-23', month: 4, day: 1,  leap: true  }, // leap 4/1
+    { solar: '2001-06-20', month: 4, day: 29, leap: true  }, // leap 4 last day
+    { solar: '2001-06-21', month: 5, day: 1,  leap: false }, // regular 5/1
+  ];
+  cases.forEach(({ solar, month, day, leap }) => {
+    const r = solarToLunar(new Date(solar)).lunar;
+    t.is(r.month,       month, `${solar}: month`);
+    t.is(r.day,         day,   `${solar}: day`);
+    t.is(r.isLeapMonth, leap,  `${solar}: isLeapMonth`);
+  });
+});
+
+test('Historical: Leap month boundaries — 2009 leap 5th month', t => {
+  const cases = [
+    { solar: '2009-06-23', month: 5, day: 1,  leap: true  }, // leap 5/1
+    { solar: '2009-07-21', month: 5, day: 29, leap: true  }, // leap 5 last day
+    { solar: '2009-07-22', month: 6, day: 1,  leap: false }, // regular 6/1
+  ];
+  cases.forEach(({ solar, month, day, leap }) => {
+    const r = solarToLunar(new Date(solar)).lunar;
+    t.is(r.month,       month, `${solar}: month`);
+    t.is(r.day,         day,   `${solar}: day`);
+    t.is(r.isLeapMonth, leap,  `${solar}: isLeapMonth`);
+  });
+});
+
+test('Historical: Leap month boundaries — 2012 leap 4th month', t => {
+  const cases = [
+    { solar: '2012-04-21', month: 4, day: 1,  leap: false }, // regular 4/1
+    { solar: '2012-05-20', month: 4, day: 30, leap: false }, // regular 4 last day
+    { solar: '2012-05-21', month: 4, day: 1,  leap: true  }, // leap 4/1
+    { solar: '2012-06-18', month: 4, day: 29, leap: true  }, // leap 4 last day
+    { solar: '2012-06-19', month: 5, day: 1,  leap: false }, // regular 5/1
+  ];
+  cases.forEach(({ solar, month, day, leap }) => {
+    const r = solarToLunar(new Date(solar)).lunar;
+    t.is(r.month,       month, `${solar}: month`);
+    t.is(r.day,         day,   `${solar}: day`);
+    t.is(r.isLeapMonth, leap,  `${solar}: isLeapMonth`);
+  });
+});
+
+test('Historical: Leap month boundaries — 2020 leap 4th month', t => {
+  const cases = [
+    { solar: '2020-05-23', month: 4, day: 1,  leap: true  }, // leap 4/1
+    { solar: '2020-06-20', month: 4, day: 29, leap: true  }, // leap 4 last day
+    { solar: '2020-06-21', month: 5, day: 1,  leap: false }, // regular 5/1
+  ];
+  cases.forEach(({ solar, month, day, leap }) => {
+    const r = solarToLunar(new Date(solar)).lunar;
+    t.is(r.month,       month, `${solar}: month`);
+    t.is(r.day,         day,   `${solar}: day`);
+    t.is(r.isLeapMonth, leap,  `${solar}: isLeapMonth`);
+  });
+});
+
+test('Historical: Leap month boundaries — 2023 leap 2nd month', t => {
+  const cases = [
+    { solar: '2023-03-22', month: 2, day: 1,  leap: true  }, // leap 2/1
+    { solar: '2023-04-19', month: 2, day: 29, leap: true  }, // leap 2 last day
+    { solar: '2023-04-20', month: 3, day: 1,  leap: false }, // regular 3/1
+  ];
+  cases.forEach(({ solar, month, day, leap }) => {
+    const r = solarToLunar(new Date(solar)).lunar;
+    t.is(r.month,       month, `${solar}: month`);
+    t.is(r.day,         day,   `${solar}: day`);
+    t.is(r.isLeapMonth, leap,  `${solar}: isLeapMonth`);
+  });
+});
+
+test('Historical: Leap month boundaries — 2025 leap 6th month', t => {
+  const cases = [
+    { solar: '2025-06-25', month: 6, day: 1,  leap: false }, // regular 6/1
+    { solar: '2025-07-24', month: 6, day: 30, leap: false }, // regular 6 last day
+    { solar: '2025-07-25', month: 6, day: 1,  leap: true  }, // leap 6/1
+    { solar: '2025-08-22', month: 6, day: 29, leap: true  }, // leap 6 last day
+    { solar: '2025-08-23', month: 7, day: 1,  leap: false }, // regular 7/1
+  ];
+  cases.forEach(({ solar, month, day, leap }) => {
+    const r = solarToLunar(new Date(solar)).lunar;
+    t.is(r.month,       month, `${solar}: month`);
+    t.is(r.day,         day,   `${solar}: day`);
+    t.is(r.isLeapMonth, leap,  `${solar}: isLeapMonth`);
+  });
 });
 
 // ===== INVALID INPUT TESTS =====

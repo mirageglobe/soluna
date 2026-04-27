@@ -1,5 +1,5 @@
 /**
- * YALC - Yet Another Lunar Calendar Converter
+ * Soluna - Gregorian and Chinese Lunar Calendar Converter
  *
  * @author Jimmy Lim (mirageglobe@gmail.com)
  * @version 2.0.0 - Functional Edition
@@ -182,15 +182,15 @@ const SOLAR_FESTIVALS = {
  * Special: '0100' means last day of 12th month (New Year's Eve)
  *
  * Includes major festivals and traditional religious/cultural dates:
- * - Buddhist dates (释迦牟尼, 观世音菩萨, 地藏王)
- * - Taoist dates (元始天尊, 太上老君, 玉皇大帝, 关公, 妈祖)
+ * - Buddhist dates (释迦牟尼, 观世音菩萨, 文殊, 普贤, 地藏王, 弥勒, 韦陀, 阿弥陀佛, 达摩)
+ * - Taoist dates (元始天尊, 太上老君, 玉皇大帝, 关公, 妈祖, 玄天上帝, 文昌, 保生大帝, 吕洞宾, 王母娘娘)
  * - Folk traditions (三娘煞, 头牙/尾牙)
  *
  * Dates verified against: nationsonline.org, kenyon.edu, wikipedia.org
  */
 const LUNAR_FESTIVALS = {
   // First month (正月)
-  '0101': { name: '春节', isHoliday: true, english: 'Spring Festival', extra: '元始天尊圣旦 四始吉日' },
+  '0101': { name: '春节', isHoliday: true, english: 'Spring Festival', extra: '元始天尊圣旦 弥勒佛圣旦 四始吉日' },
   '0104': { name: '迎神日', isHoliday: false, english: 'Welcoming Gods Day' },
   '0105': { name: '接财神', isHoliday: false, english: 'Welcoming God of Wealth' },
   '0109': { name: '玉皇大帝诞', isHoliday: false, english: 'Jade Emperor Birthday' },
@@ -201,22 +201,29 @@ const LUNAR_FESTIVALS = {
   '0215': { name: '释迦牟尼涅槃', isHoliday: false, english: 'Buddha Nirvana Day', extra: '太上老君圣旦' },
   '0216': { name: '头牙', isHoliday: false, english: 'First Ya Festival', extra: '祭拜地主日' },
   '0219': { name: '观世音菩萨圣旦', isHoliday: false, english: 'Guanyin Birthday' },
+  '0221': { name: '普贤菩萨圣旦', isHoliday: false, english: 'Samantabhadra Bodhisattva Birthday' },
   // Third month
   '0303': { name: '上巳节', isHoliday: false, english: 'Shangsi Festival', extra: '玄天上帝诞' },
   '0323': { name: '妈祖圣旦', isHoliday: false, english: 'Mazu Birthday' },
+  // Third month (Taoist)
+  '0315': { name: '保生大帝诞', isHoliday: false, english: 'Baosheng Dadi Birthday', extra: '玄坛赵公明圣旦' },
   // Fourth month
   '0401': { name: '四始吉日', isHoliday: false, english: 'Auspicious Day' },
+  '0404': { name: '文殊菩萨圣旦', isHoliday: false, english: 'Manjushri Bodhisattva Birthday' },
   '0408': { name: '释迦牟尼佛诞', isHoliday: false, english: 'Buddha Birthday', extra: '浴佛节' },
+  '0414': { name: '吕洞宾诞', isHoliday: false, english: 'Lü Dongbin Birthday' },
   // Fifth month
   '0505': { name: '端午节', isHoliday: true, english: 'Dragon Boat Festival' },
   '0513': { name: '关公磨刀日', isHoliday: false, english: 'Guan Yu Sword Day' },
   // Sixth month
+  '0603': { name: '韦陀菩萨圣旦', isHoliday: false, english: 'Skanda Bodhisattva Birthday' },
   '0619': { name: '观世音菩萨成道日', isHoliday: false, english: 'Guanyin Enlightenment' },
   '0624': { name: '关公圣旦', isHoliday: false, english: 'Guan Yu Birthday' },
   // Seventh month
   '0701': { name: '四始吉日', isHoliday: false, english: 'Auspicious Day' },
   '0707': { name: '七夕', isHoliday: false, english: 'Qixi Festival', extra: 'Chinese Valentine\'s Day' },
   '0715': { name: '中元节', isHoliday: false, english: 'Ghost Festival', extra: '盂兰盆节' },
+  '0718': { name: '王母娘娘圣诞', isHoliday: false, english: 'Queen Mother of the West Birthday' },
   '0719': { name: '值年太岁圣旦', isHoliday: false, english: 'Tai Sui Birthday' },
   '0730': { name: '地藏王菩萨诞', isHoliday: false, english: 'Dizang Bodhisattva Birthday' },
   // Eighth month
@@ -227,10 +234,13 @@ const LUNAR_FESTIVALS = {
   // Tenth month
   '1001': { name: '寒衣节', isHoliday: false, english: 'Cold Clothes Festival', extra: '祭祖节' },
   '1015': { name: '下元节', isHoliday: false, english: 'Lower Yuan Festival', extra: '水官大帝诞' },
+  // Tenth month (Buddhist)
+  '1005': { name: '达摩祖师圣旦', isHoliday: false, english: 'Bodhidharma Birthday' },
   // Eleventh month
+  '1117': { name: '阿弥陀佛圣旦', isHoliday: false, english: 'Amitabha Buddha Birthday' },
   '1119': { name: '观世音菩萨诞', isHoliday: false, english: 'Guanyin Day', extra: '南海观音入海日' },
   // Twelfth month (腊月)
-  '1208': { name: '腊八节', isHoliday: false, english: 'Laba Festival' },
+  '1208': { name: '腊八节', isHoliday: false, english: 'Laba Festival', extra: '释迦牟尼成道日' },
   '1216': { name: '尾牙', isHoliday: false, english: 'Last Ya Festival', extra: '谢地主日' },
   '1223': { name: '小年', isHoliday: false, english: 'Little New Year' },
   '1224': { name: '送神日', isHoliday: false, english: 'Sending Gods Day' },
@@ -430,12 +440,7 @@ const getTimePeriod = date => {
     };
   }
 
-  // Find the appropriate time period using functional approach
-  const timePeriod = TIME_PERIODS.find(period => {
-    if (period.name === '子时') return false; // Already handled above
-
-    return hour >= period.startHour && hour < period.endHour;
-  });
+  const timePeriod = TIME_PERIODS.find(period => hour >= period.startHour && hour < period.endHour);
 
   if (!timePeriod) {
     return {
@@ -577,26 +582,11 @@ const calculateSolarFromLunar = (lunarYear, lunarMonth, lunarDay, isLeapMonth = 
 };
 
 /**
- * Calculate stem-branch (干支) information for a date
- *
- * The stem-branch system is a 60-year/60-day cycle combining:
- * - 10 Heavenly Stems (天干)
- * - 12 Earthly Branches (地支)
- * Used for years, months, days, and hours in traditional Chinese calendar
- *
- * @param {number} year - Gregorian year
- * @param {number} month - Gregorian month (0-11)
- * @param {number} day - Gregorian day
- * @returns {Object} Stem-branch for year, month, and day
- */
-/**
  * Calculate the date (day of month) for a specific solar term
  *
  * Formula: int( (Y * D) + C ) - L
- * Y = Year suffix (last 2 digits)
- * D = 0.2422
- * C = Constant from SOLAR_TERM_INFO
- * L = Leap years correction: int(Y/4)
+ * Y = year suffix (last 2 digits), D = 0.2422, C = constant from SOLAR_TERM_INFO, L = int(Y/4)
+ * Covers 1900-2100 with ≤1 day deviation; production use would need VSOP87.
  *
  * @param {number} year - Gregorian year
  * @param {number} termIndex - Index of solar term (0-23)
@@ -605,24 +595,8 @@ const calculateSolarFromLunar = (lunarYear, lunarMonth, lunarDay, isLeapMonth = 
 const getSolarTermDay = (year, termIndex) => {
   const centuryIdx = year < 2000 ? 0 : 1;
   const yearSuffix = year % 100;
-
-  // Special correction for 2000 in this simplified formula context
-  // The C constants above for 2000+ are approximations.
-  // For production precision one would need VSOP87,
-  // but this simplified algo covers 1900-2100 with ~1 day deviation max.
-
   const c = SOLAR_TERM_INFO[centuryIdx][termIndex];
-
-  // Calculate term date
-  let day = Math.floor(yearSuffix * 0.2422 + c) - Math.floor(yearSuffix / 4);
-
-  // Adjust for leap years in the century (simplified)
-  // For 2000 (which is year 0 in 2nd century list), the formula needs care
-  // But standard algorithm usually works.
-
-  // Fix for known offsets could be added here if needed for specific range
-
-  return day;
+  return Math.floor(yearSuffix * 0.2422 + c) - Math.floor(yearSuffix / 4);
 };
 
 /**
@@ -639,89 +613,24 @@ const getSolarTermDay = (year, termIndex) => {
  * @returns {Object} Stem-branch for year, month, and day
  */
 const calculateStemBranch = (year, month, day) => {
-  // Year stem-branch: 1900 = 36th in 60-year cycle (庚子年)
-  // Note: Year pillar also changes at Start of Spring (Li Chun), not Jan 1 or Lunar NY.
-  // We need to check if we are before Li Chun (Term 2)
-
+  // Year pillar changes at Li Chun (Start of Spring, term index 2), not Jan 1
   let yearForStem = year;
-  const liChunDay = getSolarTermDay(year, 2); // Term 2 is Li Chun (Feb)
-
-  // If date is before Feb [LiChunDay], it belongs to previous year's pillar
-  // Month 1 = February in Gregorian (index 1)
+  const liChunDay = getSolarTermDay(year, 2);
   if (month === 0 || (month === 1 && day < liChunDay)) {
     yearForStem--;
   }
-
   const yearIdx = (yearForStem - 1900 + 36) % 60;
 
-  // Month stem-branch
-  // Month pillars are defined by the 12 Jie (Sectional) Terms:
-  // 小寒(Jan), 立春(Feb), 惊蛰(Mar), 清明(Apr), 立夏(May), 芒种(Jun)
-  // 小暑(Jul), 立秋(Aug), 白露(Sep), 寒露(Oct), 立冬(Nov), 大雪(Dec)
-  // These correspond to even indices in our SOLAR_TERMS array: 0, 2, 4...
-
-  // 1. Find the Jie term for the current month
-  // The Jie term for Gregorian month M (0-11) is generally at index M*2
+  // Month pillar is defined by the 12 Jie sectional terms (even indices: 0, 2, 4, ...)
+  // Each Jie falls in the same Gregorian month; if before the term, use the prior solar month.
   const termIndex = month * 2;
   const termDay = getSolarTermDay(year, termIndex);
 
-  // 2. Determine solar month index
-  // If day is before the Jie term, it belongs to previous solar month
-  let monthOffset = month;
-  if (day < termDay) {
-    monthOffset--;
-  }
-
-  // 3. Calculate stem-branch index
-  // Formula: (YearStemIndex * 2 + MonthNum) % 10 for Stem?
-  // Standard calculation:
-  // Base: 1900 Jan 1 was shortly before Xiao Han.
-  // Xiao Han 1900 started the 'Ox' month of 1899 (Jihai).
-  // Let's use a simpler offset relative to 1900.
-  // 1900 Li Chun (Feb 4) started the TRADITIONAL first month (Tiger).
-  // We can calculate total months passed since 1900 Li Chun.
-
-  // Re-calculating proper offset:
-  // We determined `yearForStem`.
-  // Verify month index relative to Li Chun (Start of Spring).
-  // Solar Month 1 = Tiger (begins at Li Chun).
-
-  // Let's count solar months since base 1900.
-  // 1900 Li Chun is Month Pillar Index...
-  // 1900 is Geng-Zi (36).
-  // Year Stem Geng (6) -> Tiger month is Wu-Yin (14).
-  // So first solar month of 1900 (Feb 4+) is 14.
-
-  // Calculate how many months have passed since 1900 Li Chun
-  // If we are in 1980 Mar 21:
-  // yearForStem = 1980.
-  // it is after Jing Zhe (Mar 5), so it is Rabbit Month (2nd month).
-  // Years passed = 1980 - 1900 = 80.
-  // Month index in year (1-12):
-  //   If monthOffset = 1 (Feb, post-LiChun) -> 1
-  //   If monthOffset = 2 (Mar, post-JingZhe) -> 2
-  //   If monthOffset = 0 (Jan, post-XiaoHan) -> 12 (of prev year basically)
-  //   But we handled year decrement for Jan/Feb-pre-LiChun already.
-
-  // Refined Logic using the (Year - 1900) * 12 + SolarMonthIndex formula
-  // We need to map Gregorian Month + Term Check to a "Solar Month Index" (0-11 or 1-12)
-  //
-  // Mapping:
-  // Feb (after LiChun) -> Tiger (1st month)
-  // Mar (after JingZhe) -> Rabbit (2nd month)
-  // ...
-  // Jan (after XiaoHan) -> Ox (12th month of year)
-
-  // Let's just calculate total months from 1900 base.
-  // 1900 Jan 6 (XiaoHan) to Feb 4 (LiChun) was Ding-Chou (13).
-  // 1900 Feb 4 (LiChun) started Wu-Yin (14).
-
+  // Offset 13 places 1900-Jan (post-XiaoHan) at the correct cycle position (Wu-Yin = 14th)
   let totalMonths = (year - 1900) * 12 + month + 13;
-  // If before the sectional term, subtract one month
   if (day < termDay) {
     totalMonths--;
   }
-
   const monthIdx = totalMonths % 60;
 
   // Day stem-branch
@@ -939,8 +848,6 @@ const lunarToSolar = (lunarYearOrDate, lunarMonthOrLeap, lunarDayVal, isLeapMont
   // Calculate solar information
   const solarInfo = calculateSolarFromLunar(lunarYear, lunarMonth, lunarDay, isLeapMonth, hour, minute, second);
   const solarDate = new Date(solarInfo.year, solarInfo.month, solarInfo.day);
-
-  // Calculate stem-branch information
   const stemBranchInfo = calculateStemBranch(solarInfo.year, solarInfo.month, solarInfo.day);
 
   // Get festival information
@@ -948,12 +855,16 @@ const lunarToSolar = (lunarYearOrDate, lunarMonthOrLeap, lunarDayVal, isLeapMont
   const lunarFestival = getLunarFestival(lunarMonth, lunarDay, lunarYear);
   const sanniangSha = isSanniangShaDay(lunarDay);
 
+  const hourTimePeriod = solarInfo.hour !== undefined
+    ? getTimePeriod(new Date(2000, 0, 1, solarInfo.hour))
+    : null;
+
   return {
     solar: {
       year: solarInfo.year,
       month: solarInfo.month + 1,
       day: solarInfo.day,
-      weekDay: DAY_NAMES[new Date(solarInfo.year, solarInfo.month, solarInfo.day).getDay()],
+      weekDay: DAY_NAMES[solarDate.getDay()],
       time: {
         hour: solarInfo.hour,
         minute: solarInfo.minute,
@@ -973,19 +884,16 @@ const lunarToSolar = (lunarYearOrDate, lunarMonthOrLeap, lunarDayVal, isLeapMont
       year: stemBranchInfo.year.name,
       month: stemBranchInfo.month.name,
       day: stemBranchInfo.day.name,
-      time: solarInfo.hour !== undefined ? getTimePeriod(new Date(2000, 0, 1, solarInfo.hour)).branch : null
+      time: hourTimePeriod ? hourTimePeriod.branch : null
     },
     baZi: {
       year: { stem: stemBranchInfo.year.stem, branch: stemBranchInfo.year.branch },
       month: { stem: stemBranchInfo.month.stem, branch: stemBranchInfo.month.branch },
       day: { stem: stemBranchInfo.day.stem, branch: stemBranchInfo.day.branch },
-      hour: solarInfo.hour !== undefined ? (() => {
-        const tp = getTimePeriod(new Date(2000, 0, 1, solarInfo.hour));
-        return {
-          stem: getHourStem(stemBranchInfo.day.index % 10, EARTHLY_BRANCHES.indexOf(tp.branch)),
-          branch: tp.branch
-        };
-      })() : null
+      hour: hourTimePeriod ? {
+        stem: getHourStem(stemBranchInfo.day.index % 10, EARTHLY_BRANCHES.indexOf(hourTimePeriod.branch)),
+        branch: hourTimePeriod.branch
+      } : null
     },
     timePeriod: null,
     festivals: {
@@ -996,50 +904,6 @@ const lunarToSolar = (lunarYearOrDate, lunarMonthOrLeap, lunarDayVal, isLeapMont
     solarTerms: ''
   };
 };
-
-// ===== EXAMPLE USAGE =====
-
-// Test solar to lunar conversion with time
-const testDateTime1 = new Date('1980-03-21T23:30:35');
-const result1 = solarToLunar(testDateTime1);
-
-console.log('=== Functional Solar to Lunar Conversion (with Time) ===');
-console.log(`Solar Date: ${testDateTime1.toLocaleString()}`);
-console.log(`Lunar Date: ${result1.lunar.year}-${result1.lunar.month}-${result1.lunar.day}`);
-console.log(`Lunar Day Name: ${result1.lunar.dayName}`);
-console.log(`Lunar Month Name: ${result1.lunar.monthName}`);
-console.log(`Year Zodiac Animal: ${result1.lunar.zodiac}`);
-console.log(`Time Period: ${result1.timePeriod.name} (${result1.timePeriod.period})`);
-console.log(`Time Zodiac: ${result1.timePeriod.zodiac}`);
-console.log(`Time Branch: ${result1.timePeriod.branch}`);
-console.log(`Description: ${result1.timePeriod.description}`);
-
-// Test different time periods using functional approach
-console.log('\n=== Time Period Examples (Functional) ===');
-const testTimes = [
-  new Date('2023-12-25T00:30:00'), // 子时 (Rat)
-  new Date('2023-12-25T02:15:00'), // 丑时 (Ox)
-  new Date('2023-12-25T06:45:00'), // 卯时 (Rabbit)
-  new Date('2023-12-25T12:00:00'), // 午时 (Horse)
-  new Date('2023-12-25T18:30:00'), // 酉时 (Rooster)
-  new Date('2023-12-25T23:45:00')  // 子时 (Rat - next day)
-];
-
-// Using functional approach with map
-testTimes
-  .map(time => ({ time, result: solarToLunar(time) }))
-  .forEach(({ time, result }) => {
-    console.log(`${time.toLocaleTimeString()}: ${result.timePeriod.name} - ${result.timePeriod.zodiac} (${result.timePeriod.period})`);
-  });
-
-// Test lunar to solar conversion
-const testDate2 = new Date(2012, 3, 7);
-const result2 = lunarToSolar(testDate2, false);
-
-console.log('\n=== Functional Lunar to Solar Conversion ===');
-console.log(`Lunar Date: ${testDate2.getFullYear()}-${testDate2.getMonth() + 1}-${testDate2.getDate()}`);
-console.log(`Solar Date: ${result2.solar.year}-${result2.solar.month}-${result2.solar.day}`);
-console.log(`Week Day: ${result2.solar.weekDay}`);
 
 // Export functions for use in other modules
 if (typeof module !== 'undefined' && module.exports) {
