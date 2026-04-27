@@ -1,10 +1,10 @@
 /**
- * Test Runner for YALC (Yet Another Lunar Calendar)
+ * Test Runner for Soluna
  *
  * Uncomment any example below to test different date conversions
  */
 
-const { solarToLunar, lunarToSolar } = require('./yalc.js');
+const { solarToLunar, lunarToSolar } = require('../soluna.js');
 
 // ===== HELPER FUNCTIONS TO DISPLAY RESULTS =====
 

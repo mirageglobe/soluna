@@ -1,6 +1,6 @@
 # AGENTS.md
 
-agent briefing for the `yalc` repository.
+agent briefing for the `soluna` repository.
 
 ---
 
@@ -31,13 +31,13 @@ see [SPEC.md](SPEC.md) for architecture, data model, core algorithms, and roadma
 
 | do not | do instead |
 | :--- | :--- |
-| add dependencies to `yalc.js` | keep the library zero-dependency; inline any needed logic |
-| split `yalc.js` into multiple files | the single-file constraint is a deliberate design decision (see SPEC.md decisions) |
+| add dependencies to `soluna.js` | keep the library zero-dependency; inline any needed logic |
+| split `soluna.js` into multiple files | the single-file constraint is a deliberate design decision (see SPEC.md decisions) |
 | modify `yalunar-legacy*.js` | treat as read-only historical reference |
 | write tests that reach into internal functions | test only via `solarToLunar` / `lunarToSolar` public API |
 | commit to `main` or `master` | branch using `YYYYMMDD-adjective-noun` format |
 | commit secrets or credentials | stop immediately if any token/key is detected in staged files |
-| skip linting before commit | run `npx eslint yalc.js` as part of pre-commit |
+| skip linting before commit | run `npx eslint soluna.js` as part of pre-commit |
 
 ---
 
@@ -58,7 +58,7 @@ test runner: AVA. node.js >= 14 required.
 ## picking up a task
 
 roadmap items are in [SPEC.md#roadmap](SPEC.md#roadmap). each item carries:
-- a component tag `[yalc]` identifying the file/area
+- a component tag `[soluna]` identifying the file/area
 - a difficulty tag `[easy]`, `[medium]`, or `[hard]`
 
 pick a task matching your capability, implement with a test first (TDD), then run `make test` before committing.
