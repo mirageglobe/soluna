@@ -17,13 +17,13 @@ see [SPEC.md](SPEC.md) for architecture, data model, core algorithms, and roadma
 | file | owns |
 | :--- | :--- |
 | `yalc.js` | entire library — constants, utilities, conversion core, public API, module export |
-| `test.js` | AVA test suite; covers public API only (`solarToLunar`, `lunarToSolar`) |
-| `run.js` | dev runner; 3-day demo output — not part of the public API |
-| `test-ui.html` | browser-based visual verification; standalone, no build step |
+| `test/yalc.test.js` | AVA test suite; covers public API only (`solarToLunar`, `lunarToSolar`) |
+| `examples/run.js` | dev runner; 3-day demo output — not part of the public API |
+| `examples/test-ui.html` | browser-based visual verification; standalone, no build step |
+| `legacy/yalunar-legacy.js` | legacy reference — do not modify or import |
+| `legacy/yalunar-legacy-refactor.js` | legacy reference — do not modify or import |
 | `Makefile` | build/dev targets; `make test` is the canonical test command |
-| `package.json` | node metadata, AVA config, dev dependencies |
-| `yalunar-legacy.js` | legacy reference — do not modify or import |
-| `yalunar-legacy-refactor.js` | legacy reference — do not modify or import |
+| `package.json` | node metadata, AVA config, dev dependencies, npm publish file list |
 
 ---
 

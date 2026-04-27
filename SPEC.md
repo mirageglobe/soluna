@@ -12,12 +12,17 @@ supports node.js (CommonJS) and browser (window global).
 
 ```
 yalc/
-├── yalc.js          # entire library — constants, utilities, core, public API
-├── test.js          # AVA test suite
-├── run.js           # dev runner (3-day view)
-├── test-ui.html     # browser-based visual test UI
-├── Makefile         # build/dev targets
-└── package.json     # node metadata, AVA config
+├── examples/
+│   ├── run.js           # dev runner (3-day view)
+│   └── test-ui.html     # browser-based visual test UI
+├── legacy/
+│   ├── yalunar-legacy.js
+│   └── yalunar-legacy-refactor.js
+├── test/
+│   └── yalc.test.js     # AVA test suite
+├── yalc.js              # entire library — constants, utilities, core, public API
+├── Makefile             # build/dev targets
+└── package.json         # node metadata, AVA config, npm publish files list
 ```
 
 ### module layout (within yalc.js)
