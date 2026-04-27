@@ -2,142 +2,150 @@
 
 [![CI](https://github.com/mirageglobe/soluna/actions/workflows/ci.yml/badge.svg)](https://github.com/mirageglobe/soluna/actions/workflows/ci.yml)
 
-A JavaScript library for converting between Gregorian (solar) and Chinese lunar calendar dates.
+Bidirectional Gregorian ↔ Chinese lunar calendar conversion for JavaScript. Zero dependencies. Single file. Node.js and browser.
 
-**Maintainer:** Jimmy Lim <mirageglobe@gmail.com>
-
----
-
-## Features
-
-- **Solar to Lunar** conversion
-- **Lunar to Solar** conversion (with leap month support)
-- **Chinese zodiac animals** (12-year cycle)
-- **Time periods** (时辰) - Traditional 12 two-hour periods
-- **Stem-Branch system** (干支) - Year, month, day pillars
-- **BaZi (Eight Characters)** - Precise Month Pillar calculation using Solar Terms (24 Jie Qi)
-- **Lunar day formatting** - Chinese character representation
-- **Festival detection** - Solar, lunar, and religious festivals
-- **Date range:** 1900-2100
+**Range:** 1900–2100 &nbsp;·&nbsp; **License:** BUSL-1.1
 
 ---
 
-## Quick Start
+## what it does
 
-> **Note:** npm publish is not yet set up. Until then, copy `soluna.js` directly into your project.
+- `solarToLunar` — Gregorian → lunar date, zodiac, stem-branch (干支), BaZi four pillars, time period (时辰), festivals
+- `lunarToSolar` — lunar → Gregorian, leap month aware
+- Month pillar calculated against actual solar term boundaries (not Gregorian month edges)
+- Festival detection: public holidays, Buddhist and Taoist dates, folk traditions, 三娘煞日
+
+---
+
+## install
+
+No npm package yet — copy `soluna.js` directly into your project.
 
 ### Node.js
 
-```javascript
+```js
 const { solarToLunar, lunarToSolar } = require('./soluna.js');
-
-// Solar to Lunar — Date Object
-const result1 = solarToLunar(new Date());
-
-// Solar to Lunar — Numerical (Year, Month, Day, Hour, Min, Sec)
-const result2 = solarToLunar(2024, 12, 28, 15, 30, 0);
-
-console.log(result2.lunar);
-// Output: { year: 2024, month: 11, day: 28, dayName: '廿八', ... }
-
-// BaZi (Eight Characters) with Hour Pillar
-console.log(result2.baZi);
-/* Output:
-{
-  year: { stem: '甲', branch: '辰' },
-  month: { stem: '丙', branch: '子' },
-  day: { stem: '辛', branch: '未' },
-  hour: { stem: '丙', branch: '申' }
-}
-*/
-
-// Lunar to Solar — Date Object + isLeap
-const solar1 = lunarToSolar(new Date(2012, 3, 7), false);
-
-// Lunar to Solar — Numerical (Year, Month, Day, isLeap, Hour, Min, Sec)
-const solar2 = lunarToSolar(2012, 4, 7, false, 12, 0, 0);
-
-console.log(solar2.solar);
-// Output: { year: 2012, month: 4, day: 27, time: { hour: 12, ... }, ... }
 ```
 
 ### Browser
-
-Copy `soluna.js` into your project and include it via a script tag. The library is available as `window.Soluna`.
 
 ```html
 <script src="soluna.js"></script>
 <script>
   const { solarToLunar, lunarToSolar } = window.Soluna;
-
-  const result = solarToLunar(new Date());
-  console.log(result.lunar);
 </script>
 ```
 
-### Requirements
+---
 
-- Node.js >= 14, or any modern browser
-- No build step or bundler required
+## usage
+
+### solar → lunar
+
+```js
+const result = solarToLunar(2024, 12, 28, 15, 30, 0);
+// or: solarToLunar(new Date())
+
+result.lunar
+// { year: 2024, month: 11, day: 28, isLeapMonth: false,
+//   monthName: '十一', dayName: '廿八', zodiac: '龙' }
+
+result.baZi
+// { year:  { stem: '甲', branch: '辰' },
+//   month: { stem: '丙', branch: '子' },
+//   day:   { stem: '辛', branch: '未' },
+//   hour:  { stem: '丙', branch: '申' } }
+
+result.timePeriod
+// { name: '申时', zodiac: '猴', period: '15:00-17:00',
+//   branch: '申', description: '晡时，又名日铺、夕食' }
+
+result.festivals
+// { solar: null, lunar: null, sanniangSha: false }
+```
+
+### lunar → solar
+
+```js
+const result = lunarToSolar(2012, 4, 7, false, 12, 0, 0);
+// pass true as 4th arg for leap month
+
+result.solar
+// { year: 2012, month: 4, day: 27, weekDay: '五',
+//   time: { hour: 12, minute: 0, second: 0 } }
+```
+
+### festival lookup
+
+```js
+const cny = solarToLunar(new Date('2025-01-29'));
+
+cny.festivals.lunar
+// { name: '春节', isHoliday: true, english: 'Spring Festival',
+//   extra: '元始天尊圣旦 弥勒佛圣旦 四始吉日' }
+```
 
 ---
 
-## Festival Data
+## output shape
 
-The library returns festival information in the `festivals` object:
-
-```javascript
+```js
 {
-  solar: { name: '元旦', isHoliday: true, english: "New Year's Day" },
-  lunar: { name: '春节', isHoliday: true, english: 'Spring Festival', extra: '...' },
-  sanniangSha: false  // Wedding inauspicious day warning
+  solar:      { year, month, day, weekDay, time: { hour, minute, second } },
+  lunar:      { year, month, day, isLeapMonth, monthName, dayName, zodiac },
+  stemBranch: { year, month, day, time },        // 干支 strings e.g. '甲辰'
+  baZi:       { year, month, day, hour },        // each { stem, branch }
+  timePeriod: { name, zodiac, period, branch, description },
+  festivals:  { solar, lunar, sanniangSha }
 }
 ```
 
-### Included Festivals
+---
 
-| Category | Count | Examples |
-|----------|-------|----------|
-| **Solar Festivals** | 13 | 元旦, 情人节, 劳动节, 国庆节, 圣诞节 |
-| **Major Lunar Festivals** | 8 | 春节, 元宵节, 端午节, 七夕, 中秋节, 重阳节, 腊八节, 除夕 |
-| **Buddhist Dates** | 6 | 释迦牟尼佛诞, 观世音菩萨圣旦/成道/出家日, 地藏王菩萨诞 |
-| **Taoist Dates** | 6 | 玉皇大帝诞, 太上老君圣旦, 关公圣旦, 妈祖圣旦, 值年太岁 |
-| **Folk Traditions** | 8+ | 龙抬头, 头牙/尾牙, 送神/迎神日, 寒衣节, 下元节 |
-| **三娘煞日** | 6/month | Days 3, 7, 13, 18, 22, 27 (wedding warnings) |
-| **24 Solar Terms** | 24 | 立春→冬至 (data defined) |
+## festival coverage
+
+| category | examples |
+|---|---|
+| solar (13) | 元旦, 劳动节, 国庆节, 圣诞节 |
+| major lunar (8) | 春节, 端午节, 七夕, 中秋节, 除夕 |
+| buddhist (13) | 释迦牟尼佛诞/涅槃/成道, 观音圣旦/成道/出家, 文殊, 普贤, 地藏王, 韦陀, 阿弥陀佛, 达摩 |
+| taoist (14+) | 玉皇大帝诞, 妈祖, 关帝, 太上老君, 吕洞宾, 王母娘娘, 保生大帝, 文昌, 福德正神 |
+| folk (8+) | 龙抬头, 头牙/尾牙, 送神/迎神, 寒衣节, 下元节 |
+| 三娘煞日 | days 3, 7, 13, 18, 22, 27 each lunar month (wedding warning) |
 
 ---
 
-## Testing
+## notes
+
+**子时 day boundary** — 23:00–01:00 (Rat hour) belongs to the *next* day in traditional Chinese timekeeping. `solarToLunar` adjusts automatically.
+
+**Month pillar** — the BaZi month pillar uses the Jie sectional solar term date, not the Gregorian month edge, so dates near the boundary may differ from naive implementations.
+
+**Precision** — the solar term formula covers 1900–2100 with ≤1 day deviation. VSOP87 would be needed for sub-day precision.
+
+---
+
+## development
 
 ```bash
-make test
+make install   # install dev dependencies
+make test      # run AVA test suite
+make today     # sanity check: today's lunar + BaZi
+make run       # 3-day demo output
 ```
 
----
-
-## Known Issues
-
-**Time Boundary**: The hour 23:00-01:00 (子时/Rat time) is considered part of the **next day** in traditional Chinese timekeeping. This is handled automatically by the library but may seem counterintuitive.
+See [SPEC.md](SPEC.md) for architecture, algorithm detail, and roadmap.
 
 ---
 
-## Contributing
+## references
 
-Contributions are welcome. Before submitting a PR, run `make test`. See [SPEC.md](SPEC.md) for architecture and build details.
-
----
-
-## References
-
-- [lunar-javascript](https://github.com/6tail/lunar-javascript) - Reference implementation
-- [Programming Hunter Article](https://www.programminghunter.com/article/85501142176/) - Algorithm explanation
-- [晶晶的博客](https://blog.jjonline.cn/userInterFace/173.html) - Extended lunar data source (1900-2100)
+- [lunar-javascript](https://github.com/6tail/lunar-javascript) — reference implementation
+- [Programming Hunter](https://www.programminghunter.com/article/85501142176/) — algorithm explanation
+- [晶晶的博客](https://blog.jjonline.cn/userInterFace/173.html) — extended lunar data 1900–2100
 
 ---
 
-## License
+## license
 
-Apache License 2.0 - See [LICENSE](LICENSE) file for details
-
-See [SPEC.md](SPEC.md#roadmap) for the project roadmap.
+BUSL-1.1 — see [LICENSE.md](LICENSE.md)
