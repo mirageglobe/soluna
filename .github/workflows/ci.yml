@@ -58,11 +58,11 @@ jobs:
         run: npm install eslint --save-dev
 
       - name: Run ESLint
-        run: npx eslint yalc.js test.js run.js --format stylish
+        run: npx eslint soluna.js test/soluna.test.js examples/run.js --format stylish
         continue-on-error: true
 
       - name: Check JavaScript syntax
-        run: node --check yalc.js && node --check test.js && node --check run.js
+        run: node --check soluna.js && node --check test/soluna.test.js && node --check examples/run.js
 
   coverage:
     name: Test Coverage
