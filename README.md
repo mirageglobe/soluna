@@ -1,4 +1,4 @@
-# YALC - Yet Another Lunar Calendar
+# Soluna
 
 [![CI](https://github.com/mirageglobe/yalc/actions/workflows/ci.yml/badge.svg)](https://github.com/mirageglobe/yalc/actions/workflows/ci.yml)
 
@@ -29,7 +29,7 @@ A JavaScript library for converting between Gregorian (solar) and Chinese lunar 
 ### Node.js
 
 ```javascript
-const { solarToLunar, lunarToSolar } = require('./yalc.js');
+const { solarToLunar, lunarToSolar } = require('./soluna.js');
 
 // Solar to Lunar — Date Object
 const result1 = solarToLunar(new Date());
@@ -63,12 +63,12 @@ console.log(solar2.solar);
 
 ### Browser
 
-Copy `yalc.js` into your project and include it via a script tag. The library is available as `window.LunarCalendarFunctional`.
+Copy `soluna.js` into your project and include it via a script tag. The library is available as `window.Soluna`.
 
 ```html
-<script src="yalc.js"></script>
+<script src="soluna.js"></script>
 <script>
-  const { solarToLunar, lunarToSolar } = window.LunarCalendarFunctional;
+  const { solarToLunar, lunarToSolar } = window.Soluna;
 
   const result = solarToLunar(new Date());
   console.log(result.lunar);
