@@ -16,7 +16,7 @@ A clear description of the bug.
 
 ## Steps to Reproduce
 ```javascript
-const { solarToLunar } = require('./yalc.js');
+const { solarToLunar } = require('./soluna.js');
 const result = solarToLunar(new Date('YYYY-MM-DD'));
 console.log(result);
 ```

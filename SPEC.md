@@ -11,7 +11,7 @@ supports node.js (CommonJS) and browser (window global).
 ## architecture
 
 ```
-yalc/
+soluna/
 ├── examples/
 │   ├── run.js           # dev runner (3-day view)
 │   └── test-ui.html     # browser-based visual test UI
@@ -25,7 +25,7 @@ yalc/
 └── package.json         # node metadata, AVA config, npm publish files list
 ```
 
-### module layout (within yalc.js)
+### module layout (within soluna.js)
 
 | section | description |
 | :--- | :--- |
@@ -136,11 +136,11 @@ CI runs on every PR via GitHub Actions:
 | check | detail |
 | :--- | :--- |
 | tests | AVA on Node.js 18, 20, 22 |
-| lint | ESLint (`npx eslint yalc.js`) |
+| lint | ESLint (`npx eslint soluna.js`) |
 | security | CodeQL scanning |
 | dependencies | Dependabot automated updates |
 
-pre-PR checklist: `make test` + `npx eslint yalc.js`.
+pre-PR checklist: `make test` + `npx eslint soluna.js`.
 
 ---
 
@@ -148,7 +148,7 @@ pre-PR checklist: `make test` + `npx eslint yalc.js`.
 
 | decision | choice | why |
 | :--- | :--- | :--- |
-| single-file library | `yalc.js` for all code | library is self-contained domain math with no external dependencies; splitting would add indirection without benefit at this scale |
+| single-file library | `soluna.js` for all code | library is self-contained domain math with no external dependencies; splitting would add indirection without benefit at this scale |
 | lookup table for lunar data | `LUNAR_INFO` hex array | precomputed data from established sources (1900–2100); astronomical recalculation would be far more complex and error-prone for a utility library |
 | functional paradigm | pure functions, no mutation | easier unit testing; each conversion step is independently verifiable; immutable inputs prevent subtle date mutation bugs |
 | solar term approximation | simplified formula (±1 day) | acceptable for pillar boundary detection; VSOP87 is overkill for this use case |
@@ -173,15 +173,15 @@ pre-PR checklist: `make test` + `npx eslint yalc.js`.
 
 ### near term
 
-- [ ] `[yalc]` npm publish pipeline via GitHub Actions — prerequisite for consumers to `npm install` the library `[easy]`
-- [ ] `[yalc]` populate `solarTerms` field in API output (currently empty string) `[medium]`
-- [ ] `[yalc]` add ESLint to `make test` so lint runs with the test suite `[easy]`
-- [ ] `[yalc]` expand test coverage for stem-branch / BaZi pillar accuracy across edge-case years `[medium]`
-- [ ] `[yalc]` validate leap month input in `lunarToSolar` (guard against invalid leap month for years with no leap) `[easy]`
+- [ ] `[soluna]` npm publish pipeline via GitHub Actions — prerequisite for consumers to `npm install` the library `[easy]`
+- [ ] `[soluna]` populate `solarTerms` field in API output (currently empty string) `[medium]`
+- [ ] `[soluna]` add ESLint to `make test` so lint runs with the test suite `[easy]`
+- [ ] `[soluna]` expand test coverage for stem-branch / BaZi pillar accuracy across edge-case years `[medium]`
+- [ ] `[soluna]` validate leap month input in `lunarToSolar` (guard against invalid leap month for years with no leap) `[easy]`
 
 ### ideas
 
-- [ ] `[yalc]` TypeScript type definitions (`yalc.d.ts`) for consumer projects `[easy]`
-- [ ] `[yalc]` solar terms lookup helper: `getSolarTermsForYear(year)` returning all 24 dates `[medium]`
-- [ ] `[yalc]` timezone-aware mode (currently assumes local time; could accept explicit UTC offset) `[hard]`
-- [ ] `[yalc]` CLI wrapper (`npx yalc <date>`) for quick lookups `[medium]`
+- [ ] `[soluna]` TypeScript type definitions (`soluna.d.ts`) for consumer projects `[easy]`
+- [ ] `[soluna]` solar terms lookup helper: `getSolarTermsForYear(year)` returning all 24 dates `[medium]`
+- [ ] `[soluna]` timezone-aware mode (currently assumes local time; could accept explicit UTC offset) `[hard]`
+- [ ] `[soluna]` CLI wrapper (`npx soluna <date>`) for quick lookups `[medium]`

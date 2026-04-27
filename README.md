@@ -1,6 +1,6 @@
 # Soluna
 
-[![CI](https://github.com/mirageglobe/yalc/actions/workflows/ci.yml/badge.svg)](https://github.com/mirageglobe/yalc/actions/workflows/ci.yml)
+[![CI](https://github.com/mirageglobe/soluna/actions/workflows/ci.yml/badge.svg)](https://github.com/mirageglobe/soluna/actions/workflows/ci.yml)
 
 A JavaScript library for converting between Gregorian (solar) and Chinese lunar calendar dates.
 
@@ -24,7 +24,7 @@ A JavaScript library for converting between Gregorian (solar) and Chinese lunar 
 
 ## Quick Start
 
-> **Note:** npm publish is not yet set up. Until then, copy `yalc.js` directly into your project.
+> **Note:** npm publish is not yet set up. Until then, copy `soluna.js` directly into your project.
 
 ### Node.js
 
