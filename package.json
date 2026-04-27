@@ -3,11 +3,16 @@
   "version": "2.0.0",
   "description": "Yet Another Lunar Calendar - JavaScript library for converting between Gregorian and Chinese lunar calendar dates",
   "main": "yalc.js",
+  "files": [
+    "yalc.js",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "test": "ava",
     "test:watch": "ava --watch",
     "test:verbose": "ava --verbose",
-    "dev": "node run.js"
+    "dev": "node examples/run.js"
   },
   "keywords": [
     "lunar",
@@ -37,7 +42,7 @@
   },
   "ava": {
     "files": [
-      "test.js"
+      "test/yalc.test.js"
     ],
     "verbose": true
   }

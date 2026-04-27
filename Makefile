@@ -18,10 +18,10 @@ install: ## Install project dependencies
 	npm install
 
 run: ## Run the example test runner (run.js)
-	node run.js
+	node examples/run.js
 
 ui: ## Launch the test UI in the default browser
-	open test-ui.html
+	open examples/test-ui.html
 
 test: ## Run all tests using AVA
 	npm test
