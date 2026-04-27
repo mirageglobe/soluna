@@ -1051,7 +1051,7 @@ if (typeof module !== 'undefined' && module.exports) {
     calculateSolarFromLunar
   };
 } else if (typeof window !== 'undefined') {
-  window.LunarCalendarFunctional = {
+  window.Soluna = {
     solarToLunar,
     lunarToSolar,
     getTimePeriod,

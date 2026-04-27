@@ -31,7 +31,7 @@
  */
 
 const test = require('ava');
-const { solarToLunar, lunarToSolar, getTimePeriod } = require('./yalc.js');
+const { solarToLunar, lunarToSolar, getTimePeriod } = require('../soluna.js');
 
 // ===== BASIC SOLAR TO LUNAR CONVERSION TESTS =====
 

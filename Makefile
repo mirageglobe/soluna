@@ -30,7 +30,7 @@ test-watch: ## Run tests in watch mode
 	npx ava --watch
 
 today: ## Show lunar and BaZi info for today's date
-	@node -e "const { solarToLunar } = require('./yalc.js'); \
+	@node -e "const { solarToLunar } = require('./soluna.js'); \
 	const r = solarToLunar(new Date()); \
 	const p = n => String(n).padStart(2, '0'); \
 	const timeStr = r.solar.time ? ' ' + p(r.solar.time.hour) + ':' + p(r.solar.time.minute) + ':' + p(r.solar.time.second) : ''; \

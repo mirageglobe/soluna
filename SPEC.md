@@ -1,4 +1,4 @@
-# YALC — Technical Specification
+# Soluna — Technical Specification
 
 ## overview
 
@@ -19,8 +19,8 @@ yalc/
 │   ├── yalunar-legacy.js
 │   └── yalunar-legacy-refactor.js
 ├── test/
-│   └── yalc.test.js     # AVA test suite
-├── yalc.js              # entire library — constants, utilities, core, public API
+│   └── soluna.test.js   # AVA test suite
+├── soluna.js            # entire library — constants, utilities, core, public API
 ├── Makefile             # build/dev targets
 └── package.json         # node metadata, AVA config, npm publish files list
 ```
@@ -35,7 +35,7 @@ yalc/
 | core conversion | `calculateLunarFromSolar`, `calculateSolarFromLunar`, `calculateStemBranch`, `getSolarTermDay` |
 | festival lookup | `getSolarFestival`, `getLunarFestival`, `isSanniangShaDay` |
 | public API | `solarToLunar`, `lunarToSolar` |
-| module export | dual: `module.exports` (CommonJS) and `window.LunarCalendarFunctional` (browser global) |
+| module export | dual: `module.exports` (CommonJS) and `window.Soluna` (browser global) |
 
 ---
 

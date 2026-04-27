@@ -1,10 +1,10 @@
 {
-  "name": "yalc",
+  "name": "soluna",
   "version": "2.0.0",
-  "description": "Yet Another Lunar Calendar - JavaScript library for converting between Gregorian and Chinese lunar calendar dates",
-  "main": "yalc.js",
+  "description": "JavaScript library for converting between Gregorian (solar) and Chinese lunar calendar dates",
+  "main": "soluna.js",
   "files": [
-    "yalc.js",
+    "soluna.js",
     "README.md",
     "LICENSE"
   ],
@@ -22,7 +22,9 @@
     "gregorian",
     "zodiac",
     "conversion",
-    "date"
+    "date",
+    "bazi",
+    "ganzhi"
   ],
   "author": "Jimmy Lim <mirageglobe@gmail.com>",
   "license": "Apache-2.0",
@@ -42,7 +44,7 @@
   },
   "ava": {
     "files": [
-      "test/yalc.test.js"
+      "test/soluna.test.js"
     ],
     "verbose": true
   }

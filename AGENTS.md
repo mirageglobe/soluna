@@ -16,8 +16,8 @@ see [SPEC.md](SPEC.md) for architecture, data model, core algorithms, and roadma
 
 | file | owns |
 | :--- | :--- |
-| `yalc.js` | entire library — constants, utilities, conversion core, public API, module export |
-| `test/yalc.test.js` | AVA test suite; covers public API only (`solarToLunar`, `lunarToSolar`) |
+| `soluna.js` | entire library — constants, utilities, conversion core, public API, module export |
+| `test/soluna.test.js` | AVA test suite; covers public API only (`solarToLunar`, `lunarToSolar`) |
 | `examples/run.js` | dev runner; 3-day demo output — not part of the public API |
 | `examples/test-ui.html` | browser-based visual verification; standalone, no build step |
 | `legacy/yalunar-legacy.js` | legacy reference — do not modify or import |
