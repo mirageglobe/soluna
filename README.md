@@ -10,43 +10,37 @@ A JavaScript library for converting between Gregorian (solar) and Chinese lunar 
 
 ## Features
 
-- ✅ **Solar to Lunar** conversion
-- ✅ **Lunar to Solar** conversion (with leap month support)
-- ✅ **Chinese zodiac animals** (12-year cycle)
-- ✅ **Time periods** (时辰) - Traditional 12 two-hour periods
-- ✅ **Stem-Branch system** (干支) - Year, month, day pillars
-- ✅ **Stem-Branch system** (干支) - Year, month, day pillars
-- ✅ **BaZi (Eight Characters)** - Precise Month Pillar calculation using Solar Terms (24 Jie Qi)
-- ✅ **Lunar day formatting** - Chinese character representation
-- ✅ **Festival detection** - Solar, lunar, and religious festivals
-- ✅ **Date range:** 1900-2100
+- **Solar to Lunar** conversion
+- **Lunar to Solar** conversion (with leap month support)
+- **Chinese zodiac animals** (12-year cycle)
+- **Time periods** (时辰) - Traditional 12 two-hour periods
+- **Stem-Branch system** (干支) - Year, month, day pillars
+- **BaZi (Eight Characters)** - Precise Month Pillar calculation using Solar Terms (24 Jie Qi)
+- **Lunar day formatting** - Chinese character representation
+- **Festival detection** - Solar, lunar, and religious festivals
+- **Date range:** 1900-2100
 
 ---
 
 ## Quick Start
 
-### Installation
+> **Note:** npm publish is not yet set up. Until then, copy `yalc.js` directly into your project.
 
-```bash
-npm install
-```
-
-### Usage
+### Node.js
 
 ```javascript
 const { solarToLunar, lunarToSolar } = require('./yalc.js');
 
-// 1. Solar to Lunar (Flexible Inputs)
-// Format A: Date Object
+// Solar to Lunar — Date Object
 const result1 = solarToLunar(new Date());
 
-// Format B: Numerical arguments (Year, Month, Day, Hour, Min, Sec)
+// Solar to Lunar — Numerical (Year, Month, Day, Hour, Min, Sec)
 const result2 = solarToLunar(2024, 12, 28, 15, 30, 0);
 
 console.log(result2.lunar);
 // Output: { year: 2024, month: 11, day: 28, dayName: '廿八', ... }
 
-// 2. BaZi (Eight Characters) with Hour Pillar
+// BaZi (Eight Characters) with Hour Pillar
 console.log(result2.baZi);
 /* Output:
 {
@@ -57,16 +51,34 @@ console.log(result2.baZi);
 }
 */
 
-// 3. Lunar to Solar (Backward Compatible & Numerical)
-// Format A: Date Object + isLeap
+// Lunar to Solar — Date Object + isLeap
 const solar1 = lunarToSolar(new Date(2012, 3, 7), false);
 
-// Format B: Numerical (Year, Month, Day, isLeap, Hour, Min, Sec)
+// Lunar to Solar — Numerical (Year, Month, Day, isLeap, Hour, Min, Sec)
 const solar2 = lunarToSolar(2012, 4, 7, false, 12, 0, 0);
 
 console.log(solar2.solar);
 // Output: { year: 2012, month: 4, day: 27, time: { hour: 12, ... }, ... }
 ```
+
+### Browser
+
+Copy `yalc.js` into your project and include it via a script tag. The library is available as `window.LunarCalendarFunctional`.
+
+```html
+<script src="yalc.js"></script>
+<script>
+  const { solarToLunar, lunarToSolar } = window.LunarCalendarFunctional;
+
+  const result = solarToLunar(new Date());
+  console.log(result.lunar);
+</script>
+```
+
+### Requirements
+
+- Node.js >= 14, or any modern browser
+- No build step or bundler required
 
 ---
 
@@ -99,124 +111,20 @@ The library returns festival information in the `festivals` object:
 ## Testing
 
 ```bash
-# Run tests (25 tests including Mid-Autumn Festival and BaZi accuracy)
-npm test
-
-# Run tests in watch mode
-npx ava --watch
-
-# Run tests with verbose output
-npx ava --verbose
+make test
 ```
-
----
-
-## Development
-
-```bash
-# Run the example test runner (shows Today overview)
-node run.js
-
-# Use Makefile for quick checks
-make today            # Show lunar/BaZi for right now
-make run              # Same as node run.js
-make run              # Same as node run.js
-make test             # Run all tests
-make ui               # Launch Test UI in browser
-```
-
-## Test UI (New)
-
-A modern, glassmorphism-styled test interface is available for visual verification.
-
-1. Run `make ui` to open the interface.
-2. **Solar to Lunar**: Select any date to see the lunar date, zodiac, and BaZi pillars.
-3. **Lunar to Solar**: Input a lunar date to convert back to Gregorian.
-4. **BaZi Grid**: Visualize the Four Pillars with correct Solar Term-based Month Pillars.
 
 ---
 
 ## Known Issues
 
-⚠️ **Time Boundary Issue**: The hour 23:00-01:00 (子时/Rat time) is considered part of the **next day** in traditional Chinese timekeeping. This is handled automatically by the library but may seem counterintuitive.
-
-~~⚠️ **2026 Conversion Bug**: There is a known bug where January 1, 2026 converts incorrectly. Expected: Lunar 2025-11-13, but returns Lunar 2025-6-16. Investigation ongoing.~~ **FIXED** ✅
-
----
-
-## Architecture
-
-This project uses **functional programming** principles:
-
-- **Pure functions** - Easier testing and debugging
-- **Immutable data** - Predictable behavior
-- **Function composition** - Better code reusability
-- **No side effects** - Easier to reason about
-
----
-
-## File Structure
-
-```
-yalc/
-├── .github/
-│   ├── dependabot.yml           # Automated dependency updates
-│   ├── PULL_REQUEST_TEMPLATE.md # PR checklist
-│   ├── ISSUE_TEMPLATE/          # Bug/feature templates
-│   └── workflows/
-│       └── ci.yml               # Tests + Lint + Coverage
-├── yalc.js                      # Main library (functional edition)
-├── test.js                      # AVA test suite (25 tests)
-├── run.js                       # Test runner (3-day view + examples)
-├── test-ui.html                 # Modern Test UI (HTML/CSS/JS)
-├── Makefile                     # Build/dev shortcuts (make ui, make today)
-├── .eslintrc.json               # ESLint configuration
-└── package.json                 # Dependencies
-```
+**Time Boundary**: The hour 23:00-01:00 (子时/Rat time) is considered part of the **next day** in traditional Chinese timekeeping. This is handled automatically by the library but may seem counterintuitive.
 
 ---
 
 ## Contributing
 
-Contributions are welcome! The project uses automated CI checks:
-
-- **Tests**: Run on Node.js 18, 20, 22
-- **ESLint**: Code style checking
-- **CodeQL**: Security vulnerability scanning
-- **Dependabot**: Automated dependency updates
-
-Before submitting a PR:
-```bash
-npm test              # Run tests
-npx eslint yalc.js    # Check code style
-```
-
----
-
-## How It Works
-
-### Lunar Information Encoding
-
-Each lunar year (1900-2100) is encoded as a 20-bit hexadecimal value in the `LUNAR_INFO` array:
-
-```
-Bit Position:  20  19-8 (12 bits)  7-5   4-1
-               ─   ───────────────  ───   ───
-               L   M1 M2 ... M12    ---   Leap Month
-               │   │                      │
-               │   └─ Month sizes ────────│── 1=30 days, 0=29 days
-               │      (Jan to Dec)        │
-               └─ Leap month size         └── 0=none, 1-12=which month
-
-Example: 0x095b0 for year 1980 (庚申年 - Year of the Monkey)
-
-  Hex:    0x095b0
-  Binary: 0000 1001 0101 1011 0000
-                              └─── Bits 1-4: 0000 = No leap month
-          └─── Bit 17: 0 = N/A (no leap month this year)
-
-  Month sizes (bits 5-16): 30,29,29,30,29,30,29,30,30,29,30,30 days
-```
+Contributions are welcome. Before submitting a PR, run `make test`. See [SPEC.md](SPEC.md) for architecture and build details.
 
 ---
 
@@ -231,3 +139,5 @@ Example: 0x095b0 for year 1980 (庚申年 - Year of the Monkey)
 ## License
 
 Apache License 2.0 - See [LICENSE](LICENSE) file for details
+
+See [SPEC.md](SPEC.md#roadmap) for the project roadmap.

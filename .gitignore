@@ -1,6 +1,7 @@
 # ===== Editor & System Files =====
 tags
 .aider*
+.claude/
 .DS_Store
 Thumbs.db
 *.swp
@@ -18,10 +19,8 @@ npm-debug.log*
 node_modules/
 
 # ===== Package Managers =====
-# Yarn (project uses npm)
 yarn-debug.log*
 yarn-error.log*
-yarn.lock
 .yarn-integrity
 .pnpm-debug.log*
 
@@ -43,7 +42,7 @@ build/
 
 # ===== Cache & Temporary Files =====
 .cache/
-.npm
+.npm/
 .eslintcache
 .node_repl_history
 *.pid
