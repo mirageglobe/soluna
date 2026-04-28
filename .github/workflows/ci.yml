@@ -1,6 +1,3 @@
-# CI Workflow - Tests, Linting, and Code Quality
-# Runs on every push and pull request
-
 name: CI
 
 permissions:
@@ -8,7 +5,6 @@ permissions:
 
 on:
   push:
-    branches: [main, master]
   pull_request:
     branches: [main, master]
 
@@ -16,79 +12,35 @@ jobs:
   test:
     name: Test (Node ${{ matrix.node-version }})
     runs-on: ubuntu-latest
-    
+
     strategy:
       matrix:
         node-version: [18.x, 20.x, 22.x]
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
 
-      - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+          cache: npm
 
-      - name: Install dependencies
-        run: npm ci
+      - run: npm ci
 
-      - name: Run tests
-        run: npm test
+      - run: npm test
 
-  lint:
-    name: Lint & Code Quality
+  syntax:
+    name: Syntax check
     runs-on: ubuntu-latest
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
         with:
           node-version: '20.x'
-          cache: 'npm'
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Install ESLint
-        run: npm install eslint --save-dev
-
-      - name: Run ESLint
-        run: npx eslint soluna.js test/soluna.test.js examples/run.js --format stylish
-        continue-on-error: true
-
-      - name: Check JavaScript syntax
-        run: node --check soluna.js && node --check test/soluna.test.js && node --check examples/run.js
-
-  coverage:
-    name: Test Coverage
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20.x'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Install NYC (coverage)
-        run: npm install nyc --save-dev
-
-      - name: Run tests with coverage
-        run: npx nyc --reporter=text npm test
-
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v4
-        with:
-          fail_ci_if_error: false
-        continue-on-error: true
+      - run: |
+          node --check soluna.js
+          node --check test/soluna.test.js
+          node --check examples/run.js
