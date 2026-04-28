@@ -9,6 +9,7 @@
     "LICENSE"
   ],
   "scripts": {
+    "lint": "biome check soluna.js test/soluna.test.mjs examples/run.js",
     "test": "node --test test/soluna.test.mjs",
     "test:watch": "node --test --watch test/soluna.test.mjs",
     "dev": "node examples/run.js"
@@ -38,5 +39,7 @@
   "engines": {
     "node": ">=22.0.0"
   },
-  "devDependencies": {}
+  "devDependencies": {
+    "@biomejs/biome": "^2.4.13"
+  }
 }

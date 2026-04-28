@@ -125,33 +125,33 @@ const MONTH_NAMES = ['正', '二', '三', '四', '五', '六', '七', '八', '�
  * Note: 子时 (23:00-01:00) spans midnight and belongs to the next day
  */
 const TIME_PERIODS = [
-  { name: '子时', zodiac: '鼠', startHour: 23, endHour: 1, dayOffset: 1, branch: '子' },  // Rat: 11pm-1am
-  { name: '丑时', zodiac: '牛', startHour: 1, endHour: 3, dayOffset: 0, branch: '丑' },   // Ox: 1am-3am
-  { name: '寅时', zodiac: '虎', startHour: 3, endHour: 5, dayOffset: 0, branch: '寅' },   // Tiger: 3am-5am
-  { name: '卯时', zodiac: '兔', startHour: 5, endHour: 7, dayOffset: 0, branch: '卯' },   // Rabbit: 5am-7am
-  { name: '辰时', zodiac: '龙', startHour: 7, endHour: 9, dayOffset: 0, branch: '辰' },   // Dragon: 7am-9am
-  { name: '巳时', zodiac: '蛇', startHour: 9, endHour: 11, dayOffset: 0, branch: '巳' },  // Snake: 9am-11am
+  { name: '子时', zodiac: '鼠', startHour: 23, endHour: 1, dayOffset: 1, branch: '子' }, // Rat: 11pm-1am
+  { name: '丑时', zodiac: '牛', startHour: 1, endHour: 3, dayOffset: 0, branch: '丑' }, // Ox: 1am-3am
+  { name: '寅时', zodiac: '虎', startHour: 3, endHour: 5, dayOffset: 0, branch: '寅' }, // Tiger: 3am-5am
+  { name: '卯时', zodiac: '兔', startHour: 5, endHour: 7, dayOffset: 0, branch: '卯' }, // Rabbit: 5am-7am
+  { name: '辰时', zodiac: '龙', startHour: 7, endHour: 9, dayOffset: 0, branch: '辰' }, // Dragon: 7am-9am
+  { name: '巳时', zodiac: '蛇', startHour: 9, endHour: 11, dayOffset: 0, branch: '巳' }, // Snake: 9am-11am
   { name: '午时', zodiac: '马', startHour: 11, endHour: 13, dayOffset: 0, branch: '午' }, // Horse: 11am-1pm
   { name: '未时', zodiac: '羊', startHour: 13, endHour: 15, dayOffset: 0, branch: '未' }, // Goat: 1pm-3pm
   { name: '申时', zodiac: '猴', startHour: 15, endHour: 17, dayOffset: 0, branch: '申' }, // Monkey: 3pm-5pm
   { name: '酉时', zodiac: '鸡', startHour: 17, endHour: 19, dayOffset: 0, branch: '酉' }, // Rooster: 5pm-7pm
   { name: '戌时', zodiac: '狗', startHour: 19, endHour: 21, dayOffset: 0, branch: '戌' }, // Dog: 7pm-9pm
-  { name: '亥时', zodiac: '猪', startHour: 21, endHour: 23, dayOffset: 0, branch: '亥' }  // Pig: 9pm-11pm
+  { name: '亥时', zodiac: '猪', startHour: 21, endHour: 23, dayOffset: 0, branch: '亥' } // Pig: 9pm-11pm
 ];
 
 const TIME_DESCRIPTIONS = {
-  '子时': '夜半，又名子夜、中夜',
-  '丑时': '鸡鸣，又名荒鸡',
-  '寅时': '平旦，又称黎明、早晨、日旦',
-  '卯时': '卯时，又名日始、破晓、旭日',
-  '辰时': '食时，又名早食',
-  '巳时': '隅中，又名日禺',
-  '午时': '日中，又名日正、中午',
-  '未时': '日昳，又名日跌、日央',
-  '申时': '晡时，又名日铺、夕食',
-  '酉时': '日入，又名日落、日沉、傍晚',
-  '戌时': '黄昏，又名日夕、日暮、日晚',
-  '亥时': '人定，又名定昏'
+  子时: '夜半，又名子夜、中夜',
+  丑时: '鸡鸣，又名荒鸡',
+  寅时: '平旦，又称黎明、早晨、日旦',
+  卯时: '卯时，又名日始、破晓、旭日',
+  辰时: '食时，又名早食',
+  巳时: '隅中，又名日禺',
+  午时: '日中，又名日正、中午',
+  未时: '日昳，又名日跌、日央',
+  申时: '晡时，又名日铺、夕食',
+  酉时: '日入，又名日落、日沉、傍晚',
+  戌时: '黄昏，又名日夕、日暮、日晚',
+  亥时: '人定，又名定昏'
 };
 
 // ===== FESTIVAL DATA =====
@@ -171,9 +171,9 @@ const SOLAR_FESTIVALS = {
   '0504': { name: '青年节', isHoliday: false, english: 'Youth Day' },
   '0601': { name: '儿童节', isHoliday: false, english: "Children's Day" },
   '0910': { name: '教师节', isHoliday: false, english: "Teachers' Day" },
-  '1001': { name: '国庆节', isHoliday: true, english: 'National Day' },
-  '1224': { name: '平安夜', isHoliday: false, english: 'Christmas Eve' },
-  '1225': { name: '圣诞节', isHoliday: false, english: 'Christmas Day' }
+  1001: { name: '国庆节', isHoliday: true, english: 'National Day' },
+  1224: { name: '平安夜', isHoliday: false, english: 'Christmas Eve' },
+  1225: { name: '圣诞节', isHoliday: false, english: 'Christmas Day' }
 };
 
 /**
@@ -221,7 +221,7 @@ const LUNAR_FESTIVALS = {
   '0624': { name: '关公圣旦', isHoliday: false, english: 'Guan Yu Birthday' },
   // Seventh month
   '0701': { name: '四始吉日', isHoliday: false, english: 'Auspicious Day' },
-  '0707': { name: '七夕', isHoliday: false, english: 'Qixi Festival', extra: 'Chinese Valentine\'s Day' },
+  '0707': { name: '七夕', isHoliday: false, english: 'Qixi Festival', extra: "Chinese Valentine's Day" },
   '0715': { name: '中元节', isHoliday: false, english: 'Ghost Festival', extra: '盂兰盆节' },
   '0718': { name: '王母娘娘圣诞', isHoliday: false, english: 'Queen Mother of the West Birthday' },
   '0719': { name: '值年太岁圣旦', isHoliday: false, english: 'Tai Sui Birthday' },
@@ -232,19 +232,19 @@ const LUNAR_FESTIVALS = {
   '0909': { name: '重阳节', isHoliday: false, english: 'Double Ninth Festival' },
   '0919': { name: '观世音菩萨出家日', isHoliday: false, english: 'Guanyin Renunciation Day' },
   // Tenth month
-  '1001': { name: '寒衣节', isHoliday: false, english: 'Cold Clothes Festival', extra: '祭祖节' },
-  '1015': { name: '下元节', isHoliday: false, english: 'Lower Yuan Festival', extra: '水官大帝诞' },
+  1001: { name: '寒衣节', isHoliday: false, english: 'Cold Clothes Festival', extra: '祭祖节' },
+  1015: { name: '下元节', isHoliday: false, english: 'Lower Yuan Festival', extra: '水官大帝诞' },
   // Tenth month (Buddhist)
-  '1005': { name: '达摩祖师圣旦', isHoliday: false, english: 'Bodhidharma Birthday' },
+  1005: { name: '达摩祖师圣旦', isHoliday: false, english: 'Bodhidharma Birthday' },
   // Eleventh month
-  '1117': { name: '阿弥陀佛圣旦', isHoliday: false, english: 'Amitabha Buddha Birthday' },
-  '1119': { name: '观世音菩萨诞', isHoliday: false, english: 'Guanyin Day', extra: '南海观音入海日' },
+  1117: { name: '阿弥陀佛圣旦', isHoliday: false, english: 'Amitabha Buddha Birthday' },
+  1119: { name: '观世音菩萨诞', isHoliday: false, english: 'Guanyin Day', extra: '南海观音入海日' },
   // Twelfth month (腊月)
-  '1208': { name: '腊八节', isHoliday: false, english: 'Laba Festival', extra: '释迦牟尼成道日' },
-  '1216': { name: '尾牙', isHoliday: false, english: 'Last Ya Festival', extra: '谢地主日' },
-  '1223': { name: '小年', isHoliday: false, english: 'Little New Year' },
-  '1224': { name: '送神日', isHoliday: false, english: 'Sending Gods Day' },
-  '1225': { name: '天官巡人间', isHoliday: false, english: 'Heaven Official Inspection' },
+  1208: { name: '腊八节', isHoliday: false, english: 'Laba Festival', extra: '释迦牟尼成道日' },
+  1216: { name: '尾牙', isHoliday: false, english: 'Last Ya Festival', extra: '谢地主日' },
+  1223: { name: '小年', isHoliday: false, english: 'Little New Year' },
+  1224: { name: '送神日', isHoliday: false, english: 'Sending Gods Day' },
+  1225: { name: '天官巡人间', isHoliday: false, english: 'Heaven Official Inspection' },
   // Special: Last day of year (varies 29 or 30)
   '0100': { name: '除夕', isHoliday: true, english: "New Year's Eve" }
 };
@@ -256,46 +256,20 @@ const LUNAR_FESTIVALS = {
 const SANNIANG_SHA_DAYS = [3, 7, 13, 18, 22, 27];
 
 /**
- * 24 Solar Terms (二十四节气)
- * Traditional Chinese calendar divisions based on sun's position
- * Two per month, roughly 15 days apart
- */
-const SOLAR_TERMS = [
-  { name: '小寒', english: 'Minor Cold', month: 1 },
-  { name: '大寒', english: 'Major Cold', month: 1 },
-  { name: '立春', english: 'Start of Spring', month: 2 },
-  { name: '雨水', english: 'Rain Water', month: 2 },
-  { name: '惊蛰', english: 'Awakening of Insects', month: 3 },
-  { name: '春分', english: 'Spring Equinox', month: 3 },
-  { name: '清明', english: 'Clear and Bright', month: 4 },
-  { name: '谷雨', english: 'Grain Rain', month: 4 },
-  { name: '立夏', english: 'Start of Summer', month: 5 },
-  { name: '小满', english: 'Grain Buds', month: 5 },
-  { name: '芒种', english: 'Grain in Ear', month: 6 },
-  { name: '夏至', english: 'Summer Solstice', month: 6 },
-  { name: '小暑', english: 'Minor Heat', month: 7 },
-  { name: '大暑', english: 'Major Heat', month: 7 },
-  { name: '立秋', english: 'Start of Autumn', month: 8 },
-  { name: '处暑', english: 'End of Heat', month: 8 },
-  { name: '白露', english: 'White Dew', month: 9 },
-  { name: '秋分', english: 'Autumn Equinox', month: 9 },
-  { name: '寒露', english: 'Cold Dew', month: 10 },
-  { name: '霜降', english: 'Frost Descent', month: 10 },
-  { name: '立冬', english: 'Start of Winter', month: 11 },
-  { name: '小雪', english: 'Minor Snow', month: 11 },
-  { name: '大雪', english: 'Major Snow', month: 12 },
-  { name: '冬至', english: 'Winter Solstice', month: 12 }
-];
-
-/**
  * Solar Term constants for calculation
  * Base D constant for 20th century (1900-1999) and 21st century (2000-2099)
  * Used in formula: D = (Year - 1900) * 0.2422 + C
  */
 const SOLAR_TERM_INFO = [
   // 小寒, 大寒, 立春, 雨水, 惊蛰, 春分, 清明, 谷雨, 立夏, 小满, 芒种, 夏至, 小暑, 大暑, 立秋, 处暑, 白露, 秋分, 寒露, 霜降, 立冬, 小雪, 大雪, 冬至
-  [5.4055, 20.12, 3.87, 18.73, 5.63, 20.646, 4.81, 20.1, 5.52, 21.04, 5.678, 21.37, 7.108, 22.83, 7.5, 23.13, 7.646, 23.042, 8.318, 23.438, 7.438, 22.36, 7.18, 21.94], // 1900-1999
-  [5.4055, 20.12, 4.15, 18.73, 5.63, 20.646, 5.11, 20.1, 5.52, 21.04, 5.678, 21.37, 7.108, 22.83, 7.5, 23.13, 7.646, 23.042, 8.318, 23.438, 7.438, 22.36, 7.18, 21.94]  // 2000-2099 (Adjusted slightly)
+  [
+    5.4055, 20.12, 3.87, 18.73, 5.63, 20.646, 4.81, 20.1, 5.52, 21.04, 5.678, 21.37, 7.108, 22.83, 7.5, 23.13, 7.646,
+    23.042, 8.318, 23.438, 7.438, 22.36, 7.18, 21.94
+  ], // 1900-1999
+  [
+    5.4055, 20.12, 4.15, 18.73, 5.63, 20.646, 5.11, 20.1, 5.52, 21.04, 5.678, 21.37, 7.108, 22.83, 7.5, 23.13, 7.646,
+    23.042, 8.318, 23.438, 7.438, 22.36, 7.18, 21.94
+  ] // 2000-2099 (Adjusted slightly)
 ];
 
 // Base date for lunar calendar calculations (Jan 31, 1900)
@@ -309,12 +283,12 @@ const MILLISECONDS_PER_DAY = 86400000;
 /**
  * Check if a value is a valid Date
  */
-const isValidDate = date => date instanceof Date && !isNaN(date.getTime());
+const isValidDate = (date) => date instanceof Date && !Number.isNaN(date.getTime());
 
 /**
  * Get lunar year information from lookup table
  */
-const getLunarYearInfo = year => LUNAR_INFO[year - 1900];
+const getLunarYearInfo = (year) => LUNAR_INFO[year - 1900];
 
 /**
  * Calculate total days in a lunar year
@@ -327,14 +301,14 @@ const getLunarYearInfo = year => LUNAR_INFO[year - 1900];
  * @param {number} year - Lunar year (1900-2049)
  * @returns {number} Total days in the lunar year (353-385)
  */
-const calculateLunarYearDays = year => {
+const calculateLunarYearDays = (year) => {
   const yearInfo = getLunarYearInfo(year);
   let totalDays = 348; // Base: 12 months × 29 days
 
   // Check each bit (0x8000 to 0x10) to determine 30-day months
   // Bit set to 1 = 30 days (big month), 0 = 29 days (small month)
   for (let i = 0x8000; i > 0x8; i >>= 1) {
-    totalDays += (yearInfo & i) ? 1 : 0;
+    totalDays += yearInfo & i ? 1 : 0;
   }
 
   return totalDays + calculateLeapMonthDays(year);
@@ -343,17 +317,17 @@ const calculateLunarYearDays = year => {
 /**
  * Get which month is the leap month (0 if none)
  */
-const getLeapMonth = year => getLunarYearInfo(year) & 0xf;
+const getLeapMonth = (year) => getLunarYearInfo(year) & 0xf;
 
 /**
  * Calculate days in leap month (0 if no leap month)
  */
-const calculateLeapMonthDays = year => {
+const calculateLeapMonthDays = (year) => {
   const leapMonth = getLeapMonth(year);
   if (leapMonth === 0) return 0;
 
   const yearInfo = getLunarYearInfo(year);
-  return (yearInfo & 0x10000) ? 30 : 29;
+  return yearInfo & 0x10000 ? 30 : 29;
 };
 
 /**
@@ -361,35 +335,33 @@ const calculateLeapMonthDays = year => {
  */
 const calculateMonthDays = (year, month) => {
   const yearInfo = getLunarYearInfo(year);
-  return (yearInfo & (0x10000 >> month)) ? 30 : 29;
+  return yearInfo & (0x10000 >> month) ? 30 : 29;
 };
-
-/**
- * Check if a Gregorian year is a leap year
- */
-const isLeapYear = year => year % 4 === 0 && (year % 100 !== 0 || year % 400 === 0);
 
 /**
  * Get stem-branch combination from number
  */
-const getStemBranch = num => HEAVENLY_STEMS[num % 10] + EARTHLY_BRANCHES[num % 12];
+const getStemBranch = (num) => HEAVENLY_STEMS[num % 10] + EARTHLY_BRANCHES[num % 12];
 
 /**
  * Get the Heavenly Stem for an hour based on the Day Stem and Hour Branch
  * Formula: HourStemIndex = (DayStemIndex % 5 * 2 + HourBranchIndex) % 10
  */
 const getHourStem = (dayStemIdx, hourBranchIdx) => {
-  return HEAVENLY_STEMS[(dayStemIdx % 5 * 2 + hourBranchIdx) % 10];
+  return HEAVENLY_STEMS[((dayStemIdx % 5) * 2 + hourBranchIdx) % 10];
 };
 
 /**
  * Format lunar day into Chinese characters
  */
-const formatLunarDay = day => {
+const formatLunarDay = (day) => {
   switch (day) {
-    case 10: return '初十';
-    case 20: return '二十';
-    case 30: return '三十';
+    case 10:
+      return '初十';
+    case 20:
+      return '二十';
+    case 30:
+      return '三十';
     default:
       return DAY_PREFIXES[Math.floor(day / 10)] + DAY_NAMES[day % 10];
   }
@@ -404,7 +376,7 @@ const formatLunarDay = day => {
  * @param {Date} date - The date to adjust
  * @returns {Date} Adjusted date (next day if hour is 23, same day otherwise)
  */
-const adjustForTimeZodiac = date => {
+const adjustForTimeZodiac = (date) => {
   const hour = date.getHours();
 
   // If it's 11pm (23:00), it's considered the next day in lunar calendar
@@ -422,7 +394,7 @@ const adjustForTimeZodiac = date => {
 /**
  * Get time period information for a given time
  */
-const getTimePeriod = date => {
+const getTimePeriod = (date) => {
   if (!isValidDate(date)) {
     throw new Error('Invalid date provided');
   }
@@ -440,7 +412,7 @@ const getTimePeriod = date => {
     };
   }
 
-  const timePeriod = TIME_PERIODS.find(period => hour >= period.startHour && hour < period.endHour);
+  const timePeriod = TIME_PERIODS.find((period) => hour >= period.startHour && hour < period.endHour);
 
   if (!timePeriod) {
     return {
@@ -475,7 +447,7 @@ const getTimePeriod = date => {
  * @param {Date} solarDate - Gregorian date to convert
  * @returns {Object} Lunar date info: { year, month, day, isLeap }
  */
-const calculateLunarFromSolar = solarDate => {
+const calculateLunarFromSolar = (solarDate) => {
   // Calculate total days from base date (1900/1/31)
   const dayOffset = Math.round((solarDate.valueOf() - BASE_DATE.valueOf()) / MILLISECONDS_PER_DAY);
   let remainingDays = dayOffset;
@@ -545,7 +517,15 @@ const calculateLunarFromSolar = solarDate => {
  * @param {number} second - Second (0-59)
  * @returns {Object} Solar date info: { year, month, day, hour, minute, second }
  */
-const calculateSolarFromLunar = (lunarYear, lunarMonth, lunarDay, isLeapMonth = false, hour = 0, minute = 0, second = 0) => {
+const calculateSolarFromLunar = (
+  lunarYear,
+  lunarMonth,
+  lunarDay,
+  isLeapMonth = false,
+  hour = 0,
+  minute = 0,
+  second = 0
+) => {
   let totalDays = 0;
 
   // Sum all days from 1900 to target year (exclusive)
@@ -699,7 +679,7 @@ const getLunarFestival = (month, day, year) => {
  * @param {number} day - Lunar day
  * @returns {boolean} True if it's a Sanniang Sha day
  */
-const isSanniangShaDay = day => SANNIANG_SHA_DAYS.includes(day);
+const isSanniangShaDay = (day) => SANNIANG_SHA_DAYS.includes(day);
 
 // ===== MAIN API FUNCTIONS =====
 
@@ -751,7 +731,11 @@ const solarToLunar = (solarDate, month, day, hour = 0, minute = 0, second = 0) =
   const timePeriod = getTimePeriod(date);
 
   // Calculate stem-branch information
-  const stemBranchInfo = calculateStemBranch(normalizedDate.getFullYear(), normalizedDate.getMonth(), normalizedDate.getDate());
+  const stemBranchInfo = calculateStemBranch(
+    normalizedDate.getFullYear(),
+    normalizedDate.getMonth(),
+    normalizedDate.getDate()
+  );
 
   // Get festival information
   const solarFestival = getSolarFestival(normalizedDate.getMonth() + 1, normalizedDate.getDate());
@@ -789,10 +773,12 @@ const solarToLunar = (solarDate, month, day, hour = 0, minute = 0, second = 0) =
       year: { stem: stemBranchInfo.year.stem, branch: stemBranchInfo.year.branch },
       month: { stem: stemBranchInfo.month.stem, branch: stemBranchInfo.month.branch },
       day: { stem: stemBranchInfo.day.stem, branch: stemBranchInfo.day.branch },
-      hour: timePeriod ? {
-        stem: getHourStem(stemBranchInfo.day.index % 10, EARTHLY_BRANCHES.indexOf(timePeriod.branch)),
-        branch: timePeriod.branch
-      } : null
+      hour: timePeriod
+        ? {
+            stem: getHourStem(stemBranchInfo.day.index % 10, EARTHLY_BRANCHES.indexOf(timePeriod.branch)),
+            branch: timePeriod.branch
+          }
+        : null
     },
     timePeriod,
     festivals: {
@@ -822,8 +808,22 @@ const solarToLunar = (solarDate, month, day, hour = 0, minute = 0, second = 0) =
  * @param {number} [second=0] - Second (0-59)
  * @returns {Object} Comprehensive solar/lunar calendar information
  */
-const lunarToSolar = (lunarYearOrDate, lunarMonthOrLeap, lunarDayVal, isLeapMonthVal = false, hourVal = 0, minuteVal = 0, secondVal = 0) => {
-  let lunarYear, lunarMonth, lunarDay, isLeapMonth = false, hour = 0, minute = 0, second = 0;
+const lunarToSolar = (
+  lunarYearOrDate,
+  lunarMonthOrLeap,
+  lunarDayVal,
+  isLeapMonthVal = false,
+  hourVal = 0,
+  minuteVal = 0,
+  secondVal = 0
+) => {
+  let lunarYear,
+    lunarMonth,
+    lunarDay,
+    isLeapMonth = false,
+    hour = 0,
+    minute = 0,
+    second = 0;
 
   if (lunarYearOrDate instanceof Date) {
     lunarYear = lunarYearOrDate.getFullYear();
@@ -842,7 +842,9 @@ const lunarToSolar = (lunarYearOrDate, lunarMonthOrLeap, lunarDayVal, isLeapMont
     minute = minuteVal;
     second = secondVal;
   } else {
-    throw new Error('Invalid input. Use (lunarDate, isLeapMonth) or (year, month, day, isLeapMonth, hour, minute, second)');
+    throw new Error(
+      'Invalid input. Use (lunarDate, isLeapMonth) or (year, month, day, isLeapMonth, hour, minute, second)'
+    );
   }
 
   // Calculate solar information
@@ -855,9 +857,7 @@ const lunarToSolar = (lunarYearOrDate, lunarMonthOrLeap, lunarDayVal, isLeapMont
   const lunarFestival = getLunarFestival(lunarMonth, lunarDay, lunarYear);
   const sanniangSha = isSanniangShaDay(lunarDay);
 
-  const hourTimePeriod = solarInfo.hour !== undefined
-    ? getTimePeriod(new Date(2000, 0, 1, solarInfo.hour))
-    : null;
+  const hourTimePeriod = solarInfo.hour !== undefined ? getTimePeriod(new Date(2000, 0, 1, solarInfo.hour)) : null;
 
   return {
     solar: {
@@ -890,10 +890,12 @@ const lunarToSolar = (lunarYearOrDate, lunarMonthOrLeap, lunarDayVal, isLeapMont
       year: { stem: stemBranchInfo.year.stem, branch: stemBranchInfo.year.branch },
       month: { stem: stemBranchInfo.month.stem, branch: stemBranchInfo.month.branch },
       day: { stem: stemBranchInfo.day.stem, branch: stemBranchInfo.day.branch },
-      hour: hourTimePeriod ? {
-        stem: getHourStem(stemBranchInfo.day.index % 10, EARTHLY_BRANCHES.indexOf(hourTimePeriod.branch)),
-        branch: hourTimePeriod.branch
-      } : null
+      hour: hourTimePeriod
+        ? {
+            stem: getHourStem(stemBranchInfo.day.index % 10, EARTHLY_BRANCHES.indexOf(hourTimePeriod.branch)),
+            branch: hourTimePeriod.branch
+          }
+        : null
     },
     timePeriod: null,
     festivals: {
