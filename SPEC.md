@@ -174,14 +174,14 @@ pre-PR checklist: `make test` + `npx eslint soluna.js`.
 ### near term
 
 - [ ] `[soluna]` npm publish pipeline via GitHub Actions — prerequisite for consumers to `npm install` the library `[easy]`
-- [ ] `[soluna]` populate `solarTerms` field in API output (currently empty string) `[medium]`
+- [ ] `[soluna]` add ESLint config (`eslint.config.js`) and add `eslint` to devDependencies — prerequisite for lint enforcement `[easy]`
 - [ ] `[soluna]` add ESLint to `make test` so lint runs with the test suite `[easy]`
+- [ ] `[soluna]` solar terms support: `getSolarTermsForYear(year)` helper returning all 24 term dates, and populate the `solarTerms` field in API output (currently empty string) `[medium]`
 - [ ] `[soluna]` expand test coverage for stem-branch / BaZi pillar accuracy across edge-case years `[medium]`
 - [ ] `[soluna]` validate leap month input in `lunarToSolar` (guard against invalid leap month for years with no leap) `[easy]`
 
 ### ideas
 
 - [ ] `[soluna]` TypeScript type definitions (`soluna.d.ts`) for consumer projects `[easy]`
-- [ ] `[soluna]` solar terms lookup helper: `getSolarTermsForYear(year)` returning all 24 dates `[medium]`
 - [ ] `[soluna]` timezone-aware mode (currently assumes local time; could accept explicit UTC offset) `[hard]`
 - [ ] `[soluna]` CLI wrapper (`npx soluna <date>`) for quick lookups `[medium]`
