@@ -37,14 +37,14 @@
   },
   "homepage": "https://github.com/mirageglobe/soluna#readme",
   "engines": {
-    "node": ">=14.0.0"
+    "node": ">=20.0.0"
   },
   "devDependencies": {
-    "ava": "^6.4.1"
+    "ava": "^8.0.0"
   },
   "ava": {
     "files": [
-      "test/soluna.test.js"
+      "test/soluna.test.mjs"
     ],
     "verbose": true
   }

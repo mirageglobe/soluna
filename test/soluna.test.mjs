@@ -1,4 +1,7 @@
-const test = require('ava');
+import test from 'ava';
+import { createRequire } from 'module';
+
+const require = createRequire(import.meta.url);
 const { solarToLunar, lunarToSolar, getTimePeriod } = require('../soluna.js');
 
 // ===== BASIC SOLAR TO LUNAR CONVERSION TESTS =====
