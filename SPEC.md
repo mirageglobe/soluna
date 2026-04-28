@@ -136,11 +136,11 @@ CI runs on every PR via GitHub Actions:
 | check | detail |
 | :--- | :--- |
 | tests | node:test on Node.js 22, 24 |
-| lint | ESLint (`npx eslint soluna.js`) |
+| lint | Biome (`npm run lint`) |
 | security | CodeQL scanning |
 | dependencies | Dependabot automated updates |
 
-pre-PR checklist: `make test` + `npx eslint soluna.js`.
+pre-PR checklist: `make test` (runs Biome + node:test).
 
 ---
 
@@ -153,6 +153,8 @@ pre-PR checklist: `make test` + `npx eslint soluna.js`.
 | functional paradigm | pure functions, no mutation | easier unit testing; each conversion step is independently verifiable; immutable inputs prevent subtle date mutation bugs |
 | solar term approximation | simplified formula (±1 day) | acceptable for pillar boundary detection; VSOP87 is overkill for this use case |
 | dual export | CommonJS + browser global | maximises compatibility without a build step or bundler dependency |
+| linter | Biome over ESLint | single devDependency, zero config overhead, handles lint + format + import sorting; ESLint plugin ecosystem not needed for plain JS |
+| test runner | node:test over AVA | zero devDependencies; built into Node 22+; sufficient for pure synchronous computation tests |
 
 ---
 
@@ -174,8 +176,7 @@ pre-PR checklist: `make test` + `npx eslint soluna.js`.
 ### near term
 
 - [ ] `[soluna]` npm publish pipeline via GitHub Actions — prerequisite for consumers to `npm install` the library `[easy]`
-- [ ] `[soluna]` add ESLint config (`eslint.config.js`) and add `eslint` to devDependencies — prerequisite for lint enforcement `[easy]`
-- [ ] `[soluna]` add ESLint to `make test` so lint runs with the test suite `[easy]`
+- [x] `[soluna]` add linter — Biome chosen over ESLint; `biome.json` config, wired into `make test` and CI `[easy]`
 - [ ] `[soluna]` solar terms support: `getSolarTermsForYear(year)` helper returning all 24 term dates, and populate the `solarTerms` field in API output (currently empty string) `[medium]`
 - [ ] `[soluna]` expand test coverage for stem-branch / BaZi pillar accuracy across edge-case years `[medium]`
 - [ ] `[soluna]` validate leap month input in `lunarToSolar` (guard against invalid leap month for years with no leap) `[easy]`

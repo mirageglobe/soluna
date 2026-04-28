@@ -23,7 +23,8 @@ run: ## Run the example test runner (run.js)
 ui: ## Launch the test UI in the default browser
 	open examples/test-ui.html
 
-test: ## Run all tests (node:test)
+test: ## Run lint (Biome) and tests (node:test)
+	npx biome check soluna.js test/soluna.test.mjs examples/run.js
 	npm test
 
 test-watch: ## Run tests in watch mode (node:test)

@@ -26,8 +26,8 @@ jobs:
 
       - run: npm test
 
-  syntax:
-    name: Syntax check
+  lint:
+    name: Lint (Biome)
     runs-on: ubuntu-latest
 
     steps:
@@ -36,8 +36,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22.x'
+          cache: npm
 
-      - run: |
-          node --check soluna.js
-          node --check test/soluna.test.mjs
-          node --check examples/run.js
+      - run: npm ci
+
+      - run: npm run lint
