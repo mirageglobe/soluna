@@ -23,11 +23,11 @@ run: ## Run the example test runner (run.js)
 ui: ## Launch the test UI in the default browser
 	open examples/test-ui.html
 
-test: ## Run all tests using AVA
+test: ## Run all tests (node:test)
 	npm test
 
-test-watch: ## Run tests in watch mode
-	npx ava --watch
+test-watch: ## Run tests in watch mode (node:test)
+	node --test --watch test/soluna.test.mjs
 
 today: ## Show lunar and BaZi info for today's date
 	@node -e "const { solarToLunar } = require('./soluna.js'); \
