@@ -128,8 +128,7 @@ cny.festivals.lunar
 ## development
 
 ```bash
-make install   # install dev dependencies
-make test      # run AVA test suite
+make test      # run test suite (node:test, no install needed)
 make today     # sanity check: today's lunar + BaZi
 make run       # 3-day demo output
 ```
