@@ -19,10 +19,10 @@ soluna/
 │   ├── yalunar-legacy.js
 │   └── yalunar-legacy-refactor.js
 ├── test/
-│   └── soluna.test.js   # AVA test suite
+│   └── soluna.test.mjs  # node:test suite
 ├── soluna.js            # entire library — constants, utilities, core, public API
 ├── Makefile             # build/dev targets
-└── package.json         # node metadata, AVA config, npm publish files list
+└── package.json         # node metadata, npm publish files list
 ```
 
 ### module layout (within soluna.js)
@@ -109,15 +109,15 @@ where `C` is a century-specific constant from `SOLAR_TERM_INFO`. max deviation ~
 
 ```bash
 make install      # npm install
-make test         # npm test (AVA)
-make test-watch   # AVA watch mode
+make test         # node --test
+make test-watch   # node --test --watch
 make run          # node run.js (3-day demo)
 make today        # lunar + BaZi for right now
 make ui           # open test-ui.html in browser
 make clean        # remove node_modules and logs
 ```
 
-test runner: AVA. node.js >= 14 required.
+test runner: node:test (built-in). node.js >= 22 required.
 
 ### test UI (`test-ui.html`)
 
@@ -135,7 +135,7 @@ CI runs on every PR via GitHub Actions:
 
 | check | detail |
 | :--- | :--- |
-| tests | AVA on Node.js 18, 20, 22 |
+| tests | node:test on Node.js 22, 24 |
 | lint | ESLint (`npx eslint soluna.js`) |
 | security | CodeQL scanning |
 | dependencies | Dependabot automated updates |
