@@ -1,33 +1,33 @@
-import test from 'ava';
+import { test } from 'node:test';
+import assert from 'node:assert/strict';
 import { createRequire } from 'module';
 
 const require = createRequire(import.meta.url);
-const { solarToLunar, lunarToSolar, getTimePeriod } = require('../soluna.js');
+const { solarToLunar, lunarToSolar } = require('../soluna.js');
 
 // ===== BASIC SOLAR TO LUNAR CONVERSION TESTS =====
 
-test('Solar to Lunar: 2020 Chinese New Year (Jan 25, 2020 = 1st day of 1st month)', t => {
+test('Solar to Lunar: 2020 Chinese New Year (Jan 25, 2020 = 1st day of 1st month)', () => {
   const result = solarToLunar(new Date('2020-01-25'));
 
-  t.is(result.lunar.year, 2020, 'Year should be 2020');
-  t.is(result.lunar.month, 1, 'Month should be 1st month');
-  t.is(result.lunar.day, 1, 'Day should be 1st day');
-  t.is(result.lunar.isLeapMonth, false, 'Should not be a leap month');
-  t.is(result.lunar.zodiac, '鼠', 'Zodiac should be Rat (鼠)');
+  assert.strictEqual(result.lunar.year, 2020, 'Year should be 2020');
+  assert.strictEqual(result.lunar.month, 1, 'Month should be 1st month');
+  assert.strictEqual(result.lunar.day, 1, 'Day should be 1st day');
+  assert.strictEqual(result.lunar.isLeapMonth, false, 'Should not be a leap month');
+  assert.strictEqual(result.lunar.zodiac, '鼠', 'Zodiac should be Rat (鼠)');
 });
 
-test('Solar to Lunar: 2021 Chinese New Year (Feb 12, 2021 = 1st day of 1st month)', t => {
+test('Solar to Lunar: 2021 Chinese New Year (Feb 12, 2021 = 1st day of 1st month)', () => {
   const result = solarToLunar(new Date('2021-02-12'));
 
-  t.is(result.lunar.year, 2021, 'Year should be 2021');
-  t.is(result.lunar.month, 1, 'Month should be 1st month');
-  t.is(result.lunar.day, 1, 'Day should be 1st day');
-  t.is(result.lunar.zodiac, '牛', 'Zodiac should be Ox (牛)');
+  assert.strictEqual(result.lunar.year, 2021, 'Year should be 2021');
+  assert.strictEqual(result.lunar.month, 1, 'Month should be 1st month');
+  assert.strictEqual(result.lunar.day, 1, 'Day should be 1st day');
+  assert.strictEqual(result.lunar.zodiac, '牛', 'Zodiac should be Ox (牛)');
 });
 
-test('Solar to Lunar: Mid-Autumn Festival dates across years (no calendar drift)', t => {
+test('Solar to Lunar: Mid-Autumn Festival dates across years (no calendar drift)', () => {
   // Mid-Autumn Festival (中秋节) is always on Lunar August 15
-  // These are verified solar dates spanning 1980-2099 to check for calendar drift
   // Sources: Hong Kong Observatory, Taiwan Central Weather Bureau
   const midAutumnDates = [
     // 1980s
@@ -50,11 +50,11 @@ test('Solar to Lunar: Mid-Autumn Festival dates across years (no calendar drift)
     { solar: '2020-10-01', lunarYear: 2020 },
     { solar: '2024-09-17', lunarYear: 2024 },
     { solar: '2025-10-06', lunarYear: 2025 },
-    // 2030s-2040s (testing mid-range)
+    // 2030s-2040s
     { solar: '2030-09-12', lunarYear: 2030 },
     { solar: '2040-09-20', lunarYear: 2040 },
     { solar: '2049-09-11', lunarYear: 2049 },
-    // 2050s-2090s (testing extended LUNAR_INFO data)
+    // 2050s-2090s (extended LUNAR_INFO data)
     { solar: '2050-09-30', lunarYear: 2050 },
     { solar: '2060-09-09', lunarYear: 2060 },
     { solar: '2070-09-19', lunarYear: 2070 },
@@ -65,71 +65,66 @@ test('Solar to Lunar: Mid-Autumn Festival dates across years (no calendar drift)
 
   midAutumnDates.forEach(({ solar, lunarYear }) => {
     const result = solarToLunar(new Date(solar));
-    t.is(result.lunar.year, lunarYear, `${solar}: Lunar year should be ${lunarYear}`);
-    t.is(result.lunar.month, 8, `${solar}: Lunar month should be August (8)`);
-    t.is(result.lunar.day, 15, `${solar}: Lunar day should be 15`);
-    t.is(result.lunar.isLeapMonth, false, `${solar}: Should NOT be a leap month`);
+    assert.strictEqual(result.lunar.year, lunarYear, `${solar}: Lunar year should be ${lunarYear}`);
+    assert.strictEqual(result.lunar.month, 8, `${solar}: Lunar month should be August (8)`);
+    assert.strictEqual(result.lunar.day, 15, `${solar}: Lunar day should be 15`);
+    assert.strictEqual(result.lunar.isLeapMonth, false, `${solar}: Should NOT be a leap month`);
   });
 });
 
-test('Solar to Lunar: Basic 2024 date conversion', t => {
+test('Solar to Lunar: Basic 2024 date conversion', () => {
   const result = solarToLunar(new Date('2024-12-26'));
 
-  t.is(result.solar.year, 2024, 'Solar year should be 2024');
-  t.is(result.lunar.year, 2024, 'Lunar year should be 2024');
-  t.is(result.lunar.zodiac, '龙', 'Zodiac should be Dragon (龙)');
-  t.false(result.lunar.isLeapMonth, 'Should not be a leap month');
+  assert.strictEqual(result.solar.year, 2024, 'Solar year should be 2024');
+  assert.strictEqual(result.lunar.year, 2024, 'Lunar year should be 2024');
+  assert.strictEqual(result.lunar.zodiac, '龙', 'Zodiac should be Dragon (龙)');
+  assert.strictEqual(result.lunar.isLeapMonth, false, 'Should not be a leap month');
 });
 
 // ===== LUNAR TO SOLAR CONVERSION TESTS =====
 
-test('Lunar to Solar: 2011-1-3 converts to solar 2011-02-05', t => {
-  const result = lunarToSolar(new Date(2011, 0, 3), false); // Lunar 2011-01-03
+test('Lunar to Solar: 2011-1-3 converts to solar 2011-02-05', () => {
+  const result = lunarToSolar(new Date(2011, 0, 3), false);
 
-  t.is(result.solar.year, 2011, 'Solar year should be 2011');
-  t.is(result.solar.month, 2, 'Solar month should be February (2)');
-  t.is(result.solar.day, 5, 'Solar day should be 5');
+  assert.strictEqual(result.solar.year, 2011, 'Solar year should be 2011');
+  assert.strictEqual(result.solar.month, 2, 'Solar month should be February (2)');
+  assert.strictEqual(result.solar.day, 5, 'Solar day should be 5');
 });
 
-test('Lunar to Solar: Round-trip conversion maintains accuracy', t => {
-  // Start with a solar date
+test('Lunar to Solar: Round-trip conversion maintains accuracy', () => {
   const originalSolar = new Date('2020-01-25');
-
-  // Convert to lunar
   const lunarResult = solarToLunar(originalSolar);
-
-  // Convert back to solar
   const solarResult = lunarToSolar(
     new Date(lunarResult.lunar.year, lunarResult.lunar.month - 1, lunarResult.lunar.day),
     lunarResult.lunar.isLeapMonth
   );
 
-  t.is(solarResult.solar.year, 2020, 'Year should match');
-  t.is(solarResult.solar.month, 1, 'Month should match');
-  t.is(solarResult.solar.day, 25, 'Day should match');
+  assert.strictEqual(solarResult.solar.year, 2020, 'Year should match');
+  assert.strictEqual(solarResult.solar.month, 1, 'Month should match');
+  assert.strictEqual(solarResult.solar.day, 25, 'Day should match');
 });
 
 // ===== LEAP MONTH TESTS =====
 
-test('Leap month: 2012 has leap 4th month - regular 4th month', t => {
+test('Leap month: 2012 has leap 4th month - regular 4th month', () => {
   const result = lunarToSolar(new Date(2012, 3, 7), false);
 
-  t.is(result.solar.year, 2012, 'Solar year should be 2012');
-  t.is(result.solar.month, 4, 'Should be April');
-  t.is(result.solar.day, 27, 'Should be 27th');
+  assert.strictEqual(result.solar.year, 2012, 'Solar year should be 2012');
+  assert.strictEqual(result.solar.month, 4, 'Should be April');
+  assert.strictEqual(result.solar.day, 27, 'Should be 27th');
 });
 
-test('Leap month: 2012 leap 4th month (different from regular 4th month)', t => {
+test('Leap month: 2012 leap 4th month (different from regular 4th month)', () => {
   const result = lunarToSolar(new Date(2012, 3, 7), true);
 
-  t.is(result.solar.year, 2012, 'Solar year should be 2012');
-  t.is(result.solar.month, 5, 'Should be May (one month later)');
-  t.is(result.solar.day, 27, 'Should be 27th');
+  assert.strictEqual(result.solar.year, 2012, 'Solar year should be 2012');
+  assert.strictEqual(result.solar.month, 5, 'Should be May (one month later)');
+  assert.strictEqual(result.solar.day, 27, 'Should be 27th');
 });
 
 // ===== ZODIAC ANIMAL TESTS =====
 
-test('Zodiac animals: Verify full 12-year cycle (using dates after LNY)', t => {
+test('Zodiac animals: Verify full 12-year cycle (using dates after LNY)', () => {
   const zodiacCycle = [
     { year: 2020, animal: '鼠' }, // Rat
     { year: 2021, animal: '牛' }, // Ox
@@ -146,137 +141,133 @@ test('Zodiac animals: Verify full 12-year cycle (using dates after LNY)', t => {
   ];
 
   zodiacCycle.forEach(({ year, animal }) => {
-    // using May 1st to ensure we are well past Lunar New Year
     const result = solarToLunar(new Date(`${year}-05-01`));
-    t.is(result.lunar.zodiac, animal, `Year ${year} should be ${animal}`);
+    assert.strictEqual(result.lunar.zodiac, animal, `Year ${year} should be ${animal}`);
   });
 });
 
 // ===== TIME PERIOD (时辰) TESTS =====
 
-test('Time period: Midnight (00:30) is Rat/子时', t => {
+test('Time period: Midnight (00:30) is Rat/子时', () => {
   const result = solarToLunar(new Date('2023-12-25T00:30:00'));
 
-  t.truthy(result.timePeriod, 'Time period should exist');
-  t.is(result.timePeriod.name, '子时', 'Should be 子时');
-  t.is(result.timePeriod.zodiac, '鼠', 'Should be Rat (鼠)');
-  t.is(result.timePeriod.branch, '子', 'Branch should be 子');
+  assert.ok(result.timePeriod, 'Time period should exist');
+  assert.strictEqual(result.timePeriod.name, '子时', 'Should be 子时');
+  assert.strictEqual(result.timePeriod.zodiac, '鼠', 'Should be Rat (鼠)');
+  assert.strictEqual(result.timePeriod.branch, '子', 'Branch should be 子');
 });
 
-test('Time period: Noon (12:30) is Horse/午时', t => {
+test('Time period: Noon (12:30) is Horse/午时', () => {
   const result = solarToLunar(new Date('2023-12-25T12:30:00'));
 
-  t.truthy(result.timePeriod, 'Time period should exist');
-  t.is(result.timePeriod.name, '午时', 'Should be 午时');
-  t.is(result.timePeriod.zodiac, '马', 'Should be Horse (马)');
-  t.is(result.timePeriod.branch, '午', 'Branch should be 午');
+  assert.ok(result.timePeriod, 'Time period should exist');
+  assert.strictEqual(result.timePeriod.name, '午时', 'Should be 午时');
+  assert.strictEqual(result.timePeriod.zodiac, '马', 'Should be Horse (马)');
+  assert.strictEqual(result.timePeriod.branch, '午', 'Branch should be 午');
 });
 
-test('Time period: Evening (18:30) is Rooster/酉时', t => {
+test('Time period: Evening (18:30) is Rooster/酉时', () => {
   const result = solarToLunar(new Date('2023-12-25T18:30:00'));
 
-  t.truthy(result.timePeriod, 'Time period should exist');
-  t.is(result.timePeriod.name, '酉时', 'Should be 酉时');
-  t.is(result.timePeriod.zodiac, '鸡', 'Should be Rooster (鸡)');
+  assert.ok(result.timePeriod, 'Time period should exist');
+  assert.strictEqual(result.timePeriod.name, '酉时', 'Should be 酉时');
+  assert.strictEqual(result.timePeriod.zodiac, '鸡', 'Should be Rooster (鸡)');
 });
 
-test('Time period: 23:30 (子时) advances lunar day to next day', t => {
+test('Time period: 23:30 (子时) advances lunar day to next day', () => {
   const before = solarToLunar(new Date('2023-12-25T22:30:00')); // 亥时
   const result = solarToLunar(new Date('2023-12-25T23:30:00')); // 子时 — same solar day
 
-  t.is(result.timePeriod.name, '子时', 'Should be 子时');
-  t.is(result.timePeriod.zodiac, '鼠', 'Should be Rat');
-  t.is(result.lunar.day, before.lunar.day + 1, 'Lunar day should advance by 1 vs 22:30');
+  assert.strictEqual(result.timePeriod.name, '子时', 'Should be 子时');
+  assert.strictEqual(result.timePeriod.zodiac, '鼠', 'Should be Rat');
+  assert.strictEqual(result.lunar.day, before.lunar.day + 1, 'Lunar day should advance by 1 vs 22:30');
 });
 
 // ===== STEM-BRANCH (干支) TESTS =====
 
-test('Stem-branch: Should have year, month, day pillars', t => {
+test('Stem-branch: Should have year, month, day pillars', () => {
   const result = solarToLunar(new Date('2024-12-26'));
 
-  t.truthy(result.stemBranch, 'Stem-branch should exist');
-  t.truthy(result.stemBranch.year, 'Year pillar should exist');
-  t.truthy(result.stemBranch.month, 'Month pillar should exist');
-  t.truthy(result.stemBranch.day, 'Day pillar should exist');
-  t.is(result.stemBranch.year.length, 2, 'Year pillar should be 2 characters');
-  t.is(result.stemBranch.month.length, 2, 'Month pillar should be 2 characters');
-  t.is(result.stemBranch.day.length, 2, 'Day pillar should be 2 characters');
+  assert.ok(result.stemBranch, 'Stem-branch should exist');
+  assert.ok(result.stemBranch.year, 'Year pillar should exist');
+  assert.ok(result.stemBranch.month, 'Month pillar should exist');
+  assert.ok(result.stemBranch.day, 'Day pillar should exist');
+  assert.strictEqual(result.stemBranch.year.length, 2, 'Year pillar should be 2 characters');
+  assert.strictEqual(result.stemBranch.month.length, 2, 'Month pillar should be 2 characters');
+  assert.strictEqual(result.stemBranch.day.length, 2, 'Day pillar should be 2 characters');
 });
 
 // ===== LUNAR DAY NAME FORMATTING TESTS =====
 
-test('Lunar day names: Special formatting for specific days', t => {
-  // Test 1st day
+test('Lunar day names: Special formatting for specific days', () => {
   const result1 = solarToLunar(new Date('2020-01-25')); // CNY 2020
-  t.is(result1.lunar.dayName, '初一', 'First day should be 初一');
+  assert.strictEqual(result1.lunar.dayName, '初一', 'First day should be 初一');
 
-  // Test 10th day
   const result10 = solarToLunar(new Date('2020-02-03'));
-  t.is(result10.lunar.dayName, '初十', '10th day should be 初十');
+  assert.strictEqual(result10.lunar.dayName, '初十', '10th day should be 初十');
 
-  // Test 20th day
   const result20 = solarToLunar(new Date('2020-02-13'));
-  t.is(result20.lunar.dayName, '二十', '20th day should be 二十');
+  assert.strictEqual(result20.lunar.dayName, '二十', '20th day should be 二十');
 });
 
 // ===== EDGE CASE TESTS =====
 
-test('Edge case: Date at start of lunar calendar range (1900)', t => {
+test('Edge case: Date at start of lunar calendar range (1900)', () => {
   const result = solarToLunar(new Date('1900-02-15'));
 
-  t.is(result.solar.year, 1900);
-  t.is(typeof result.lunar.year, 'number');
-  t.is(typeof result.lunar.month, 'number');
-  t.is(typeof result.lunar.day, 'number');
+  assert.strictEqual(result.solar.year, 1900);
+  assert.strictEqual(typeof result.lunar.year, 'number');
+  assert.strictEqual(typeof result.lunar.month, 'number');
+  assert.strictEqual(typeof result.lunar.day, 'number');
 });
 
-test('Edge case: Date near end of lunar calendar range (2049)', t => {
+test('Edge case: Date near end of lunar calendar range (2049)', () => {
   const result = solarToLunar(new Date('2049-01-01'));
 
-  t.is(result.solar.year, 2049);
-  t.is(typeof result.lunar.year, 'number');
-  t.is(typeof result.lunar.month, 'number');
-  t.is(typeof result.lunar.day, 'number');
+  assert.strictEqual(result.solar.year, 2049);
+  assert.strictEqual(typeof result.lunar.year, 'number');
+  assert.strictEqual(typeof result.lunar.month, 'number');
+  assert.strictEqual(typeof result.lunar.day, 'number');
 });
 
-test('Regression: Solar to Lunar 2026-01-01 should be Lunar 2025-11-13', t => {
+test('Regression: Solar to Lunar 2026-01-01 should be Lunar 2025-11-13', () => {
   const result = solarToLunar(new Date('2026-01-01'));
 
-  t.is(result.lunar.year, 2025, 'Lunar year should be 2025');
-  t.is(result.lunar.month, 11, 'Lunar month should be 11');
-  t.is(result.lunar.day, 13, 'Lunar day should be 13');
-  t.is(result.lunar.isLeapMonth, false, 'Should NOT be a leap month');
+  assert.strictEqual(result.lunar.year, 2025, 'Lunar year should be 2025');
+  assert.strictEqual(result.lunar.month, 11, 'Lunar month should be 11');
+  assert.strictEqual(result.lunar.day, 13, 'Lunar day should be 13');
+  assert.strictEqual(result.lunar.isLeapMonth, false, 'Should NOT be a leap month');
 });
 
 // ===== DATA STRUCTURE VALIDATION TESTS =====
 
-test('Output structure: Solar to Lunar contains all required fields', t => {
+test('Output structure: Solar to Lunar contains all required fields', () => {
   const result = solarToLunar(new Date('2024-12-26T12:30:00'));
 
-  t.like(result, {
+  assert.partialDeepStrictEqual(result, {
     solar: { year: 2024, month: 12, day: 26 },
     lunar: { year: 2024, month: 11, day: 26, isLeapMonth: false },
   });
-  t.is(typeof result.solar.weekDay, 'string');
-  t.is(typeof result.lunar.monthName, 'string');
-  t.is(typeof result.lunar.dayName, 'string');
-  t.is(typeof result.lunar.zodiac, 'string');
-  t.truthy(result.stemBranch);
-  t.truthy(result.timePeriod);
+  assert.strictEqual(typeof result.solar.weekDay, 'string');
+  assert.strictEqual(typeof result.lunar.monthName, 'string');
+  assert.strictEqual(typeof result.lunar.dayName, 'string');
+  assert.strictEqual(typeof result.lunar.zodiac, 'string');
+  assert.ok(result.stemBranch);
+  assert.ok(result.timePeriod);
 });
 
-test('Output structure: Lunar to Solar contains all required fields', t => {
+test('Output structure: Lunar to Solar contains all required fields', () => {
   const result = lunarToSolar(new Date(2024, 0, 1), false);
 
-  t.truthy(result.solar);
-  t.truthy(result.lunar);
-  t.truthy(result.stemBranch);
-  t.is(result.timePeriod, null);
+  assert.ok(result.solar);
+  assert.ok(result.lunar);
+  assert.ok(result.stemBranch);
+  assert.strictEqual(result.timePeriod, null);
 });
 
 // ===== HISTORICAL DATE VERIFICATION (cross-referenced against HKO) =====
 
-test('Historical: Chinese New Year dates across decades', t => {
+test('Historical: Chinese New Year dates across decades', () => {
   // source: Hong Kong Observatory perpetual calendar
   const cnyDates = [
     { solar: '1903-01-29', year: 1903 },
@@ -294,38 +285,38 @@ test('Historical: Chinese New Year dates across decades', t => {
 
   cnyDates.forEach(({ solar, year }) => {
     const r = solarToLunar(new Date(solar)).lunar;
-    t.is(r.year,        year,  `${solar}: lunar year`);
-    t.is(r.month,       1,     `${solar}: lunar month 1`);
-    t.is(r.day,         1,     `${solar}: lunar day 1`);
-    t.is(r.isLeapMonth, false, `${solar}: not leap`);
+    assert.strictEqual(r.year,        year,  `${solar}: lunar year`);
+    assert.strictEqual(r.month,       1,     `${solar}: lunar month 1`);
+    assert.strictEqual(r.day,         1,     `${solar}: lunar day 1`);
+    assert.strictEqual(r.isLeapMonth, false, `${solar}: not leap`);
   });
 });
 
-test('Historical: Year crossover — late December falls in prior lunar year', t => {
+test('Historical: Year crossover — late December falls in prior lunar year', () => {
   const r = solarToLunar(new Date('2022-12-31')).lunar;
-  t.is(r.year,  2022);
-  t.is(r.month, 12);
-  t.is(r.day,   9);
-  t.is(r.isLeapMonth, false);
+  assert.strictEqual(r.year,  2022);
+  assert.strictEqual(r.month, 12);
+  assert.strictEqual(r.day,   9);
+  assert.strictEqual(r.isLeapMonth, false);
 });
 
-test('Historical: Leap month boundaries — 1903 leap 5th month', t => {
+test('Historical: Leap month boundaries — 1903 leap 5th month', () => {
   // source: HKO
   const cases = [
-    { solar: '1903-05-27', month: 5,  day: 1,  leap: false }, // regular 5/1
-    { solar: '1903-06-25', month: 5,  day: 1,  leap: true  }, // leap 5/1
-    { solar: '1903-07-23', month: 5,  day: 29, leap: true  }, // leap 5 last day
-    { solar: '1903-07-24', month: 6,  day: 1,  leap: false }, // regular 6/1
+    { solar: '1903-05-27', month: 5, day: 1,  leap: false }, // regular 5/1
+    { solar: '1903-06-25', month: 5, day: 1,  leap: true  }, // leap 5/1
+    { solar: '1903-07-23', month: 5, day: 29, leap: true  }, // leap 5 last day
+    { solar: '1903-07-24', month: 6, day: 1,  leap: false }, // regular 6/1
   ];
   cases.forEach(({ solar, month, day, leap }) => {
     const r = solarToLunar(new Date(solar)).lunar;
-    t.is(r.month,       month, `${solar}: month`);
-    t.is(r.day,         day,   `${solar}: day`);
-    t.is(r.isLeapMonth, leap,  `${solar}: isLeapMonth`);
+    assert.strictEqual(r.month,       month, `${solar}: month`);
+    assert.strictEqual(r.day,         day,   `${solar}: day`);
+    assert.strictEqual(r.isLeapMonth, leap,  `${solar}: isLeapMonth`);
   });
 });
 
-test('Historical: Leap month boundaries — 2001 leap 4th month', t => {
+test('Historical: Leap month boundaries — 2001 leap 4th month', () => {
   const cases = [
     { solar: '2001-05-22', month: 4, day: 30, leap: false }, // regular 4 last day
     { solar: '2001-05-23', month: 4, day: 1,  leap: true  }, // leap 4/1
@@ -334,13 +325,13 @@ test('Historical: Leap month boundaries — 2001 leap 4th month', t => {
   ];
   cases.forEach(({ solar, month, day, leap }) => {
     const r = solarToLunar(new Date(solar)).lunar;
-    t.is(r.month,       month, `${solar}: month`);
-    t.is(r.day,         day,   `${solar}: day`);
-    t.is(r.isLeapMonth, leap,  `${solar}: isLeapMonth`);
+    assert.strictEqual(r.month,       month, `${solar}: month`);
+    assert.strictEqual(r.day,         day,   `${solar}: day`);
+    assert.strictEqual(r.isLeapMonth, leap,  `${solar}: isLeapMonth`);
   });
 });
 
-test('Historical: Leap month boundaries — 2009 leap 5th month', t => {
+test('Historical: Leap month boundaries — 2009 leap 5th month', () => {
   const cases = [
     { solar: '2009-06-23', month: 5, day: 1,  leap: true  }, // leap 5/1
     { solar: '2009-07-21', month: 5, day: 29, leap: true  }, // leap 5 last day
@@ -348,13 +339,13 @@ test('Historical: Leap month boundaries — 2009 leap 5th month', t => {
   ];
   cases.forEach(({ solar, month, day, leap }) => {
     const r = solarToLunar(new Date(solar)).lunar;
-    t.is(r.month,       month, `${solar}: month`);
-    t.is(r.day,         day,   `${solar}: day`);
-    t.is(r.isLeapMonth, leap,  `${solar}: isLeapMonth`);
+    assert.strictEqual(r.month,       month, `${solar}: month`);
+    assert.strictEqual(r.day,         day,   `${solar}: day`);
+    assert.strictEqual(r.isLeapMonth, leap,  `${solar}: isLeapMonth`);
   });
 });
 
-test('Historical: Leap month boundaries — 2012 leap 4th month', t => {
+test('Historical: Leap month boundaries — 2012 leap 4th month', () => {
   const cases = [
     { solar: '2012-04-21', month: 4, day: 1,  leap: false }, // regular 4/1
     { solar: '2012-05-20', month: 4, day: 30, leap: false }, // regular 4 last day
@@ -364,13 +355,13 @@ test('Historical: Leap month boundaries — 2012 leap 4th month', t => {
   ];
   cases.forEach(({ solar, month, day, leap }) => {
     const r = solarToLunar(new Date(solar)).lunar;
-    t.is(r.month,       month, `${solar}: month`);
-    t.is(r.day,         day,   `${solar}: day`);
-    t.is(r.isLeapMonth, leap,  `${solar}: isLeapMonth`);
+    assert.strictEqual(r.month,       month, `${solar}: month`);
+    assert.strictEqual(r.day,         day,   `${solar}: day`);
+    assert.strictEqual(r.isLeapMonth, leap,  `${solar}: isLeapMonth`);
   });
 });
 
-test('Historical: Leap month boundaries — 2020 leap 4th month', t => {
+test('Historical: Leap month boundaries — 2020 leap 4th month', () => {
   const cases = [
     { solar: '2020-05-23', month: 4, day: 1,  leap: true  }, // leap 4/1
     { solar: '2020-06-20', month: 4, day: 29, leap: true  }, // leap 4 last day
@@ -378,13 +369,13 @@ test('Historical: Leap month boundaries — 2020 leap 4th month', t => {
   ];
   cases.forEach(({ solar, month, day, leap }) => {
     const r = solarToLunar(new Date(solar)).lunar;
-    t.is(r.month,       month, `${solar}: month`);
-    t.is(r.day,         day,   `${solar}: day`);
-    t.is(r.isLeapMonth, leap,  `${solar}: isLeapMonth`);
+    assert.strictEqual(r.month,       month, `${solar}: month`);
+    assert.strictEqual(r.day,         day,   `${solar}: day`);
+    assert.strictEqual(r.isLeapMonth, leap,  `${solar}: isLeapMonth`);
   });
 });
 
-test('Historical: Leap month boundaries — 2023 leap 2nd month', t => {
+test('Historical: Leap month boundaries — 2023 leap 2nd month', () => {
   const cases = [
     { solar: '2023-03-22', month: 2, day: 1,  leap: true  }, // leap 2/1
     { solar: '2023-04-19', month: 2, day: 29, leap: true  }, // leap 2 last day
@@ -392,13 +383,13 @@ test('Historical: Leap month boundaries — 2023 leap 2nd month', t => {
   ];
   cases.forEach(({ solar, month, day, leap }) => {
     const r = solarToLunar(new Date(solar)).lunar;
-    t.is(r.month,       month, `${solar}: month`);
-    t.is(r.day,         day,   `${solar}: day`);
-    t.is(r.isLeapMonth, leap,  `${solar}: isLeapMonth`);
+    assert.strictEqual(r.month,       month, `${solar}: month`);
+    assert.strictEqual(r.day,         day,   `${solar}: day`);
+    assert.strictEqual(r.isLeapMonth, leap,  `${solar}: isLeapMonth`);
   });
 });
 
-test('Historical: Leap month boundaries — 2025 leap 6th month', t => {
+test('Historical: Leap month boundaries — 2025 leap 6th month', () => {
   const cases = [
     { solar: '2025-06-25', month: 6, day: 1,  leap: false }, // regular 6/1
     { solar: '2025-07-24', month: 6, day: 30, leap: false }, // regular 6 last day
@@ -408,87 +399,64 @@ test('Historical: Leap month boundaries — 2025 leap 6th month', t => {
   ];
   cases.forEach(({ solar, month, day, leap }) => {
     const r = solarToLunar(new Date(solar)).lunar;
-    t.is(r.month,       month, `${solar}: month`);
-    t.is(r.day,         day,   `${solar}: day`);
-    t.is(r.isLeapMonth, leap,  `${solar}: isLeapMonth`);
+    assert.strictEqual(r.month,       month, `${solar}: month`);
+    assert.strictEqual(r.day,         day,   `${solar}: day`);
+    assert.strictEqual(r.isLeapMonth, leap,  `${solar}: isLeapMonth`);
   });
 });
 
 // ===== INVALID INPUT TESTS =====
 
-test('Invalid input: Should throw error for invalid date', t => {
-  t.throws(() => {
-    solarToLunar(new Date('invalid'));
-  }, { message: 'Invalid date provided' });
+test('Invalid input: Should throw error for invalid date', () => {
+  assert.throws(() => solarToLunar(new Date('invalid')), { message: 'Invalid date provided' });
 });
 
-test('Invalid input: Should throw error for null', t => {
-  t.throws(() => {
-    solarToLunar(null);
-  }, { message: 'Invalid date provided' });
+test('Invalid input: Should throw error for null', () => {
+  assert.throws(() => solarToLunar(null), { message: 'Invalid date provided' });
 });
 
-test('BaZi: Verify Four Pillars (Year, Month, Day, Hour)', t => {
-  // Test case: 2020-01-25 12:30 (Chinese New Year)
-  // 2020 is Geng-Zi (庚子) year
-  // 2020-01-25 is Ding-Mao (丁卯) day
-  // 12:30 is Wu-Shi (午时) branch
-  // Hour Stem for Ding Day and Wu Hour is Bing (丙)
-  const date = new Date(2020, 0, 25, 12, 30);
-  const result = solarToLunar(date);
+// ===== BAZI (八字) TESTS =====
 
-  // Year pillar
-  // 2020-01-25 is BEFORE Li Chun (Feb 4), so it belongs to previous Year Pillar (Ji Hai - 2019)
-  // 2019 = Ji Hai (己亥)
-  t.is(result.baZi.year.stem, '己', 'Year stem should be Ji (己) - Pre-Li Chun');
-  t.is(result.baZi.year.branch, '亥', 'Year branch should be Hai (亥) - Pre-Li Chun');
+test('BaZi: Verify Four Pillars (Year, Month, Day, Hour)', () => {
+  // 2020-01-25 12:30 — before Li Chun (Feb 4), so year pillar is Ji-Hai (己亥) not Geng-Zi
+  const result = solarToLunar(new Date(2020, 0, 25, 12, 30));
 
-  // Day pillar
-  t.is(result.baZi.day.stem, '丁', 'Day stem should be Ding (丁)');
-  t.is(result.baZi.day.branch, '卯', 'Day branch should be Mao (卯)');
-
-  t.is(result.baZi.hour.stem, '丙', 'Hour stem for Ding Day + Wu Hour should be Bing (丙)');
-  t.is(result.baZi.hour.branch, '午', 'Hour branch should be Wu (午)');
+  assert.strictEqual(result.baZi.year.stem,   '己', 'Year stem should be Ji (己)');
+  assert.strictEqual(result.baZi.year.branch, '亥', 'Year branch should be Hai (亥)');
+  assert.strictEqual(result.baZi.day.stem,    '丁', 'Day stem should be Ding (丁)');
+  assert.strictEqual(result.baZi.day.branch,  '卯', 'Day branch should be Mao (卯)');
+  assert.strictEqual(result.baZi.hour.stem,   '丙', 'Hour stem should be Bing (丙)');
+  assert.strictEqual(result.baZi.hour.branch, '午', 'Hour branch should be Wu (午)');
 });
 
-test('BaZi: Regression - Month Pillar for 1980-03-21 should be Ji-Mao (date after Jing Zhe)', t => {
-  // 1980-03-21 is in 2nd Solar Month (Rabbit), but 2nd Lunar Month started Feb 16.
-  // Previous bug calculated it as 1st Solar Month because math used Lunar Month index.
-  const date = new Date('1980-03-21T13:30:00');
-  const result = solarToLunar(date);
+test('BaZi: Regression - Month Pillar for 1980-03-21 should be Ji-Mao (date after Jing Zhe)', () => {
+  const result = solarToLunar(new Date('1980-03-21T13:30:00'));
 
-  // Year: Geng-Shen (Monkey) - 1980
-  t.is(result.baZi.year.stem + result.baZi.year.branch, '庚申', 'Year should be Geng-Shen');
-
-  // Month: Ji-Mao (Rabbit) - 2nd Solar Month
-  // Incorrect buggy value was Wu-Yin (Tiger)
-  t.is(result.baZi.month.stem + result.baZi.month.branch, '己卯', 'Month should be Ji-Mao (Correct Solar Month)');
-
-  // Day: Gui-Si (Snake)
-  t.is(result.baZi.day.stem + result.baZi.day.branch, '癸巳', 'Day should be Gui-Si');
+  assert.strictEqual(result.baZi.year.stem  + result.baZi.year.branch,  '庚申', 'Year should be Geng-Shen');
+  assert.strictEqual(result.baZi.month.stem + result.baZi.month.branch, '己卯', 'Month should be Ji-Mao');
+  assert.strictEqual(result.baZi.day.stem   + result.baZi.day.branch,   '癸巳', 'Day should be Gui-Si');
 });
 
+// ===== FLEXIBLE INPUT TESTS =====
 
-test('Flexible Input: solarToLunar with numerical arguments', t => {
-  // 2024-12-28 15:45:30
+test('Flexible Input: solarToLunar with numerical arguments', () => {
   const result = solarToLunar(2024, 12, 28, 15, 45, 30);
 
-  t.is(result.solar.year, 2024);
-  t.is(result.solar.month, 12);
-  t.is(result.solar.day, 28);
-  t.is(result.solar.time.hour, 15);
-  t.is(result.solar.time.minute, 45);
-  t.is(result.solar.time.second, 30);
+  assert.strictEqual(result.solar.year,        2024);
+  assert.strictEqual(result.solar.month,       12);
+  assert.strictEqual(result.solar.day,         28);
+  assert.strictEqual(result.solar.time.hour,   15);
+  assert.strictEqual(result.solar.time.minute, 45);
+  assert.strictEqual(result.solar.time.second, 30);
 });
 
-test('Flexible Input: lunarToSolar with numerical arguments and time', t => {
-  // Lunar 2025-11-9 12:30:00
+test('Flexible Input: lunarToSolar with numerical arguments and time', () => {
   const result = lunarToSolar(2025, 11, 9, false, 12, 30, 0);
 
-  t.is(result.lunar.year, 2025);
-  t.is(result.lunar.month, 11);
-  t.is(result.lunar.day, 9);
-  t.is(result.solar.time.hour, 12);
-  t.is(result.solar.time.minute, 30);
-  t.is(result.solar.time.second, 0);
+  assert.strictEqual(result.lunar.year,        2025);
+  assert.strictEqual(result.lunar.month,       11);
+  assert.strictEqual(result.lunar.day,         9);
+  assert.strictEqual(result.solar.time.hour,   12);
+  assert.strictEqual(result.solar.time.minute, 30);
+  assert.strictEqual(result.solar.time.second, 0);
 });
