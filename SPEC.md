@@ -178,7 +178,7 @@ pre-PR checklist: `make test` (runs Biome + node:test).
 - [ ] `[soluna]` npm publish pipeline via GitHub Actions — prerequisite for consumers to `npm install` the library `[easy]`
 - [x] `[soluna]` add linter — Biome chosen over ESLint; `biome.json` config, wired into `make test` and CI `[easy]`
 - [x] `[soluna]` solar terms support: `getSolarTermsForYear(year)` helper returning all 24 term dates, and populate the `solarTerms` field in API output (currently empty string) `[medium]`
-- [ ] `[soluna]` expand test coverage for stem-branch / BaZi pillar accuracy across edge-case years `[medium]`
+- [x] `[soluna]` expand test coverage for stem-branch / BaZi pillar accuracy across edge-case years `[medium]`
 - [ ] `[soluna]` validate leap month input in `lunarToSolar` (guard against invalid leap month for years with no leap) `[easy]`
 - [ ] `[soluna]` tradition tagging: annotate each festival entry with one or more tradition tags (`public`, `buddhist`, `taoist`, `folk`) and expose a filter option on `solarToLunar` / `lunarToSolar` to include only the requested traditions in the `festivals` output `[medium]`
 
