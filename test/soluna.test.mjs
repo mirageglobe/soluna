@@ -437,6 +437,67 @@ test('BaZi: Regression - Month Pillar for 1980-03-21 should be Ji-Mao (date afte
   assert.strictEqual(result.baZi.day.stem + result.baZi.day.branch, '癸巳', 'Day should be Gui-Si');
 });
 
+// ===== TRADITION TAGGING TESTS =====
+
+test('Tradition tagging: festival object includes traditions array', () => {
+  // 2020-01-25 = 春节 (public lunar holiday)
+  const result = solarToLunar(new Date(2020, 0, 25));
+  assert.ok(Array.isArray(result.festivals.lunar.traditions), 'traditions should be an array');
+  assert.ok(result.festivals.lunar.traditions.includes('public'));
+});
+
+test('Tradition tagging: solarToLunar filter keeps matching festival', () => {
+  // 春节 is public; ['public'] filter should return it
+  const result = solarToLunar(new Date(2020, 0, 25), { traditions: ['public'] });
+  assert.ok(result.festivals.lunar !== null);
+  assert.strictEqual(result.festivals.lunar.name, '春节');
+});
+
+test('Tradition tagging: solarToLunar filter removes non-matching festival', () => {
+  // 春节 is public only; ['buddhist'] filter should return null
+  const result = solarToLunar(new Date(2020, 0, 25), { traditions: ['buddhist'] });
+  assert.strictEqual(result.festivals.lunar, null);
+});
+
+test('Tradition tagging: solarToLunar buddhist filter returns buddhist festival', () => {
+  // 释迦牟尼佛诞 = lunar 4/8 = buddhist; solar date derived from lunarToSolar(2024, 4, 8)
+  const solarRef = lunarToSolar(2024, 4, 8);
+  const result = solarToLunar(new Date(solarRef.solar.year, solarRef.solar.month - 1, solarRef.solar.day), {
+    traditions: ['buddhist']
+  });
+  assert.ok(result.festivals.lunar !== null);
+  assert.ok(result.festivals.lunar.traditions.includes('buddhist'));
+});
+
+test('Tradition tagging: solarToLunar taoist filter removes buddhist festival', () => {
+  // 释迦牟尼佛诞 is buddhist only; ['taoist'] filter should return null
+  const solarRef = lunarToSolar(2024, 4, 8);
+  const result = solarToLunar(new Date(solarRef.solar.year, solarRef.solar.month - 1, solarRef.solar.day), {
+    traditions: ['taoist']
+  });
+  assert.strictEqual(result.festivals.lunar, null);
+});
+
+test('Tradition tagging: no filter returns all festivals (backward compat)', () => {
+  // Without options, all festivals should still be returned as before
+  const withFilter = solarToLunar(new Date(2020, 0, 25), {});
+  const withoutFilter = solarToLunar(new Date(2020, 0, 25));
+  assert.deepEqual(withFilter.festivals, withoutFilter.festivals);
+});
+
+test('Tradition tagging: lunarToSolar numeric form accepts options', () => {
+  // 春节 with public filter
+  const result = lunarToSolar(2020, 1, 1, false, 0, 0, 0, { traditions: ['public'] });
+  assert.ok(result.festivals.lunar !== null);
+  assert.strictEqual(result.festivals.lunar.name, '春节');
+});
+
+test('Tradition tagging: lunarToSolar numeric form filters non-matching', () => {
+  // 玉皇大帝诞 = lunar 1/9 = taoist; ['public'] filter should return null
+  const result = lunarToSolar(2024, 1, 9, false, 0, 0, 0, { traditions: ['public'] });
+  assert.strictEqual(result.festivals.lunar, null);
+});
+
 // ===== LEAP MONTH VALIDATION TESTS =====
 
 test('lunarToSolar: valid leap month accepted (2020 leap 4th month)', () => {
