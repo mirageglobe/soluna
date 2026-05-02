@@ -3,7 +3,7 @@ import { createRequire } from 'node:module';
 import { test } from 'node:test';
 
 const require = createRequire(import.meta.url);
-const { solarToLunar, lunarToSolar } = require('../soluna.js');
+const { solarToLunar, lunarToSolar, getSolarTermsForYear } = require('../soluna.js');
 
 // ===== BASIC SOLAR TO LUNAR CONVERSION TESTS =====
 
@@ -459,4 +459,49 @@ test('Flexible Input: lunarToSolar with numerical arguments and time', () => {
   assert.strictEqual(result.solar.time.hour, 12);
   assert.strictEqual(result.solar.time.minute, 30);
   assert.strictEqual(result.solar.time.second, 0);
+});
+
+// ===== SOLAR TERMS TESTS =====
+
+test('getSolarTermsForYear: returns 24 terms for 2025', () => {
+  const terms = getSolarTermsForYear(2025);
+  assert.strictEqual(terms.length, 24);
+  assert.ok(terms.every((t) => typeof t.nameZh === 'string' && t.nameZh.length > 0));
+  assert.ok(terms.every((t) => t.month >= 1 && t.month <= 12));
+  assert.ok(terms.every((t) => t.day >= 1 && t.day <= 31));
+});
+
+test('getSolarTermsForYear: 小寒 2025 falls on Jan 5', () => {
+  const terms = getSolarTermsForYear(2025);
+  const xiaohan = terms.find((t) => t.nameZh === '小寒');
+  assert.ok(xiaohan, '小寒 should exist');
+  assert.strictEqual(xiaohan.month, 1);
+  assert.strictEqual(xiaohan.day, 5);
+});
+
+test('getSolarTermsForYear: 冬至 2025 falls on Dec 21', () => {
+  const terms = getSolarTermsForYear(2025);
+  const dongzhi = terms.find((t) => t.nameZh === '冬至');
+  assert.ok(dongzhi, '冬至 should exist');
+  assert.strictEqual(dongzhi.month, 12);
+  assert.strictEqual(dongzhi.day, 21);
+});
+
+test('solarToLunar: solarTerms populated on solar term day (小寒 2025 = Jan 5)', () => {
+  const result = solarToLunar(new Date(2025, 0, 5));
+  assert.strictEqual(result.solarTerms, '小寒');
+});
+
+test('solarToLunar: solarTerms empty on non-solar-term day', () => {
+  const result = solarToLunar(new Date(2025, 0, 1));
+  assert.strictEqual(result.solarTerms, '');
+});
+
+test('lunarToSolar: solarTerms populated when converted date is a solar term', () => {
+  // Lunar date that converts to 2025-01-05 (小寒)
+  const result = lunarToSolar(2024, 12, 6);
+  assert.strictEqual(result.solar.year, 2025);
+  assert.strictEqual(result.solar.month, 1);
+  assert.strictEqual(result.solar.day, 5);
+  assert.strictEqual(result.solarTerms, '小寒');
 });
