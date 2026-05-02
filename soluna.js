@@ -161,19 +161,19 @@ const TIME_DESCRIPTIONS = {
  * Format: 'MMDD*Name' where * indicates a public holiday
  */
 const SOLAR_FESTIVALS = {
-  '0101': { name: '元旦', isHoliday: true, english: "New Year's Day" },
-  '0214': { name: '情人节', isHoliday: false, english: "Valentine's Day" },
-  '0308': { name: '妇女节', isHoliday: false, english: "Women's Day" },
-  '0312': { name: '植树节', isHoliday: false, english: 'Arbor Day' },
-  '0401': { name: '愚人节', isHoliday: false, english: "April Fool's Day" },
-  '0422': { name: '地球日', isHoliday: false, english: 'Earth Day' },
-  '0501': { name: '劳动节', isHoliday: true, english: 'Labor Day' },
-  '0504': { name: '青年节', isHoliday: false, english: 'Youth Day' },
-  '0601': { name: '儿童节', isHoliday: false, english: "Children's Day" },
-  '0910': { name: '教师节', isHoliday: false, english: "Teachers' Day" },
-  1001: { name: '国庆节', isHoliday: true, english: 'National Day' },
-  1224: { name: '平安夜', isHoliday: false, english: 'Christmas Eve' },
-  1225: { name: '圣诞节', isHoliday: false, english: 'Christmas Day' }
+  '0101': { name: '元旦', isHoliday: true, english: "New Year's Day", traditions: ['public'] },
+  '0214': { name: '情人节', isHoliday: false, english: "Valentine's Day", traditions: ['folk'] },
+  '0308': { name: '妇女节', isHoliday: false, english: "Women's Day", traditions: ['public'] },
+  '0312': { name: '植树节', isHoliday: false, english: 'Arbor Day', traditions: ['public'] },
+  '0401': { name: '愚人节', isHoliday: false, english: "April Fool's Day", traditions: ['folk'] },
+  '0422': { name: '地球日', isHoliday: false, english: 'Earth Day', traditions: ['folk'] },
+  '0501': { name: '劳动节', isHoliday: true, english: 'Labor Day', traditions: ['public'] },
+  '0504': { name: '青年节', isHoliday: false, english: 'Youth Day', traditions: ['public'] },
+  '0601': { name: '儿童节', isHoliday: false, english: "Children's Day", traditions: ['public'] },
+  '0910': { name: '教师节', isHoliday: false, english: "Teachers' Day", traditions: ['public'] },
+  1001: { name: '国庆节', isHoliday: true, english: 'National Day', traditions: ['public'] },
+  1224: { name: '平安夜', isHoliday: false, english: 'Christmas Eve', traditions: ['folk'] },
+  1225: { name: '圣诞节', isHoliday: false, english: 'Christmas Day', traditions: ['folk'] }
 };
 
 /**
@@ -190,63 +190,154 @@ const SOLAR_FESTIVALS = {
  */
 const LUNAR_FESTIVALS = {
   // First month (正月)
-  '0101': { name: '春节', isHoliday: true, english: 'Spring Festival', extra: '元始天尊圣旦 弥勒佛圣旦 四始吉日' },
-  '0104': { name: '迎神日', isHoliday: false, english: 'Welcoming Gods Day' },
-  '0105': { name: '接财神', isHoliday: false, english: 'Welcoming God of Wealth' },
-  '0109': { name: '玉皇大帝诞', isHoliday: false, english: 'Jade Emperor Birthday' },
-  '0115': { name: '元宵节', isHoliday: false, english: 'Lantern Festival', extra: '上元节' },
+  '0101': {
+    name: '春节',
+    isHoliday: true,
+    english: 'Spring Festival',
+    extra: '元始天尊圣旦 弥勒佛圣旦 四始吉日',
+    traditions: ['public']
+  },
+  '0104': { name: '迎神日', isHoliday: false, english: 'Welcoming Gods Day', traditions: ['folk'] },
+  '0105': { name: '接财神', isHoliday: false, english: 'Welcoming God of Wealth', traditions: ['folk'] },
+  '0109': { name: '玉皇大帝诞', isHoliday: false, english: 'Jade Emperor Birthday', traditions: ['taoist'] },
+  '0115': {
+    name: '元宵节',
+    isHoliday: false,
+    english: 'Lantern Festival',
+    extra: '上元节',
+    traditions: ['public', 'folk']
+  },
   // Second month
-  '0202': { name: '龙抬头', isHoliday: false, english: 'Dragon Raises Head', extra: '福德正神圣旦' },
-  '0203': { name: '文昌圣旦', isHoliday: false, english: 'Wenchang Birthday' },
-  '0215': { name: '释迦牟尼涅槃', isHoliday: false, english: 'Buddha Nirvana Day', extra: '太上老君圣旦' },
-  '0216': { name: '头牙', isHoliday: false, english: 'First Ya Festival', extra: '祭拜地主日' },
-  '0219': { name: '观世音菩萨圣旦', isHoliday: false, english: 'Guanyin Birthday' },
-  '0221': { name: '普贤菩萨圣旦', isHoliday: false, english: 'Samantabhadra Bodhisattva Birthday' },
+  '0202': {
+    name: '龙抬头',
+    isHoliday: false,
+    english: 'Dragon Raises Head',
+    extra: '福德正神圣旦',
+    traditions: ['folk']
+  },
+  '0203': { name: '文昌圣旦', isHoliday: false, english: 'Wenchang Birthday', traditions: ['taoist'] },
+  '0215': {
+    name: '释迦牟尼涅槃',
+    isHoliday: false,
+    english: 'Buddha Nirvana Day',
+    extra: '太上老君圣旦',
+    traditions: ['buddhist']
+  },
+  '0216': { name: '头牙', isHoliday: false, english: 'First Ya Festival', extra: '祭拜地主日', traditions: ['folk'] },
+  '0219': { name: '观世音菩萨圣旦', isHoliday: false, english: 'Guanyin Birthday', traditions: ['buddhist'] },
+  '0221': {
+    name: '普贤菩萨圣旦',
+    isHoliday: false,
+    english: 'Samantabhadra Bodhisattva Birthday',
+    traditions: ['buddhist']
+  },
   // Third month
-  '0303': { name: '上巳节', isHoliday: false, english: 'Shangsi Festival', extra: '玄天上帝诞' },
-  '0323': { name: '妈祖圣旦', isHoliday: false, english: 'Mazu Birthday' },
-  // Third month (Taoist)
-  '0315': { name: '保生大帝诞', isHoliday: false, english: 'Baosheng Dadi Birthday', extra: '玄坛赵公明圣旦' },
+  '0303': { name: '上巳节', isHoliday: false, english: 'Shangsi Festival', extra: '玄天上帝诞', traditions: ['folk'] },
+  '0315': {
+    name: '保生大帝诞',
+    isHoliday: false,
+    english: 'Baosheng Dadi Birthday',
+    extra: '玄坛赵公明圣旦',
+    traditions: ['taoist']
+  },
+  '0323': { name: '妈祖圣旦', isHoliday: false, english: 'Mazu Birthday', traditions: ['taoist', 'folk'] },
   // Fourth month
-  '0401': { name: '四始吉日', isHoliday: false, english: 'Auspicious Day' },
-  '0404': { name: '文殊菩萨圣旦', isHoliday: false, english: 'Manjushri Bodhisattva Birthday' },
-  '0408': { name: '释迦牟尼佛诞', isHoliday: false, english: 'Buddha Birthday', extra: '浴佛节' },
-  '0414': { name: '吕洞宾诞', isHoliday: false, english: 'Lü Dongbin Birthday' },
+  '0401': { name: '四始吉日', isHoliday: false, english: 'Auspicious Day', traditions: ['folk'] },
+  '0404': {
+    name: '文殊菩萨圣旦',
+    isHoliday: false,
+    english: 'Manjushri Bodhisattva Birthday',
+    traditions: ['buddhist']
+  },
+  '0408': {
+    name: '释迦牟尼佛诞',
+    isHoliday: false,
+    english: 'Buddha Birthday',
+    extra: '浴佛节',
+    traditions: ['buddhist']
+  },
+  '0414': { name: '吕洞宾诞', isHoliday: false, english: 'Lü Dongbin Birthday', traditions: ['taoist'] },
   // Fifth month
-  '0505': { name: '端午节', isHoliday: true, english: 'Dragon Boat Festival' },
-  '0513': { name: '关公磨刀日', isHoliday: false, english: 'Guan Yu Sword Day' },
+  '0505': { name: '端午节', isHoliday: true, english: 'Dragon Boat Festival', traditions: ['public'] },
+  '0513': { name: '关公磨刀日', isHoliday: false, english: 'Guan Yu Sword Day', traditions: ['folk', 'taoist'] },
   // Sixth month
-  '0603': { name: '韦陀菩萨圣旦', isHoliday: false, english: 'Skanda Bodhisattva Birthday' },
-  '0619': { name: '观世音菩萨成道日', isHoliday: false, english: 'Guanyin Enlightenment' },
-  '0624': { name: '关公圣旦', isHoliday: false, english: 'Guan Yu Birthday' },
+  '0603': { name: '韦陀菩萨圣旦', isHoliday: false, english: 'Skanda Bodhisattva Birthday', traditions: ['buddhist'] },
+  '0619': { name: '观世音菩萨成道日', isHoliday: false, english: 'Guanyin Enlightenment', traditions: ['buddhist'] },
+  '0624': { name: '关公圣旦', isHoliday: false, english: 'Guan Yu Birthday', traditions: ['taoist', 'folk'] },
   // Seventh month
-  '0701': { name: '四始吉日', isHoliday: false, english: 'Auspicious Day' },
-  '0707': { name: '七夕', isHoliday: false, english: 'Qixi Festival', extra: "Chinese Valentine's Day" },
-  '0715': { name: '中元节', isHoliday: false, english: 'Ghost Festival', extra: '盂兰盆节' },
-  '0718': { name: '王母娘娘圣诞', isHoliday: false, english: 'Queen Mother of the West Birthday' },
-  '0719': { name: '值年太岁圣旦', isHoliday: false, english: 'Tai Sui Birthday' },
-  '0730': { name: '地藏王菩萨诞', isHoliday: false, english: 'Dizang Bodhisattva Birthday' },
+  '0701': { name: '四始吉日', isHoliday: false, english: 'Auspicious Day', traditions: ['folk'] },
+  '0707': {
+    name: '七夕',
+    isHoliday: false,
+    english: 'Qixi Festival',
+    extra: "Chinese Valentine's Day",
+    traditions: ['folk']
+  },
+  '0715': {
+    name: '中元节',
+    isHoliday: false,
+    english: 'Ghost Festival',
+    extra: '盂兰盆节',
+    traditions: ['buddhist', 'taoist', 'folk']
+  },
+  '0718': {
+    name: '王母娘娘圣诞',
+    isHoliday: false,
+    english: 'Queen Mother of the West Birthday',
+    traditions: ['taoist']
+  },
+  '0719': { name: '值年太岁圣旦', isHoliday: false, english: 'Tai Sui Birthday', traditions: ['taoist'] },
+  '0730': { name: '地藏王菩萨诞', isHoliday: false, english: 'Dizang Bodhisattva Birthday', traditions: ['buddhist'] },
   // Eighth month
-  '0815': { name: '中秋节', isHoliday: true, english: 'Mid-Autumn Festival' },
+  '0815': { name: '中秋节', isHoliday: true, english: 'Mid-Autumn Festival', traditions: ['public'] },
   // Ninth month
-  '0909': { name: '重阳节', isHoliday: false, english: 'Double Ninth Festival' },
-  '0919': { name: '观世音菩萨出家日', isHoliday: false, english: 'Guanyin Renunciation Day' },
+  '0909': { name: '重阳节', isHoliday: false, english: 'Double Ninth Festival', traditions: ['folk'] },
+  '0919': { name: '观世音菩萨出家日', isHoliday: false, english: 'Guanyin Renunciation Day', traditions: ['buddhist'] },
   // Tenth month
-  1001: { name: '寒衣节', isHoliday: false, english: 'Cold Clothes Festival', extra: '祭祖节' },
-  1015: { name: '下元节', isHoliday: false, english: 'Lower Yuan Festival', extra: '水官大帝诞' },
-  // Tenth month (Buddhist)
-  1005: { name: '达摩祖师圣旦', isHoliday: false, english: 'Bodhidharma Birthday' },
+  1001: { name: '寒衣节', isHoliday: false, english: 'Cold Clothes Festival', extra: '祭祖节', traditions: ['folk'] },
+  1005: { name: '达摩祖师圣旦', isHoliday: false, english: 'Bodhidharma Birthday', traditions: ['buddhist'] },
+  1015: {
+    name: '下元节',
+    isHoliday: false,
+    english: 'Lower Yuan Festival',
+    extra: '水官大帝诞',
+    traditions: ['taoist', 'folk']
+  },
   // Eleventh month
-  1117: { name: '阿弥陀佛圣旦', isHoliday: false, english: 'Amitabha Buddha Birthday' },
-  1119: { name: '观世音菩萨诞', isHoliday: false, english: 'Guanyin Day', extra: '南海观音入海日' },
+  1117: { name: '阿弥陀佛圣旦', isHoliday: false, english: 'Amitabha Buddha Birthday', traditions: ['buddhist'] },
+  1119: {
+    name: '观世音菩萨诞',
+    isHoliday: false,
+    english: 'Guanyin Day',
+    extra: '南海观音入海日',
+    traditions: ['buddhist']
+  },
   // Twelfth month (腊月)
-  1208: { name: '腊八节', isHoliday: false, english: 'Laba Festival', extra: '释迦牟尼成道日' },
-  1216: { name: '尾牙', isHoliday: false, english: 'Last Ya Festival', extra: '谢地主日' },
-  1223: { name: '小年', isHoliday: false, english: 'Little New Year' },
-  1224: { name: '送神日', isHoliday: false, english: 'Sending Gods Day' },
-  1225: { name: '天官巡人间', isHoliday: false, english: 'Heaven Official Inspection' },
+  1208: {
+    name: '腊八节',
+    isHoliday: false,
+    english: 'Laba Festival',
+    extra: '释迦牟尼成道日',
+    traditions: ['buddhist', 'folk']
+  },
+  1216: { name: '尾牙', isHoliday: false, english: 'Last Ya Festival', extra: '谢地主日', traditions: ['folk'] },
+  1223: { name: '小年', isHoliday: false, english: 'Little New Year', traditions: ['folk'] },
+  1224: { name: '送神日', isHoliday: false, english: 'Sending Gods Day', traditions: ['folk', 'taoist'] },
+  1225: { name: '天官巡人间', isHoliday: false, english: 'Heaven Official Inspection', traditions: ['taoist'] },
   // Special: Last day of year (varies 29 or 30)
-  '0100': { name: '除夕', isHoliday: true, english: "New Year's Eve" }
+  '0100': { name: '除夕', isHoliday: true, english: "New Year's Eve", traditions: ['public'] }
+};
+
+/**
+ * Filter a festival object by requested tradition tags.
+ * Returns the festival unchanged if no filter is requested, null if it doesn't match.
+ * @param {Object|null} festival
+ * @param {string[]|undefined} traditions - requested tradition tags (e.g. ['public','buddhist'])
+ * @returns {Object|null}
+ */
+const filterFestival = (festival, traditions) => {
+  if (!festival || !traditions || traditions.length === 0) return festival;
+  return festival.traditions?.some((t) => traditions.includes(t)) ? festival : null;
 };
 
 /**
@@ -746,10 +837,13 @@ const isSanniangShaDay = (day) => SANNIANG_SHA_DAYS.includes(day);
  * @returns {Object} Comprehensive lunar calendar information
  * @throws {Error} If invalid date provided
  */
-const solarToLunar = (solarDate, month, day, hour = 0, minute = 0, second = 0) => {
+const solarToLunar = (solarDate, month, day, hour = 0, minute = 0, second = 0, options = {}) => {
   let date;
   if (solarDate instanceof Date) {
     date = solarDate;
+    if (typeof month === 'object' && month !== null) {
+      options = month; // solarToLunar(date, { traditions: [...] })
+    }
   } else if (typeof solarDate === 'number' && month !== undefined && day !== undefined) {
     date = new Date(solarDate, month - 1, day, hour, minute, second);
   } else {
@@ -778,8 +872,12 @@ const solarToLunar = (solarDate, month, day, hour = 0, minute = 0, second = 0) =
   );
 
   // Get festival information
-  const solarFestival = getSolarFestival(normalizedDate.getMonth() + 1, normalizedDate.getDate());
-  const lunarFestival = getLunarFestival(lunarInfo.month, lunarInfo.day, lunarInfo.year);
+  const traditions = options.traditions && options.traditions.length > 0 ? options.traditions : null;
+  const solarFestival = filterFestival(
+    getSolarFestival(normalizedDate.getMonth() + 1, normalizedDate.getDate()),
+    traditions
+  );
+  const lunarFestival = filterFestival(getLunarFestival(lunarInfo.month, lunarInfo.day, lunarInfo.year), traditions);
   const sanniangSha = isSanniangShaDay(lunarInfo.day);
 
   const solarYear = normalizedDate.getFullYear();
@@ -860,7 +958,8 @@ const lunarToSolar = (
   isLeapMonthVal = false,
   hourVal = 0,
   minuteVal = 0,
-  secondVal = 0
+  secondVal = 0,
+  options = {}
 ) => {
   let lunarYear,
     lunarMonth,
@@ -878,6 +977,9 @@ const lunarToSolar = (
     hour = hourVal;
     minute = minuteVal;
     second = secondVal;
+    if (typeof lunarDayVal === 'object' && lunarDayVal !== null) {
+      options = lunarDayVal; // lunarToSolar(date, isLeapMonth, { traditions: [...] })
+    }
   } else if (typeof lunarYearOrDate === 'number' && lunarMonthOrLeap !== undefined && lunarDayVal !== undefined) {
     lunarYear = lunarYearOrDate;
     lunarMonth = lunarMonthOrLeap;
@@ -908,8 +1010,9 @@ const lunarToSolar = (
   const stemBranchInfo = calculateStemBranch(solarInfo.year, solarInfo.month, solarInfo.day);
 
   // Get festival information
-  const solarFestival = getSolarFestival(solarInfo.month + 1, solarInfo.day);
-  const lunarFestival = getLunarFestival(lunarMonth, lunarDay, lunarYear);
+  const traditionsFilter = options.traditions && options.traditions.length > 0 ? options.traditions : null;
+  const solarFestival = filterFestival(getSolarFestival(solarInfo.month + 1, solarInfo.day), traditionsFilter);
+  const lunarFestival = filterFestival(getLunarFestival(lunarMonth, lunarDay, lunarYear), traditionsFilter);
   const sanniangSha = isSanniangShaDay(lunarDay);
   const matchedTermLunar = getSolarTermsForYear(solarInfo.year).find(
     (t) => t.month === solarInfo.month + 1 && t.day === solarInfo.day
