@@ -437,6 +437,31 @@ test('BaZi: Regression - Month Pillar for 1980-03-21 should be Ji-Mao (date afte
   assert.strictEqual(result.baZi.day.stem + result.baZi.day.branch, '癸巳', 'Day should be Gui-Si');
 });
 
+// ===== LEAP MONTH VALIDATION TESTS =====
+
+test('lunarToSolar: valid leap month accepted (2020 leap 4th month)', () => {
+  // 2020 has a leap 4th month; this should resolve to a real solar date
+  const result = lunarToSolar(2020, 4, 1, true);
+  assert.strictEqual(result.solar.year, 2020);
+  assert.strictEqual(result.solar.month, 5);
+  assert.strictEqual(result.solar.day, 23);
+});
+
+test('lunarToSolar: valid leap month accepted (2023 leap 2nd month)', () => {
+  const result = lunarToSolar(2023, 2, 1, true);
+  assert.strictEqual(result.solar.year, 2023);
+  assert.strictEqual(result.solar.month, 3);
+  assert.strictEqual(result.solar.day, 22);
+});
+
+test('lunarToSolar: throws when isLeapMonth=true but year has no leap month (2021)', () => {
+  assert.throws(() => lunarToSolar(2021, 4, 1, true), /no leap month/i);
+});
+
+test('lunarToSolar: throws when isLeapMonth=true but month does not match leap month (2020 leap is 4, not 3)', () => {
+  assert.throws(() => lunarToSolar(2020, 3, 1, true), /leap month/i);
+});
+
 // ===== STEM-BRANCH / BAZI EDGE CASE TESTS =====
 
 test('BaZi: year pillar uses prior year on day before Li Chun (2024-02-02 → 癸卯)', () => {
