@@ -272,6 +272,33 @@ const SOLAR_TERM_INFO = [
   ] // 2000-2099 (Adjusted slightly)
 ];
 
+const SOLAR_TERM_NAMES = [
+  '小寒',
+  '大寒',
+  '立春',
+  '雨水',
+  '惊蛰',
+  '春分',
+  '清明',
+  '谷雨',
+  '立夏',
+  '小满',
+  '芒种',
+  '夏至',
+  '小暑',
+  '大暑',
+  '立秋',
+  '处暑',
+  '白露',
+  '秋分',
+  '寒露',
+  '霜降',
+  '立冬',
+  '小雪',
+  '大雪',
+  '冬至'
+];
+
 // Base date for lunar calendar calculations (Jan 31, 1900)
 const BASE_DATE = new Date(1900, 0, 31);
 
@@ -580,6 +607,19 @@ const getSolarTermDay = (year, termIndex) => {
 };
 
 /**
+ * Get all 24 solar terms for a given Gregorian year
+ *
+ * @param {number} year - Gregorian year
+ * @returns {Array<{nameZh: string, month: number, day: number}>}
+ */
+const getSolarTermsForYear = (year) =>
+  SOLAR_TERM_NAMES.map((nameZh, i) => ({
+    nameZh,
+    month: Math.floor(i / 2) + 1,
+    day: getSolarTermDay(year, i)
+  }));
+
+/**
  * Calculate stem-branch (干支) information for a date
  *
  * The stem-branch system is a 60-year/60-day cycle combining:
@@ -742,6 +782,11 @@ const solarToLunar = (solarDate, month, day, hour = 0, minute = 0, second = 0) =
   const lunarFestival = getLunarFestival(lunarInfo.month, lunarInfo.day, lunarInfo.year);
   const sanniangSha = isSanniangShaDay(lunarInfo.day);
 
+  const solarYear = normalizedDate.getFullYear();
+  const solarMonth = normalizedDate.getMonth() + 1;
+  const solarDay = normalizedDate.getDate();
+  const matchedTerm = getSolarTermsForYear(solarYear).find((t) => t.month === solarMonth && t.day === solarDay);
+
   return {
     solar: {
       year: normalizedDate.getFullYear(),
@@ -786,7 +831,7 @@ const solarToLunar = (solarDate, month, day, hour = 0, minute = 0, second = 0) =
       lunar: lunarFestival,
       sanniangSha
     },
-    solarTerms: ''
+    solarTerms: matchedTerm ? matchedTerm.nameZh : ''
   };
 };
 
@@ -856,6 +901,9 @@ const lunarToSolar = (
   const solarFestival = getSolarFestival(solarInfo.month + 1, solarInfo.day);
   const lunarFestival = getLunarFestival(lunarMonth, lunarDay, lunarYear);
   const sanniangSha = isSanniangShaDay(lunarDay);
+  const matchedTermLunar = getSolarTermsForYear(solarInfo.year).find(
+    (t) => t.month === solarInfo.month + 1 && t.day === solarInfo.day
+  );
 
   const hourTimePeriod = solarInfo.hour !== undefined ? getTimePeriod(new Date(2000, 0, 1, solarInfo.hour)) : null;
 
@@ -903,7 +951,7 @@ const lunarToSolar = (
       lunar: lunarFestival,
       sanniangSha
     },
-    solarTerms: ''
+    solarTerms: matchedTermLunar ? matchedTermLunar.nameZh : ''
   };
 };
 
@@ -914,7 +962,8 @@ if (typeof module !== 'undefined' && module.exports) {
     lunarToSolar,
     getTimePeriod,
     calculateLunarFromSolar,
-    calculateSolarFromLunar
+    calculateSolarFromLunar,
+    getSolarTermsForYear
   };
 } else if (typeof window !== 'undefined') {
   window.Soluna = {
@@ -922,6 +971,7 @@ if (typeof module !== 'undefined' && module.exports) {
     lunarToSolar,
     getTimePeriod,
     calculateLunarFromSolar,
-    calculateSolarFromLunar
+    calculateSolarFromLunar,
+    getSolarTermsForYear
   };
 }
