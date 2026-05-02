@@ -2,6 +2,9 @@ export type Tradition = 'public' | 'buddhist' | 'taoist' | 'folk';
 
 export interface FestivalOptions {
   traditions?: Tradition[];
+  /** Fixed UTC offset in hours (e.g. 8 for CST, -5 for EST). When provided, the Date argument
+   *  is interpreted at this offset rather than the runtime's local timezone. */
+  utcOffset?: number;
 }
 
 export interface Festival {

@@ -507,19 +507,36 @@ const adjustForTimeZodiac = (date) => {
   return date;
 };
 
+/**
+ * Extract wall-clock date components from a Date.
+ * When utcOffset (hours) is provided, interprets the timestamp at that fixed offset
+ * rather than the runtime's local timezone.
+ */
+const getComponents = (date, utcOffset) => {
+  if (utcOffset === undefined || utcOffset === null) {
+    return {
+      year: date.getFullYear(),
+      month: date.getMonth(),
+      day: date.getDate(),
+      hour: date.getHours(),
+      minute: date.getMinutes(),
+      second: date.getSeconds()
+    };
+  }
+  const shifted = new Date(date.getTime() + utcOffset * 3600000);
+  return {
+    year: shifted.getUTCFullYear(),
+    month: shifted.getUTCMonth(),
+    day: shifted.getUTCDate(),
+    hour: shifted.getUTCHours(),
+    minute: shifted.getUTCMinutes(),
+    second: shifted.getUTCSeconds()
+  };
+};
+
 // ===== TIME PERIOD FUNCTIONS =====
 
-/**
- * Get time period information for a given time
- */
-const getTimePeriod = (date) => {
-  if (!isValidDate(date)) {
-    throw new Error('Invalid date provided');
-  }
-
-  const hour = date.getHours();
-
-  // Handle special case for 子时 (23:00-01:00 next day)
+const getTimePeriodForHour = (hour) => {
   if (hour >= 23 || hour < 1) {
     return {
       name: '子时',
@@ -549,6 +566,16 @@ const getTimePeriod = (date) => {
     branch: timePeriod.branch,
     description: TIME_DESCRIPTIONS[timePeriod.name] || '时间段描述未知'
   };
+};
+
+/**
+ * Get time period information for a given time
+ */
+const getTimePeriod = (date) => {
+  if (!isValidDate(date)) {
+    throw new Error('Invalid date provided');
+  }
+  return getTimePeriodForHour(date.getHours());
 };
 
 // ===== CORE CONVERSION FUNCTIONS =====
@@ -854,15 +881,25 @@ const solarToLunar = (solarDate, month, day, hour = 0, minute = 0, second = 0, o
     throw new Error('Invalid date provided');
   }
 
-  // Adjust date if time is 23:00 (belongs to next day in lunar calendar)
-  const adjustedDate = adjustForTimeZodiac(date);
-  const normalizedDate = new Date(adjustedDate.getFullYear(), adjustedDate.getMonth(), adjustedDate.getDate());
+  // Extract wall-clock components, respecting utcOffset when provided
+  const isDateForm = solarDate instanceof Date;
+  const comp = isDateForm ? getComponents(date, options.utcOffset) : getComponents(date, undefined);
+
+  // Adjust if 23:00 (子时 belongs to the next day in the lunar calendar)
+  let { year: cYear, month: cMonth, day: cDay } = comp;
+  if (comp.hour === 23) {
+    const next = new Date(Date.UTC(cYear, cMonth, cDay + 1));
+    cYear = next.getUTCFullYear();
+    cMonth = next.getUTCMonth();
+    cDay = next.getUTCDate();
+  }
+  const normalizedDate = new Date(cYear, cMonth, cDay);
 
   // Calculate lunar information
   const lunarInfo = calculateLunarFromSolar(normalizedDate);
 
-  // Get time period if time is available
-  const timePeriod = getTimePeriod(date);
+  // Get time period using the offset-adjusted hour
+  const timePeriod = getTimePeriodForHour(comp.hour);
 
   // Calculate stem-branch information
   const stemBranchInfo = calculateStemBranch(
@@ -892,9 +929,9 @@ const solarToLunar = (solarDate, month, day, hour = 0, minute = 0, second = 0, o
       day: normalizedDate.getDate(),
       weekDay: DAY_NAMES[normalizedDate.getDay()],
       time: {
-        hour: date.getHours(),
-        minute: date.getMinutes(),
-        second: date.getSeconds()
+        hour: comp.hour,
+        minute: comp.minute,
+        second: comp.second
       }
     },
     lunar: {
@@ -970,16 +1007,17 @@ const lunarToSolar = (
     second = 0;
 
   if (lunarYearOrDate instanceof Date) {
-    lunarYear = lunarYearOrDate.getFullYear();
-    lunarMonth = lunarYearOrDate.getMonth() + 1;
-    lunarDay = lunarYearOrDate.getDate();
-    isLeapMonth = !!lunarMonthOrLeap; // isLeapMonth is the second arg in format 1
-    hour = hourVal;
-    minute = minuteVal;
-    second = secondVal;
     if (typeof lunarDayVal === 'object' && lunarDayVal !== null) {
       options = lunarDayVal; // lunarToSolar(date, isLeapMonth, { traditions: [...] })
     }
+    const comp = getComponents(lunarYearOrDate, options.utcOffset);
+    lunarYear = comp.year;
+    lunarMonth = comp.month + 1;
+    lunarDay = comp.day;
+    isLeapMonth = !!lunarMonthOrLeap;
+    hour = hourVal;
+    minute = minuteVal;
+    second = secondVal;
   } else if (typeof lunarYearOrDate === 'number' && lunarMonthOrLeap !== undefined && lunarDayVal !== undefined) {
     lunarYear = lunarYearOrDate;
     lunarMonth = lunarMonthOrLeap;

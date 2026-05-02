@@ -7,6 +7,17 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [2.3.0] - 2026-05-02
+
+### Added
+
+- `utcOffset` option on `solarToLunar` and `lunarToSolar` — accepts a fixed UTC offset in hours (e.g. `8` for CST, `-5` for EST); when provided, the `Date` argument is interpreted at that offset instead of the runtime's local timezone
+- `getComponents(date, utcOffset)` internal helper for timezone-safe component extraction
+- `getTimePeriodForHour(hour)` internal helper; `getTimePeriod` delegates to it so 子时 detection also respects `utcOffset`
+- `utcOffset?: number` field added to `FestivalOptions` in `soluna.d.ts`
+
+---
+
 ## [2.2.0] - 2026-05-02
 
 ### Added

@@ -437,6 +437,58 @@ test('BaZi: Regression - Month Pillar for 1980-03-21 should be Ji-Mao (date afte
   assert.strictEqual(result.baZi.day.stem + result.baZi.day.branch, '癸巳', 'Day should be Gui-Si');
 });
 
+// ===== TIMEZONE / UTC OFFSET TESTS =====
+
+test('Timezone: utcOffset +8 interprets UTC midnight as local morning (same day)', () => {
+  // 2020-01-25T00:00:00Z = Jan 25 08:00 in UTC+8 → 春节 (lunar 2020/1/1)
+  const result = solarToLunar(new Date('2020-01-25T00:00:00Z'), { utcOffset: 8 });
+  assert.strictEqual(result.solar.year, 2020);
+  assert.strictEqual(result.solar.month, 1);
+  assert.strictEqual(result.solar.day, 25);
+  assert.strictEqual(result.lunar.year, 2020);
+  assert.strictEqual(result.lunar.month, 1);
+  assert.strictEqual(result.lunar.day, 1);
+});
+
+test('Timezone: utcOffset -5 interprets UTC midnight as prior day evening', () => {
+  // 2020-01-25T00:00:00Z = Jan 24 19:00 in UTC-5 → 2019 lunar 12/30
+  const result = solarToLunar(new Date('2020-01-25T00:00:00Z'), { utcOffset: -5 });
+  assert.strictEqual(result.solar.year, 2020);
+  assert.strictEqual(result.solar.month, 1);
+  assert.strictEqual(result.solar.day, 24);
+  assert.strictEqual(result.lunar.year, 2019);
+  assert.strictEqual(result.lunar.month, 12);
+  assert.strictEqual(result.lunar.day, 30);
+});
+
+test('Timezone: solar.time.hour reflects utcOffset-adjusted wall clock', () => {
+  // 2024-01-01T00:00:00Z with utcOffset +8 → hour should be 8
+  const result = solarToLunar(new Date('2024-01-01T00:00:00Z'), { utcOffset: 8 });
+  assert.strictEqual(result.solar.time.hour, 8);
+});
+
+test('Timezone: 子时 detection uses utcOffset-adjusted hour', () => {
+  // 2024-06-14T15:00:00Z with utcOffset +8 → 23:00 → 子时 → next day Jun 15
+  const result = solarToLunar(new Date('2024-06-14T15:00:00Z'), { utcOffset: 8 });
+  assert.strictEqual(result.solar.day, 15);
+  assert.strictEqual(result.lunar.year, 2024);
+  assert.strictEqual(result.lunar.month, 5);
+  assert.strictEqual(result.lunar.day, 10);
+});
+
+test('Timezone: timePeriod uses utcOffset-adjusted hour', () => {
+  // 2024-06-15T01:00:00Z with utcOffset +8 → 09:00 → 巳时
+  const result = solarToLunar(new Date('2024-06-15T01:00:00Z'), { utcOffset: 8 });
+  assert.strictEqual(result.timePeriod.name, '巳时');
+  assert.strictEqual(result.timePeriod.branch, '巳');
+});
+
+test('Timezone: traditions and utcOffset can be combined', () => {
+  // 2020-01-25T00:00:00Z with utcOffset +8 and public filter → 春节 returned
+  const result = solarToLunar(new Date('2020-01-25T00:00:00Z'), { utcOffset: 8, traditions: ['public'] });
+  assert.strictEqual(result.festivals.lunar.name, '春节');
+});
+
 // ===== TRADITION TAGGING TESTS =====
 
 test('Tradition tagging: festival object includes traditions array', () => {
