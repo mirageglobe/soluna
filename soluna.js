@@ -892,6 +892,16 @@ const lunarToSolar = (
     );
   }
 
+  if (isLeapMonth) {
+    const leapMonthForYear = getLeapMonth(lunarYear);
+    if (leapMonthForYear === 0) {
+      throw new Error(`Year ${lunarYear} has no leap month`);
+    }
+    if (leapMonthForYear !== lunarMonth) {
+      throw new Error(`Year ${lunarYear} leap month is ${leapMonthForYear}, not ${lunarMonth}`);
+    }
+  }
+
   // Calculate solar information
   const solarInfo = calculateSolarFromLunar(lunarYear, lunarMonth, lunarDay, isLeapMonth, hour, minute, second);
   const solarDate = new Date(solarInfo.year, solarInfo.month, solarInfo.day);
