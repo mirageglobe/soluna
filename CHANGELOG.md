@@ -7,6 +7,17 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [2.2.0] - 2026-05-02
+
+### Added
+
+- `soluna.d.ts` — full TypeScript type definitions for all exported functions and return types
+- `types` field in `package.json`; `soluna.d.ts` added to the published file list
+- Types cover: `CalendarResult`, `BaZi`, `StemBranch`, `TimePeriod`, `Festival`, `Festivals`, `LunarDate`, `SolarDate`, `SolarTerm`, `LunarInfo`, `SolarInfo`, `FestivalOptions`, `Tradition`
+- Function overloads for both Date-form and numeric-form signatures of `solarToLunar` and `lunarToSolar`
+
+---
+
 ## [2.1.0] - 2026-05-02
 
 ### Added
