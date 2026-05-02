@@ -437,6 +437,55 @@ test('BaZi: Regression - Month Pillar for 1980-03-21 should be Ji-Mao (date afte
   assert.strictEqual(result.baZi.day.stem + result.baZi.day.branch, '癸巳', 'Day should be Gui-Si');
 });
 
+// ===== STEM-BRANCH / BAZI EDGE CASE TESTS =====
+
+test('BaZi: year pillar uses prior year on day before Li Chun (2024-02-02 → 癸卯)', () => {
+  // Li Chun 2024 = Feb 3; Feb 2 still belongs to year 2023
+  const result = solarToLunar(new Date(2024, 1, 2));
+  assert.strictEqual(result.baZi.year.stem + result.baZi.year.branch, '癸卯');
+});
+
+test('BaZi: year pillar advances on Li Chun (2024-02-03 → 甲辰)', () => {
+  const result = solarToLunar(new Date(2024, 1, 3));
+  assert.strictEqual(result.baZi.year.stem + result.baZi.year.branch, '甲辰');
+});
+
+test('BaZi: Jan 1 year pillar is always prior year (2024-01-01 → 癸卯)', () => {
+  // Li Chun 2024 is in Feb; Jan 1 still belongs to 2023
+  const result = solarToLunar(new Date(2024, 0, 1));
+  assert.strictEqual(result.baZi.year.stem + result.baZi.year.branch, '癸卯');
+});
+
+test('BaZi: month pillar is 戊寅 on day before 惊蛰 (1980-03-04)', () => {
+  // 惊蛰 1980 = Mar 5; before the Jie, month remains 寅-month
+  const result = solarToLunar(new Date(1980, 2, 4));
+  assert.strictEqual(result.baZi.month.stem + result.baZi.month.branch, '戊寅');
+});
+
+test('BaZi: month pillar advances to 己卯 on 惊蛰 (1980-03-05)', () => {
+  const result = solarToLunar(new Date(1980, 2, 5));
+  assert.strictEqual(result.baZi.month.stem + result.baZi.month.branch, '己卯');
+});
+
+test('BaZi: day pillar increments by 1 for consecutive days (1980-03-21/22)', () => {
+  // 1980-03-21 is 癸巳 (established by regression test); next day must be 甲午
+  const result = solarToLunar(new Date(1980, 2, 22));
+  assert.strictEqual(result.baZi.day.stem + result.baZi.day.branch, '甲午');
+});
+
+test('BaZi: year 2000 is 庚辰 after Li Chun (2000-02-05)', () => {
+  // Li Chun 2000 = Feb 4; Feb 5 enters 庚辰 year — exercises century-boundary formula constant
+  const result = solarToLunar(new Date(2000, 1, 5));
+  assert.strictEqual(result.baZi.year.stem + result.baZi.year.branch, '庚辰');
+});
+
+test('BaZi: 60-year cycle — year pillars 60 years apart are identical (1984 and 2044 both 甲子)', () => {
+  const r1984 = solarToLunar(new Date(1984, 3, 15));
+  const r2044 = solarToLunar(new Date(2044, 3, 15));
+  assert.strictEqual(r1984.baZi.year.stem + r1984.baZi.year.branch, '甲子');
+  assert.strictEqual(r1984.baZi.year.stem + r1984.baZi.year.branch, r2044.baZi.year.stem + r2044.baZi.year.branch);
+});
+
 // ===== FLEXIBLE INPUT TESTS =====
 
 test('Flexible Input: solarToLunar with numerical arguments', () => {
