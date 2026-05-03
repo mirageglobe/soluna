@@ -423,9 +423,9 @@ test('BaZi: Verify Four Pillars (Year, Month, Day, Hour)', () => {
 
   assert.strictEqual(result.baZi.year.stem, '己', 'Year stem should be Ji (己)');
   assert.strictEqual(result.baZi.year.branch, '亥', 'Year branch should be Hai (亥)');
-  assert.strictEqual(result.baZi.day.stem, '丁', 'Day stem should be Ding (丁)');
-  assert.strictEqual(result.baZi.day.branch, '卯', 'Day branch should be Mao (卯)');
-  assert.strictEqual(result.baZi.hour.stem, '丙', 'Hour stem should be Bing (丙)');
+  assert.strictEqual(result.baZi.day.stem, '癸', 'Day stem should be Gui (癸)');
+  assert.strictEqual(result.baZi.day.branch, '未', 'Day branch should be Wei (未)');
+  assert.strictEqual(result.baZi.hour.stem, '戊', 'Hour stem should be Wu (戊)');
   assert.strictEqual(result.baZi.hour.branch, '午', 'Hour branch should be Wu (午)');
 });
 
@@ -434,7 +434,7 @@ test('BaZi: Regression - Month Pillar for 1980-03-21 should be Ji-Mao (date afte
 
   assert.strictEqual(result.baZi.year.stem + result.baZi.year.branch, '庚申', 'Year should be Geng-Shen');
   assert.strictEqual(result.baZi.month.stem + result.baZi.month.branch, '己卯', 'Month should be Ji-Mao');
-  assert.strictEqual(result.baZi.day.stem + result.baZi.day.branch, '癸巳', 'Day should be Gui-Si');
+  assert.strictEqual(result.baZi.day.stem + result.baZi.day.branch, '己酉', 'Day should be Ji-You');
 });
 
 // ===== TIMEZONE / UTC OFFSET TESTS =====
@@ -606,15 +606,21 @@ test('BaZi: month pillar advances to 己卯 on 惊蛰 (1980-03-05)', () => {
 });
 
 test('BaZi: day pillar increments by 1 for consecutive days (1980-03-21/22)', () => {
-  // 1980-03-21 is 癸巳 (established by regression test); next day must be 甲午
+  // 1980-03-21 is 己酉 (JDN-anchored); next day must be 庚戌
   const result = solarToLunar(new Date(1980, 2, 22));
-  assert.strictEqual(result.baZi.day.stem + result.baZi.day.branch, '甲午');
+  assert.strictEqual(result.baZi.day.stem + result.baZi.day.branch, '庚戌');
 });
 
 test('BaZi: year 2000 is 庚辰 after Li Chun (2000-02-05)', () => {
   // Li Chun 2000 = Feb 4; Feb 5 enters 庚辰 year — exercises century-boundary formula constant
   const result = solarToLunar(new Date(2000, 1, 5));
   assert.strictEqual(result.baZi.year.stem + result.baZi.year.branch, '庚辰');
+});
+
+test('BaZi: day pillar JDN anchor — 2000-01-01 (JDN 2451545) must be 甲戌', () => {
+  // Standard astronomical epoch: JDN 2451545 = 2000-01-01 = cycle index 10 (甲戌)
+  const result = solarToLunar(new Date(2000, 0, 1));
+  assert.strictEqual(result.baZi.day.stem + result.baZi.day.branch, '甲戌');
 });
 
 test('BaZi: 60-year cycle — year pillars 60 years apart are identical (1984 and 2044 both 甲子)', () => {
