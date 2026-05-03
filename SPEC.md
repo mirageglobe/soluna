@@ -186,5 +186,5 @@ pre-PR checklist: `make test` (runs Biome + node:test).
 
 - [x] `[soluna]` TypeScript type definitions (`soluna.d.ts`) for consumer projects `[easy]`
 - [x] `[soluna]` timezone-aware mode (currently assumes local time; could accept explicit UTC offset) `[hard]`
-- [ ] `[soluna]` CLI wrapper (`npx soluna <date>`) for quick lookups `[medium]`
+- [x] `[soluna]` CLI wrapper (`npx soluna <date>`) for quick lookups `[medium]`
 - [ ] `[soluna-go]` Go port of the soluna library — expose the same public API (`SolarToLunar`, `LunarToSolar`, `GetSolarTermsForYear`) as a native Go module; zero CGo, pure Go, suitable for server-side and FFI/gRPC use `[hard]`

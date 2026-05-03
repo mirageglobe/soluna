@@ -4,9 +4,13 @@
   "description": "JavaScript library for converting between Gregorian (solar) and Chinese lunar calendar dates",
   "main": "soluna.js",
   "types": "soluna.d.ts",
+  "bin": {
+    "soluna": "bin/soluna.js"
+  },
   "files": [
     "soluna.js",
     "soluna.d.ts",
+    "bin/soluna.js",
     "README.md",
     "LICENSE"
   ],
