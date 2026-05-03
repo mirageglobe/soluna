@@ -7,6 +7,16 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [2.4.0] - 2026-05-03
+
+### Added
+
+- `bin/soluna.js` CLI entry point — run `npx soluna [YYYY-MM-DD]` or `soluna [YYYY MM DD]` for quick lookups from the terminal
+- outputs solar date, lunar date, zodiac, BaZi pillars, solar term, and festivals
+- registered in `package.json` `bin` field; included in npm published files
+
+---
+
 ## [2.3.0] - 2026-05-02
 
 ### Added
