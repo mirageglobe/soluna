@@ -698,3 +698,74 @@ test('lunarToSolar: solarTerms populated when converted date is a solar term', (
   assert.strictEqual(result.solar.day, 5);
   assert.strictEqual(result.solarTerms, '小寒');
 });
+
+// ===== ROUND-TRIP PROPERTY TESTS =====
+
+test('Round-trip: solarToLunar -> lunarToSolar restores original date (sampled across 1900–2100)', () => {
+  // step every ~73 days across the full LUNAR_INFO range to cover all months/years
+  const start = new Date('1900-01-31');
+  const end = new Date('2100-12-31');
+  const stepMs = 73 * 24 * 60 * 60 * 1000;
+
+  for (let t = start.getTime(); t <= end.getTime(); t += stepMs) {
+    const original = new Date(t);
+    const y = original.getFullYear();
+    const m = original.getMonth() + 1;
+    const d = original.getDate();
+
+    const lunar = solarToLunar(y, m, d);
+    const restored = lunarToSolar(lunar.lunar.year, lunar.lunar.month, lunar.lunar.day, lunar.lunar.isLeapMonth);
+
+    assert.strictEqual(restored.solar.year, y, `round-trip year  failed for solar ${y}-${m}-${d}`);
+    assert.strictEqual(restored.solar.month, m, `round-trip month failed for solar ${y}-${m}-${d}`);
+    assert.strictEqual(restored.solar.day, d, `round-trip day   failed for solar ${y}-${m}-${d}`);
+  }
+});
+
+// ===== SPOT-CHECK FIXTURES (authoritative sources) =====
+// Sources: HK Observatory (hko.gov.hk), Taiwan CWB, time.is/lunar
+
+test('Spot-check fixtures: known solar <-> lunar pairs from HK Observatory / Taiwan CWB', () => {
+  const fixtures = [
+    // { solar, lunarYear, lunarMonth, lunarDay, isLeap }
+    // Spring Festival (Chinese New Year) anchors
+    { solar: '1949-01-29', lunarYear: 1949, lunarMonth: 1, lunarDay: 1, isLeap: false },
+    { solar: '1967-02-09', lunarYear: 1967, lunarMonth: 1, lunarDay: 1, isLeap: false },
+    { solar: '1984-02-02', lunarYear: 1984, lunarMonth: 1, lunarDay: 1, isLeap: false },
+    { solar: '2000-02-05', lunarYear: 2000, lunarMonth: 1, lunarDay: 1, isLeap: false },
+    { solar: '2038-02-04', lunarYear: 2038, lunarMonth: 1, lunarDay: 1, isLeap: false },
+    // Qingming (清明) — solar term, always ~Apr 4-6
+    { solar: '2023-04-05', lunarYear: 2023, lunarMonth: 2, lunarDay: 15, isLeap: true }, // falls in leap 2nd month
+    { solar: '2024-04-04', lunarYear: 2024, lunarMonth: 2, lunarDay: 26, isLeap: false },
+    // Dragon Boat Festival (端午) — Lunar May 5
+    { solar: '2023-06-22', lunarYear: 2023, lunarMonth: 5, lunarDay: 5, isLeap: false },
+    { solar: '2024-06-10', lunarYear: 2024, lunarMonth: 5, lunarDay: 5, isLeap: false },
+    // Double Ninth (重陽) — Lunar Sep 9
+    { solar: '2023-10-23', lunarYear: 2023, lunarMonth: 9, lunarDay: 9, isLeap: false },
+    { solar: '2024-10-11', lunarYear: 2024, lunarMonth: 9, lunarDay: 9, isLeap: false },
+    // Leap month verification — 2023 has leap Feb (月2)
+    { solar: '2023-03-22', lunarYear: 2023, lunarMonth: 2, lunarDay: 1, isLeap: true },
+    // Winter Solstice (冬至) anchors
+    { solar: '2022-12-22', lunarYear: 2022, lunarMonth: 11, lunarDay: 29, isLeap: false },
+    { solar: '2023-12-22', lunarYear: 2023, lunarMonth: 11, lunarDay: 10, isLeap: false },
+    // Far-future boundary
+    { solar: '2099-01-21', lunarYear: 2099, lunarMonth: 1, lunarDay: 1, isLeap: false },
+    // Far-past boundary
+    { solar: '1901-02-19', lunarYear: 1901, lunarMonth: 1, lunarDay: 1, isLeap: false }
+  ];
+
+  fixtures.forEach(({ solar, lunarYear, lunarMonth, lunarDay, isLeap }) => {
+    const [y, m, d] = solar.split('-').map(Number);
+    const result = solarToLunar(y, m, d);
+
+    assert.strictEqual(result.lunar.year, lunarYear, `${solar}: lunar year`);
+    assert.strictEqual(result.lunar.month, lunarMonth, `${solar}: lunar month`);
+    assert.strictEqual(result.lunar.day, lunarDay, `${solar}: lunar day`);
+    assert.strictEqual(result.lunar.isLeapMonth, isLeap, `${solar}: isLeapMonth`);
+
+    const back = lunarToSolar(lunarYear, lunarMonth, lunarDay, isLeap);
+    assert.strictEqual(back.solar.year, y, `${solar}: reverse year`);
+    assert.strictEqual(back.solar.month, m, `${solar}: reverse month`);
+    assert.strictEqual(back.solar.day, d, `${solar}: reverse day`);
+  });
+});
