@@ -772,7 +772,8 @@ const calculateStemBranch = (year, month, day) => {
   const monthIdx = totalMonths % 60;
 
   // Day stem-branch
-  const dayOffset = Math.floor(Date.UTC(year, month, day) / MILLISECONDS_PER_DAY) + 25567 + 10;
+  // +33 anchors JDN 2451545 (2000-01-01) to cycle index 10 (甲戌), the standard astronomical epoch
+  const dayOffset = Math.floor(Date.UTC(year, month, day) / MILLISECONDS_PER_DAY) + 33;
   const dayIdx = dayOffset % 60;
 
   return {
