@@ -9,9 +9,8 @@ jobs:
   publish:
     name: Publish to npm
     runs-on: ubuntu-latest
-    environment: npm
-
     permissions:
+      id-token: write
       contents: read
 
     steps:
@@ -27,6 +26,4 @@ jobs:
 
       - run: npm test
 
-      - run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npm publish --provenance --access public
