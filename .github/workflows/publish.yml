@@ -10,6 +10,7 @@ jobs:
     name: Publish to npm
     runs-on: ubuntu-latest
     permissions:
+      id-token: write
       contents: read
 
     steps:
@@ -18,13 +19,10 @@ jobs:
       - uses: actions/setup-node@v4.4.0
         with:
           node-version: '22.x'
-          registry-url: 'https://registry.npmjs.org'
           cache: npm
 
       - run: npm ci
 
       - run: npm test
 
-      - run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - run: npm publish --provenance --access public
