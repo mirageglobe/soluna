@@ -7,6 +7,36 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [2.7.0] - 2026-05-04
+
+### Added
+
+- `moonPhase` field in `solarToLunar` and `lunarToSolar` output — `{ name, nameZh }` derived from the lunar day, covering all 8 standard phases (朔, 娥眉月, 上弦月, 盈凸月, 望, 亏凸月, 下弦月, 残月)
+
+---
+
+## [2.6.0] - 2026-05-04
+
+### Changed
+
+- removed automated npm publish from GitHub Actions; publish is now manual (`npm publish` after tagging)
+- added `make release` and `make publish` targets to `Makefile` to guide the release flow
+
+---
+
+## [2.5.0] - 2026-05-03
+
+### Added
+
+- npm publish GitHub Actions workflow (`release.yml`) with OIDC trusted publishing support
+- `make release` target for version bumping and tagging
+
+### Fixed
+
+- multiple CI patches (2.5.1–2.5.11) resolving OIDC token injection, registry-url conflicts, and `package-lock.json` inclusion in release commits
+
+---
+
 ## [2.4.0] - 2026-05-03
 
 ### Added
