@@ -769,3 +769,53 @@ test('Spot-check fixtures: known solar <-> lunar pairs from HK Observatory / Tai
     assert.strictEqual(back.solar.day, d, `${solar}: reverse day`);
   });
 });
+
+// ===== MOON PHASE TESTS =====
+
+test('Moon phase: new moon on lunar day 1', () => {
+  // 2024-03-10 = lunar 2024/2/1 (new moon)
+  const result = solarToLunar(2024, 3, 10);
+  assert.strictEqual(result.lunar.day, 1);
+  assert.strictEqual(result.moonPhase.nameZh, '朔');
+  assert.strictEqual(result.moonPhase.name, 'New Moon');
+});
+
+test('Moon phase: full moon on lunar day 15', () => {
+  // 2024-03-24 = lunar 2024/2/15 (full moon)
+  const result = solarToLunar(2024, 3, 24);
+  assert.strictEqual(result.lunar.day, 15);
+  assert.strictEqual(result.moonPhase.nameZh, '望');
+  assert.strictEqual(result.moonPhase.name, 'Full Moon');
+});
+
+test('Moon phase: first quarter on lunar day 7', () => {
+  // 2024-03-16 = lunar 2024/2/7
+  const result = solarToLunar(2024, 3, 16);
+  assert.strictEqual(result.lunar.day, 7);
+  assert.strictEqual(result.moonPhase.nameZh, '上弦月');
+  assert.strictEqual(result.moonPhase.name, 'First Quarter');
+});
+
+test('Moon phase: last quarter on lunar day 23', () => {
+  // 2024-04-01 = lunar 2024/2/23
+  const result = solarToLunar(2024, 4, 1);
+  assert.strictEqual(result.lunar.day, 23);
+  assert.strictEqual(result.moonPhase.nameZh, '下弦月');
+  assert.strictEqual(result.moonPhase.name, 'Last Quarter');
+});
+
+test('Moon phase: waxing crescent on lunar day 4', () => {
+  const result = solarToLunar(2024, 3, 13);
+  assert.strictEqual(result.moonPhase.name, 'Waxing Crescent');
+});
+
+test('Moon phase: waning gibbous on lunar day 19', () => {
+  const result = solarToLunar(2024, 3, 28);
+  assert.strictEqual(result.moonPhase.name, 'Waning Gibbous');
+});
+
+test('Moon phase: present in lunarToSolar output', () => {
+  const result = lunarToSolar(2024, 2, 15, false);
+  assert.strictEqual(result.moonPhase.nameZh, '望');
+  assert.strictEqual(result.moonPhase.name, 'Full Moon');
+});
