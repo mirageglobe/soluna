@@ -147,6 +147,7 @@ pre-PR checklist: `make test` (runs Biome + node:test).
 ```
 feature branch
   └── commit changes
+  └── update CHANGELOG.md with new version entry
   └── git push origin <branch>
   └── open PR and merge to main
 
