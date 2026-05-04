@@ -201,16 +201,20 @@ npm publish --access public
 
 ### near term
 
+- [x] `[soluna]` moon phase (月相) — astronomical primitive derived from lunar day `[medium]`
+
+### ideas
+
+- [ ] `[soluna-go]` Go port of the soluna library — expose the same public API (`SolarToLunar`, `LunarToSolar`, `GetSolarTermsForYear`) as a native Go module; zero CGo, pure Go, suitable for server-side and FFI/gRPC use `[hard]`
+
+### done
+
 - [x] `[soluna]` npm publish pipeline via GitHub Actions — prerequisite for consumers to `npm install` the library `[easy]`
 - [x] `[soluna]` add linter — Biome chosen over ESLint; `biome.json` config, wired into `make test` and CI `[easy]`
 - [x] `[soluna]` solar terms support: `getSolarTermsForYear(year)` helper returning all 24 term dates, and populate the `solarTerms` field in API output (currently empty string) `[medium]`
 - [x] `[soluna]` expand test coverage for stem-branch / BaZi pillar accuracy across edge-case years `[medium]`
 - [x] `[soluna]` validate leap month input in `lunarToSolar` (guard against invalid leap month for years with no leap) `[easy]`
 - [x] `[soluna]` tradition tagging: annotate each festival entry with one or more tradition tags (`public`, `buddhist`, `taoist`, `folk`) and expose a filter option on `solarToLunar` / `lunarToSolar` to include only the requested traditions in the `festivals` output `[medium]`
-
-### ideas
-
 - [x] `[soluna]` TypeScript type definitions (`soluna.d.ts`) for consumer projects `[easy]`
 - [x] `[soluna]` timezone-aware mode (currently assumes local time; could accept explicit UTC offset) `[hard]`
 - [x] `[soluna]` CLI wrapper (`npx soluna <date>`) for quick lookups `[medium]`
-- [ ] `[soluna-go]` Go port of the soluna library — expose the same public API (`SolarToLunar`, `LunarToSolar`, `GetSolarTermsForYear`) as a native Go module; zero CGo, pure Go, suitable for server-side and FFI/gRPC use `[hard]`

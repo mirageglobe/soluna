@@ -486,6 +486,22 @@ const formatLunarDay = (day) => {
 };
 
 /**
+ * Map lunar day to moon phase
+ * @param {number} lunarDay - Day of the lunar month (1–30)
+ * @returns {{ name: string, nameZh: string }}
+ */
+const getMoonPhase = (lunarDay) => {
+  if (lunarDay === 1) return { name: 'New Moon', nameZh: '朔' };
+  if (lunarDay >= 2 && lunarDay <= 6) return { name: 'Waxing Crescent', nameZh: '娥眉月' };
+  if (lunarDay >= 7 && lunarDay <= 8) return { name: 'First Quarter', nameZh: '上弦月' };
+  if (lunarDay >= 9 && lunarDay <= 14) return { name: 'Waxing Gibbous', nameZh: '盈凸月' };
+  if (lunarDay === 15) return { name: 'Full Moon', nameZh: '望' };
+  if (lunarDay >= 16 && lunarDay <= 22) return { name: 'Waning Gibbous', nameZh: '亏凸月' };
+  if (lunarDay === 23) return { name: 'Last Quarter', nameZh: '下弦月' };
+  return { name: 'Waning Crescent', nameZh: '残月' };
+};
+
+/**
  * Adjust date for Chinese time zodiac system
  *
  * In traditional Chinese timekeeping, 子时 (23:00-01:00) is considered
@@ -967,7 +983,8 @@ const solarToLunar = (solarDate, month, day, hour = 0, minute = 0, second = 0, o
       lunar: lunarFestival,
       sanniangSha
     },
-    solarTerms: matchedTerm ? matchedTerm.nameZh : ''
+    solarTerms: matchedTerm ? matchedTerm.nameZh : '',
+    moonPhase: getMoonPhase(lunarInfo.day)
   };
 };
 
@@ -1103,7 +1120,8 @@ const lunarToSolar = (
       lunar: lunarFestival,
       sanniangSha
     },
-    solarTerms: matchedTermLunar ? matchedTermLunar.nameZh : ''
+    solarTerms: matchedTermLunar ? matchedTermLunar.nameZh : '',
+    moonPhase: getMoonPhase(lunarDay)
   };
 };
 
