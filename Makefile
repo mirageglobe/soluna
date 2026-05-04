@@ -69,6 +69,7 @@ _release:
 	git tag v$(TAG)
 	git push origin HEAD
 	git push origin v$(TAG)
+	@echo "[ OK ] run 'npm publish --access public' to publish to npm"
 
 clean: ## Remove node_modules and logs
 	rm -rf node_modules
