@@ -157,11 +157,16 @@ main branch (after merge)
   └── make release-major    # x.y.z → (x+1).0.0  breaking changes
 ```
 
-the release target bumps `package.json`, commits directly to `main`, creates a `v*` tag, and pushes — which triggers `.github/workflows/publish.yml` to publish to npm via OIDC trusted publishing (no token required).
+the release target bumps `package.json`, commits directly to `main`, creates a `v*` tag, and pushes. after that, publish to npm manually:
+
+```bash
+npm publish --access public
+```
 
 **rules:**
 - only run `make release-*` on `main` after pulling
 - run it once — each call creates a new version and tag
+- run `npm publish` locally after the release target completes
 
 ---
 
