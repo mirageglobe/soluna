@@ -175,7 +175,7 @@ pre-PR checklist: `make test` (runs Biome + node:test).
 
 ### near term
 
-- [ ] `[soluna]` npm publish pipeline via GitHub Actions — prerequisite for consumers to `npm install` the library `[easy]`
+- [x] `[soluna]` npm publish pipeline via GitHub Actions — prerequisite for consumers to `npm install` the library `[easy]`
 - [x] `[soluna]` add linter — Biome chosen over ESLint; `biome.json` config, wired into `make test` and CI `[easy]`
 - [x] `[soluna]` solar terms support: `getSolarTermsForYear(year)` helper returning all 24 term dates, and populate the `solarTerms` field in API output (currently empty string) `[medium]`
 - [x] `[soluna]` expand test coverage for stem-branch / BaZi pillar accuracy across edge-case years `[medium]`
