@@ -2,7 +2,7 @@
 # ===== Configuration =====
 
 .DEFAULT_GOAL := help
-.PHONY: help install run ui today test test-watch clean
+.PHONY: help install run ui today test test-watch clean release-patch release-minor release-major
 
 # ===== Helpers =====
 
@@ -48,6 +48,27 @@ today: ## Show lunar and BaZi info for today's date
 	console.log('  Lunar: ' + (r.festivals.lunar ? r.festivals.lunar.name : 'None')); \
 	if (r.festivals.sanniangSha) console.log('  ⚠️  Warning: Sanniang Sha Day (三娘煞)'); \
 	console.log('');"
+
+release-patch: ## Bump patch version and publish (e.g. 2.4.0 → 2.4.1)
+	$(eval TAG := $(shell node -p "const [a,b,c] = require('./package.json').version.split('.').map(Number); a+'.'+b+'.'+(c+1)"))
+	@$(MAKE) _release TAG=$(TAG)
+
+release-minor: ## Bump minor version and publish (e.g. 2.4.0 → 2.5.0)
+	$(eval TAG := $(shell node -p "const [a,b,c] = require('./package.json').version.split('.').map(Number); a+'.'+(b+1)+'.0'"))
+	@$(MAKE) _release TAG=$(TAG)
+
+release-major: ## Bump major version and publish (e.g. 2.4.0 → 3.0.0)
+	$(eval TAG := $(shell node -p "const [a,b,c] = require('./package.json').version.split('.').map(Number); (a+1)+'.0.0'"))
+	@$(MAKE) _release TAG=$(TAG)
+
+_release:
+	@echo "releasing v$(TAG)"
+	npm version $(TAG) --no-git-tag-version
+	git add package.json
+	git commit -m "chore: bump version to $(TAG)"
+	git tag v$(TAG)
+	git push origin HEAD
+	git push origin v$(TAG)
 
 clean: ## Remove node_modules and logs
 	rm -rf node_modules
