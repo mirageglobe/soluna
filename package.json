@@ -1,6 +1,6 @@
 {
   "name": "soluna",
-  "version": "2.5.9",
+  "version": "2.5.10",
   "description": "JavaScript library for converting between Gregorian (solar) and Chinese lunar calendar dates",
   "main": "soluna.js",
   "types": "soluna.d.ts",
