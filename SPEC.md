@@ -142,6 +142,27 @@ CI runs on every PR via GitHub Actions:
 
 pre-PR checklist: `make test` (runs Biome + node:test).
 
+### release flow
+
+```
+feature branch
+  └── commit changes
+  └── git push origin <branch>
+  └── open PR and merge to main
+
+main branch (after merge)
+  └── git checkout main && git pull
+  └── make release-patch    # x.y.z → x.y.(z+1)  bug fixes
+  └── make release-minor    # x.y.z → x.(y+1).0  new features
+  └── make release-major    # x.y.z → (x+1).0.0  breaking changes
+```
+
+the release target bumps `package.json`, commits directly to `main`, creates a `v*` tag, and pushes — which triggers `.github/workflows/publish.yml` to publish to npm via OIDC trusted publishing (no token required).
+
+**rules:**
+- only run `make release-*` on `main` after pulling
+- run it once — each call creates a new version and tag
+
 ---
 
 ## decisions
