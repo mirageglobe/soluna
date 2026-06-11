@@ -423,9 +423,9 @@ test('BaZi: Verify Four Pillars (Year, Month, Day, Hour)', () => {
 
   assert.strictEqual(result.baZi.year.stem, '己', 'Year stem should be Ji (己)');
   assert.strictEqual(result.baZi.year.branch, '亥', 'Year branch should be Hai (亥)');
-  assert.strictEqual(result.baZi.day.stem, '癸', 'Day stem should be Gui (癸)');
-  assert.strictEqual(result.baZi.day.branch, '未', 'Day branch should be Wei (未)');
-  assert.strictEqual(result.baZi.hour.stem, '戊', 'Hour stem should be Wu (戊)');
+  assert.strictEqual(result.baZi.day.stem, '丁', 'Day stem should be Ding (丁)');
+  assert.strictEqual(result.baZi.day.branch, '卯', 'Day branch should be Mao (卯)');
+  assert.strictEqual(result.baZi.hour.stem, '丙', 'Hour stem should be Bing (丙)');
   assert.strictEqual(result.baZi.hour.branch, '午', 'Hour branch should be Wu (午)');
 });
 
@@ -434,7 +434,7 @@ test('BaZi: Regression - Month Pillar for 1980-03-21 should be Ji-Mao (date afte
 
   assert.strictEqual(result.baZi.year.stem + result.baZi.year.branch, '庚申', 'Year should be Geng-Shen');
   assert.strictEqual(result.baZi.month.stem + result.baZi.month.branch, '己卯', 'Month should be Ji-Mao');
-  assert.strictEqual(result.baZi.day.stem + result.baZi.day.branch, '己酉', 'Day should be Ji-You');
+  assert.strictEqual(result.baZi.day.stem + result.baZi.day.branch, '癸巳', 'Day should be Gui-Si');
 });
 
 // ===== TIMEZONE / UTC OFFSET TESTS =====
@@ -606,9 +606,9 @@ test('BaZi: month pillar advances to 己卯 on 惊蛰 (1980-03-05)', () => {
 });
 
 test('BaZi: day pillar increments by 1 for consecutive days (1980-03-21/22)', () => {
-  // 1980-03-21 is 己酉 (JDN-anchored); next day must be 庚戌
+  // 1980-03-21 is 癸巳; the next day must advance one position to 甲午
   const result = solarToLunar(new Date(1980, 2, 22));
-  assert.strictEqual(result.baZi.day.stem + result.baZi.day.branch, '庚戌');
+  assert.strictEqual(result.baZi.day.stem + result.baZi.day.branch, '甲午');
 });
 
 test('BaZi: year 2000 is 庚辰 after Li Chun (2000-02-05)', () => {
@@ -617,10 +617,16 @@ test('BaZi: year 2000 is 庚辰 after Li Chun (2000-02-05)', () => {
   assert.strictEqual(result.baZi.year.stem + result.baZi.year.branch, '庚辰');
 });
 
-test('BaZi: day pillar JDN anchor — 2000-01-01 (JDN 2451545) must be 甲戌', () => {
-  // Standard astronomical epoch: JDN 2451545 = 2000-01-01 = cycle index 10 (甲戌)
-  const result = solarToLunar(new Date(2000, 0, 1));
-  assert.strictEqual(result.baZi.day.stem + result.baZi.day.branch, '甲戌');
+test('BaZi: day pillar epoch anchor (2000-01-01 is 戊午, 2000-01-07 is 甲子)', () => {
+  // sexagenary day cycle anchored to the Hong Kong Observatory almanac
+  assert.strictEqual(
+    solarToLunar(new Date(2000, 0, 1)).baZi.day.stem + solarToLunar(new Date(2000, 0, 1)).baZi.day.branch,
+    '戊午'
+  );
+  assert.strictEqual(
+    solarToLunar(new Date(2000, 0, 7)).baZi.day.stem + solarToLunar(new Date(2000, 0, 7)).baZi.day.branch,
+    '甲子'
+  );
 });
 
 test('BaZi: 60-year cycle — year pillars 60 years apart are identical (1984 and 2044 both 甲子)', () => {
@@ -818,4 +824,113 @@ test('Moon phase: present in lunarToSolar output', () => {
   const result = lunarToSolar(2024, 2, 15, false);
   assert.strictEqual(result.moonPhase.nameZh, '望');
   assert.strictEqual(result.moonPhase.name, 'Full Moon');
+});
+
+// ===== INPUT VALIDATION TESTS =====
+
+test('Validation: solarToLunar throws below supported year range (1899)', () => {
+  assert.throws(() => solarToLunar(1899, 6, 1), /out of supported range/i);
+});
+
+test('Validation: solarToLunar throws above supported year range (2101)', () => {
+  assert.throws(() => solarToLunar(2101, 6, 1), /out of supported range/i);
+});
+
+test('Validation: lunarToSolar throws below supported year range (1899)', () => {
+  assert.throws(() => lunarToSolar(1899, 6, 1, false), /out of supported range/i);
+});
+
+test('Validation: lunarToSolar throws above supported year range (2101)', () => {
+  assert.throws(() => lunarToSolar(2101, 6, 1, false), /out of supported range/i);
+});
+
+test('Validation: supported boundary years 1900 and 2100 still convert', () => {
+  assert.doesNotThrow(() => solarToLunar(1900, 6, 1));
+  assert.doesNotThrow(() => solarToLunar(2100, 6, 1));
+});
+
+test('Validation: solarToLunar (numeric form) throws on out-of-range month/day', () => {
+  assert.throws(() => solarToLunar(2024, 13, 1), /month/i);
+  assert.throws(() => solarToLunar(2024, 6, 32), /day/i);
+});
+
+test('Validation: lunarToSolar throws on out-of-range lunar month/day', () => {
+  assert.throws(() => lunarToSolar(2024, 13, 1, false), /month/i);
+  assert.throws(() => lunarToSolar(2024, 6, 31, false), /day/i);
+});
+
+// ===== DAY PILLAR GOLDEN DATA =====
+// authoritative day ganzhi cross-checked against the Hong Kong Observatory almanac
+// and lunar-javascript. these guard the sexagenary day epoch against off-by-N regressions.
+
+test('Day pillar golden data: known dates match the HKO almanac', () => {
+  const golden = [
+    ['2000-01-01', '戊午'],
+    ['2000-01-07', '甲子'],
+    ['1980-03-21', '癸巳'],
+    ['2025-01-06', '乙亥'],
+    // September 2026 almanac page
+    ['2026-09-01', '戊寅'],
+    ['2026-09-02', '己卯'],
+    ['2026-09-03', '庚辰'],
+    ['2026-09-04', '辛巳'],
+    ['2026-09-13', '庚寅'],
+    ['2026-09-14', '辛卯'],
+    ['2026-09-15', '壬辰'],
+    ['2026-09-16', '癸巳'],
+    // October 2026 almanac page
+    ['2026-10-07', '甲寅'],
+    ['2026-10-08', '乙卯'],
+    ['2026-10-09', '丙辰'],
+    ['2026-10-10', '丁巳']
+  ];
+  golden.forEach(([iso, expected]) => {
+    const [y, m, d] = iso.split('-').map(Number);
+    const r = solarToLunar(y, m, d, 12); // noon, clear of the 子时 rollover
+    assert.strictEqual(r.baZi.day.stem + r.baZi.day.branch, expected, `${iso} day pillar`);
+  });
+});
+
+test('Day pillar: zodiac clash (冲) is the branch six positions opposite', () => {
+  // the clash animal printed in almanacs is branch + 6 (mod 12); verify against the day branch
+  const BRANCHES = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
+  const ANIMALS = ['鼠', '牛', '虎', '兔', '龙', '蛇', '马', '羊', '猴', '鸡', '狗', '猪'];
+  const cases = [
+    ['2026-09-01', '猴'], // 戊寅 (虎) clashes 猴
+    ['2026-09-14', '鸡'], // 辛卯 (兔) clashes 鸡
+    ['2026-10-10', '猪'] //  丁巳 (蛇) clashes 猪
+  ];
+  cases.forEach(([iso, expectedClash]) => {
+    const [y, m, d] = iso.split('-').map(Number);
+    const branch = solarToLunar(y, m, d, 12).baZi.day.branch;
+    const clash = ANIMALS[(BRANCHES.indexOf(branch) + 6) % 12];
+    assert.strictEqual(clash, expectedClash, `${iso} clash`);
+  });
+});
+
+test('Day pillar: advances exactly one cycle position per calendar day over 60 days', () => {
+  const STEMS = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
+  const BRANCHES = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
+  // resolve the unique 0-59 sexagenary index from a stem/branch pair
+  const cycleIndex = (stem, branch) => {
+    const s = STEMS.indexOf(stem);
+    const b = BRANCHES.indexOf(branch);
+    for (let n = 0; n < 60; n++) {
+      if (n % 10 === s && n % 12 === b) return n;
+    }
+    return -1;
+  };
+
+  const seen = new Set();
+  let prev = -1;
+  for (let i = 0; i < 60; i++) {
+    const r = solarToLunar(new Date(2026, 0, 1 + i, 12, 0));
+    const idx = cycleIndex(r.baZi.day.stem, r.baZi.day.branch);
+    if (prev !== -1) {
+      assert.strictEqual(idx, (prev + 1) % 60, `day ${i} should advance one position`);
+    }
+    seen.add(idx);
+    prev = idx;
+  }
+  assert.strictEqual(seen.size, 60, 'a 60-day span should cover every cycle index exactly once');
 });
