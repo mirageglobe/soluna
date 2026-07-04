@@ -64,7 +64,7 @@ release-major: ## Bump major version and publish (e.g. 2.4.0 → 3.0.0)
 _release:
 	@echo "releasing v$(TAG)"
 	npm version $(TAG) --no-git-tag-version
-	git add package.json
+	git add package.json package-lock.json
 	git commit -m "chore: bump version to $(TAG)"
 	git tag v$(TAG)
 	git push origin HEAD

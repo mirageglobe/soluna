@@ -125,18 +125,18 @@ const MONTH_NAMES = ['正', '二', '三', '四', '五', '六', '七', '八', '�
  * Note: 子时 (23:00-01:00) spans midnight and belongs to the next day
  */
 const TIME_PERIODS = [
-  { name: '子时', zodiac: '鼠', startHour: 23, endHour: 1, dayOffset: 1, branch: '子' }, // Rat: 11pm-1am
-  { name: '丑时', zodiac: '牛', startHour: 1, endHour: 3, dayOffset: 0, branch: '丑' }, // Ox: 1am-3am
-  { name: '寅时', zodiac: '虎', startHour: 3, endHour: 5, dayOffset: 0, branch: '寅' }, // Tiger: 3am-5am
-  { name: '卯时', zodiac: '兔', startHour: 5, endHour: 7, dayOffset: 0, branch: '卯' }, // Rabbit: 5am-7am
-  { name: '辰时', zodiac: '龙', startHour: 7, endHour: 9, dayOffset: 0, branch: '辰' }, // Dragon: 7am-9am
-  { name: '巳时', zodiac: '蛇', startHour: 9, endHour: 11, dayOffset: 0, branch: '巳' }, // Snake: 9am-11am
-  { name: '午时', zodiac: '马', startHour: 11, endHour: 13, dayOffset: 0, branch: '午' }, // Horse: 11am-1pm
-  { name: '未时', zodiac: '羊', startHour: 13, endHour: 15, dayOffset: 0, branch: '未' }, // Goat: 1pm-3pm
-  { name: '申时', zodiac: '猴', startHour: 15, endHour: 17, dayOffset: 0, branch: '申' }, // Monkey: 3pm-5pm
-  { name: '酉时', zodiac: '鸡', startHour: 17, endHour: 19, dayOffset: 0, branch: '酉' }, // Rooster: 5pm-7pm
-  { name: '戌时', zodiac: '狗', startHour: 19, endHour: 21, dayOffset: 0, branch: '戌' }, // Dog: 7pm-9pm
-  { name: '亥时', zodiac: '猪', startHour: 21, endHour: 23, dayOffset: 0, branch: '亥' } // Pig: 9pm-11pm
+  { name: '子时', zodiac: '鼠', startHour: 23, endHour: 1, branch: '子' }, // Rat: 11pm-1am
+  { name: '丑时', zodiac: '牛', startHour: 1, endHour: 3, branch: '丑' }, // Ox: 1am-3am
+  { name: '寅时', zodiac: '虎', startHour: 3, endHour: 5, branch: '寅' }, // Tiger: 3am-5am
+  { name: '卯时', zodiac: '兔', startHour: 5, endHour: 7, branch: '卯' }, // Rabbit: 5am-7am
+  { name: '辰时', zodiac: '龙', startHour: 7, endHour: 9, branch: '辰' }, // Dragon: 7am-9am
+  { name: '巳时', zodiac: '蛇', startHour: 9, endHour: 11, branch: '巳' }, // Snake: 9am-11am
+  { name: '午时', zodiac: '马', startHour: 11, endHour: 13, branch: '午' }, // Horse: 11am-1pm
+  { name: '未时', zodiac: '羊', startHour: 13, endHour: 15, branch: '未' }, // Goat: 1pm-3pm
+  { name: '申时', zodiac: '猴', startHour: 15, endHour: 17, branch: '申' }, // Monkey: 3pm-5pm
+  { name: '酉时', zodiac: '鸡', startHour: 17, endHour: 19, branch: '酉' }, // Rooster: 5pm-7pm
+  { name: '戌时', zodiac: '狗', startHour: 19, endHour: 21, branch: '戌' }, // Dog: 7pm-9pm
+  { name: '亥时', zodiac: '猪', startHour: 21, endHour: 23, branch: '亥' } // Pig: 9pm-11pm
 ];
 
 const TIME_DESCRIPTIONS = {
@@ -404,9 +404,44 @@ const MILLISECONDS_PER_DAY = 86400000;
 const isValidDate = (date) => date instanceof Date && !Number.isNaN(date.getTime());
 
 /**
+ * Supported year range, bounded by the LUNAR_INFO lookup table (1900-2100).
+ * Outside this range the lookup returns undefined and downstream math yields
+ * silently wrong dates, so callers must be rejected rather than guessed at.
+ */
+const LUNAR_YEAR_MIN = 1900;
+const LUNAR_YEAR_MAX = 2100;
+
+const assertYearInRange = (year) => {
+  if (!Number.isInteger(year) || year < LUNAR_YEAR_MIN || year > LUNAR_YEAR_MAX) {
+    throw new RangeError(`Year ${year} out of supported range ${LUNAR_YEAR_MIN}-${LUNAR_YEAR_MAX}`);
+  }
+};
+
+const assertSolarMonthDay = (month, day) => {
+  if (!Number.isInteger(month) || month < 1 || month > 12) {
+    throw new RangeError(`Month ${month} out of range 1-12`);
+  }
+  if (!Number.isInteger(day) || day < 1 || day > 31) {
+    throw new RangeError(`Day ${day} out of range 1-31`);
+  }
+};
+
+const assertLunarMonthDay = (month, day) => {
+  if (!Number.isInteger(month) || month < 1 || month > 12) {
+    throw new RangeError(`Lunar month ${month} out of range 1-12`);
+  }
+  if (!Number.isInteger(day) || day < 1 || day > 30) {
+    throw new RangeError(`Lunar day ${day} out of range 1-30`);
+  }
+};
+
+/**
  * Get lunar year information from lookup table
  */
-const getLunarYearInfo = (year) => LUNAR_INFO[year - 1900];
+const getLunarYearInfo = (year) => {
+  assertYearInRange(year);
+  return LUNAR_INFO[year - 1900];
+};
 
 /**
  * Calculate total days in a lunar year
@@ -486,25 +521,19 @@ const formatLunarDay = (day) => {
 };
 
 /**
- * Adjust date for Chinese time zodiac system
- *
- * In traditional Chinese timekeeping, 子时 (23:00-01:00) is considered
- * the beginning of the next day. This function adjusts the date accordingly.
- *
- * @param {Date} date - The date to adjust
- * @returns {Date} Adjusted date (next day if hour is 23, same day otherwise)
+ * Map lunar day to moon phase
+ * @param {number} lunarDay - Day of the lunar month (1–30)
+ * @returns {{ name: string, nameZh: string }}
  */
-const adjustForTimeZodiac = (date) => {
-  const hour = date.getHours();
-
-  // If it's 11pm (23:00), it's considered the next day in lunar calendar
-  if (hour === 23) {
-    const adjustedDate = new Date(date);
-    adjustedDate.setDate(adjustedDate.getDate() + 1);
-    return adjustedDate;
-  }
-
-  return date;
+const getMoonPhase = (lunarDay) => {
+  if (lunarDay === 1) return { name: 'New Moon', nameZh: '朔' };
+  if (lunarDay >= 2 && lunarDay <= 6) return { name: 'Waxing Crescent', nameZh: '娥眉月' };
+  if (lunarDay >= 7 && lunarDay <= 8) return { name: 'First Quarter', nameZh: '上弦月' };
+  if (lunarDay >= 9 && lunarDay <= 14) return { name: 'Waxing Gibbous', nameZh: '盈凸月' };
+  if (lunarDay === 15) return { name: 'Full Moon', nameZh: '望' };
+  if (lunarDay >= 16 && lunarDay <= 22) return { name: 'Waning Gibbous', nameZh: '亏凸月' };
+  if (lunarDay === 23) return { name: 'Last Quarter', nameZh: '下弦月' };
+  return { name: 'Waning Crescent', nameZh: '残月' };
 };
 
 /**
@@ -718,7 +747,9 @@ const calculateSolarFromLunar = (
  * @returns {number} Day of the month
  */
 const getSolarTermDay = (year, termIndex) => {
-  const centuryIdx = year < 2000 ? 0 : 1;
+  // SOLAR_TERM_INFO holds two calibrated blocks: 1900-1999 and 2000-2099.
+  // year 2100 (the table's upper bound) reuses the 2000-2099 block, within the documented ±1 day caveat.
+  const centuryIdx = Math.min(year < 2000 ? 0 : 1, SOLAR_TERM_INFO.length - 1);
   const yearSuffix = year % 100;
   const c = SOLAR_TERM_INFO[centuryIdx][termIndex];
   return Math.floor(yearSuffix * 0.2422 + c) - Math.floor(yearSuffix / 4);
@@ -772,8 +803,9 @@ const calculateStemBranch = (year, month, day) => {
   const monthIdx = totalMonths % 60;
 
   // Day stem-branch
-  // +33 anchors JDN 2451545 (2000-01-01) to cycle index 10 (甲戌), the standard astronomical epoch
-  const dayOffset = Math.floor(Date.UTC(year, month, day) / MILLISECONDS_PER_DAY) + 33;
+  // +17 anchors the sexagenary day cycle: 2000-01-01 = 戊午 (index 54), 2000-01-07 = 甲子 (index 0),
+  // matching the Hong Kong Observatory almanac. (the earlier +33 / 甲戌 anchor was off by 16.)
+  const dayOffset = Math.floor(Date.UTC(year, month, day) / MILLISECONDS_PER_DAY) + 17;
   const dayIdx = dayOffset % 60;
 
   return {
@@ -873,6 +905,8 @@ const solarToLunar = (solarDate, month, day, hour = 0, minute = 0, second = 0, o
       options = month; // solarToLunar(date, { traditions: [...] })
     }
   } else if (typeof solarDate === 'number' && month !== undefined && day !== undefined) {
+    assertYearInRange(solarDate);
+    assertSolarMonthDay(month, day);
     date = new Date(solarDate, month - 1, day, hour, minute, second);
   } else {
     throw new Error('Invalid date provided');
@@ -967,7 +1001,8 @@ const solarToLunar = (solarDate, month, day, hour = 0, minute = 0, second = 0, o
       lunar: lunarFestival,
       sanniangSha
     },
-    solarTerms: matchedTerm ? matchedTerm.nameZh : ''
+    solarTerms: matchedTerm ? matchedTerm.nameZh : '',
+    moonPhase: getMoonPhase(lunarInfo.day)
   };
 };
 
@@ -1032,6 +1067,9 @@ const lunarToSolar = (
       'Invalid input. Use (lunarDate, isLeapMonth) or (year, month, day, isLeapMonth, hour, minute, second)'
     );
   }
+
+  assertYearInRange(lunarYear);
+  assertLunarMonthDay(lunarMonth, lunarDay);
 
   if (isLeapMonth) {
     const leapMonthForYear = getLeapMonth(lunarYear);
@@ -1103,7 +1141,8 @@ const lunarToSolar = (
       lunar: lunarFestival,
       sanniangSha
     },
-    solarTerms: matchedTermLunar ? matchedTermLunar.nameZh : ''
+    solarTerms: matchedTermLunar ? matchedTermLunar.nameZh : '',
+    moonPhase: getMoonPhase(lunarDay)
   };
 };
 

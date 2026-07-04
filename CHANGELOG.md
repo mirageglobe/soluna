@@ -7,6 +7,53 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ---
 
+## [Unreleased]
+
+### Fixed
+
+- **Day pillar (日柱) off by 16 positions in the sexagenary cycle.** The day stem-branch used a wrong epoch (anchored 2000-01-01 to 甲戌); every day pillar, and the hour pillar derived from it, was 16 cycle positions ahead of the true value. Corrected the offset so 2000-01-01 = 戊午 and 2000-01-07 = 甲子, matching the Hong Kong Observatory almanac. This changes day/hour pillar output for all dates; year and month pillars are unaffected
+
+### Added
+
+- Input validation: `solarToLunar` and `lunarToSolar` now throw a `RangeError` for years outside the supported 1900-2100 range, and for out-of-range month/day arguments, instead of silently returning incorrect dates
+- Day pillar golden-data tests cross-checked against the Hong Kong Observatory almanac, plus a 60-day continuity test guarding the day-cycle epoch against off-by-N regressions
+
+### Removed
+
+- Dead code: unused `adjustForTimeZodiac` helper and the unread `dayOffset` field on `TIME_PERIODS`; the 子时 (23:00) day rollover is handled inline in `solarToLunar`
+
+---
+
+## [2.7.0] - 2026-05-04
+
+### Added
+
+- `moonPhase` field in `solarToLunar` and `lunarToSolar` output — `{ name, nameZh }` derived from the lunar day, covering all 8 standard phases (朔, 娥眉月, 上弦月, 盈凸月, 望, 亏凸月, 下弦月, 残月)
+
+---
+
+## [2.6.0] - 2026-05-04
+
+### Changed
+
+- removed automated npm publish from GitHub Actions; publish is now manual (`npm publish` after tagging)
+- added `make release` and `make publish` targets to `Makefile` to guide the release flow
+
+---
+
+## [2.5.0] - 2026-05-03
+
+### Added
+
+- npm publish GitHub Actions workflow (`release.yml`) with OIDC trusted publishing support
+- `make release` target for version bumping and tagging
+
+### Fixed
+
+- multiple CI patches (2.5.1–2.5.11) resolving OIDC token injection, registry-url conflicts, and `package-lock.json` inclusion in release commits
+
+---
+
 ## [2.4.0] - 2026-05-03
 
 ### Added

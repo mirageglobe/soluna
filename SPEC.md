@@ -30,7 +30,7 @@ soluna/
 | section | description |
 | :--- | :--- |
 | constants | `LUNAR_INFO`, stems, branches, zodiac, day/month names, time periods, festivals, solar term data |
-| utility functions | date validation, bit-extraction helpers, lunar day formatter, time zodiac adjuster |
+| utility functions | date validation, range/input guards, bit-extraction helpers, lunar day formatter |
 | time period functions | `getTimePeriod` — maps hour → 时辰 |
 | core conversion | `calculateLunarFromSolar`, `calculateSolarFromLunar`, `calculateStemBranch`, `getSolarTermDay` |
 | festival lookup | `getSolarFestival`, `getLunarFestival`, `isSanniangShaDay` |
@@ -65,7 +65,8 @@ both `solarToLunar` and `lunarToSolar` return the same structure:
   baZi:       { year, month, day, hour },           // { stem, branch } per pillar
   timePeriod: { name, zodiac, period, branch, description },
   festivals:  { solar, lunar, sanniangSha },
-  solarTerms: ''                                    // placeholder — not yet populated
+  solarTerms: '小寒',                               // matched 节气 name, or '' if none
+  moonPhase:  { name, nameZh }                      // derived from lunar day
 }
 ```
 
@@ -90,7 +91,7 @@ both `solarToLunar` and `lunarToSolar` return the same structure:
 
 - **year pillar**: `(year - 1900 + 36) % 60`, adjusted back one year if date precedes 立春 (Start of Spring)
 - **month pillar**: total months since 1900 base, adjusted using the sectional solar term (Jie) for the current Gregorian month
-- **day pillar**: days since unix epoch + fixed offset, mod 60
+- **day pillar**: days since unix epoch + fixed offset, mod 60; epoch anchored so 2000-01-01 = 戊午 and 2000-01-07 = 甲子 (Hong Kong Observatory almanac)
 - **hour pillar**: derived from day stem index and time branch index using `HourStemIndex = (dayStemIdx % 5 * 2 + hourBranchIdx) % 10`
 
 ### solar term day calculation
@@ -101,7 +102,7 @@ where `C` is a century-specific constant from `SOLAR_TERM_INFO`. max deviation ~
 
 ### 子时 boundary
 
-23:00–01:00 is the Rat hour (子时) and belongs to the **next calendar day** in traditional Chinese timekeeping. `adjustForTimeZodiac` shifts the date forward when `hour === 23` before the lunar conversion.
+23:00–01:00 is the Rat hour (子时) and belongs to the **next calendar day** in traditional Chinese timekeeping. the conversion shifts the date forward inline when `hour === 23`, before the lunar lookup (no standalone helper).
 
 ---
 
@@ -142,6 +143,33 @@ CI runs on every PR via GitHub Actions:
 
 pre-PR checklist: `make test` (runs Biome + node:test).
 
+### release flow
+
+```
+feature branch
+  └── commit changes
+  └── update CHANGELOG.md with new version entry
+  └── git push origin <branch>
+  └── open PR and merge to main
+
+main branch (after merge)
+  └── git checkout main && git pull
+  └── make release-patch    # x.y.z → x.y.(z+1)  bug fixes
+  └── make release-minor    # x.y.z → x.(y+1).0  new features
+  └── make release-major    # x.y.z → (x+1).0.0  breaking changes
+```
+
+the release target bumps `package.json`, commits directly to `main`, creates a `v*` tag, and pushes. after that, publish to npm manually:
+
+```bash
+npm publish --access public
+```
+
+**rules:**
+- only run `make release-*` on `main` after pulling
+- run it once — each call creates a new version and tag
+- run `npm publish` locally after the release target completes
+
 ---
 
 ## decisions
@@ -155,6 +183,7 @@ pre-PR checklist: `make test` (runs Biome + node:test).
 | dual export | CommonJS + browser global | maximises compatibility without a build step or bundler dependency |
 | linter | Biome over ESLint | single devDependency, zero config overhead, handles lint + format + import sorting; ESLint plugin ecosystem not needed for plain JS |
 | test runner | node:test over AVA | zero devDependencies; built into Node 22+; sufficient for pure synchronous computation tests |
+| input validation | reject out-of-range years/dates | LUNAR_INFO covers 1900-2100; outside it the lookup silently produced wrong dates, so public APIs now throw a RangeError rather than serve garbage |
 
 ---
 
@@ -175,16 +204,23 @@ pre-PR checklist: `make test` (runs Biome + node:test).
 
 ### near term
 
+- [x] `[soluna]` moon phase (月相) — astronomical primitive derived from lunar day `[medium]`
+
+### ideas
+
+- [ ] `[soluna]` higher-precision solar terms: replace the ±1 day formula (or extend `SOLAR_TERM_INFO` past 2099) with VSOP87-derived or precomputed term dates, since 立春/节 boundaries set the year and month pillars; add golden-data tests against known 立春 dates `[hard]`
+- [ ] `[soluna-go]` Go port of the soluna library — expose the same public API (`SolarToLunar`, `LunarToSolar`, `GetSolarTermsForYear`) as a native Go module; zero CGo, pure Go, suitable for server-side and FFI/gRPC use `[hard]`
+
+### done
+
+- [x] `[soluna]` input validation: reject years outside 1900-2100 and out-of-range month/day in `solarToLunar` / `lunarToSolar` with a `RangeError` `[easy]`
+- [x] `[soluna]` remove dead code: unused `adjustForTimeZodiac` helper and unread `dayOffset` field on `TIME_PERIODS` `[easy]`
 - [x] `[soluna]` npm publish pipeline via GitHub Actions — prerequisite for consumers to `npm install` the library `[easy]`
 - [x] `[soluna]` add linter — Biome chosen over ESLint; `biome.json` config, wired into `make test` and CI `[easy]`
 - [x] `[soluna]` solar terms support: `getSolarTermsForYear(year)` helper returning all 24 term dates, and populate the `solarTerms` field in API output (currently empty string) `[medium]`
 - [x] `[soluna]` expand test coverage for stem-branch / BaZi pillar accuracy across edge-case years `[medium]`
 - [x] `[soluna]` validate leap month input in `lunarToSolar` (guard against invalid leap month for years with no leap) `[easy]`
 - [x] `[soluna]` tradition tagging: annotate each festival entry with one or more tradition tags (`public`, `buddhist`, `taoist`, `folk`) and expose a filter option on `solarToLunar` / `lunarToSolar` to include only the requested traditions in the `festivals` output `[medium]`
-
-### ideas
-
 - [x] `[soluna]` TypeScript type definitions (`soluna.d.ts`) for consumer projects `[easy]`
 - [x] `[soluna]` timezone-aware mode (currently assumes local time; could accept explicit UTC offset) `[hard]`
 - [x] `[soluna]` CLI wrapper (`npx soluna <date>`) for quick lookups `[medium]`
-- [ ] `[soluna-go]` Go port of the soluna library — expose the same public API (`SolarToLunar`, `LunarToSolar`, `GetSolarTermsForYear`) as a native Go module; zero CGo, pure Go, suitable for server-side and FFI/gRPC use `[hard]`
