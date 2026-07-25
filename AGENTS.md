@@ -17,13 +17,14 @@ see [SPEC.md](SPEC.md) for architecture, data model, core algorithms, and roadma
 | file | owns |
 | :--- | :--- |
 | `soluna.js` | entire library — constants, utilities, conversion core, public API, module export |
-| `test/soluna.test.js` | AVA test suite; covers public API only (`solarToLunar`, `lunarToSolar`) |
+| `test/soluna.test.mjs` | node:test suite; covers public API only (`solarToLunar`, `lunarToSolar`) |
 | `examples/run.js` | dev runner; 3-day demo output — not part of the public API |
 | `examples/test-ui.html` | browser-based visual verification; standalone, no build step |
 | `legacy/yalunar-legacy.js` | legacy reference — do not modify or import |
 | `legacy/yalunar-legacy-refactor.js` | legacy reference — do not modify or import |
 | `Makefile` | build/dev targets; `make test` is the canonical test command |
-| `package.json` | node metadata, AVA config, dev dependencies, npm publish file list |
+| `package.json` | node metadata, npm publish file list, dev dependencies |
+| `biome.json` | linter/formatter config (Biome) |
 
 ---
 
@@ -37,7 +38,7 @@ see [SPEC.md](SPEC.md) for architecture, data model, core algorithms, and roadma
 | write tests that reach into internal functions | test only via `solarToLunar` / `lunarToSolar` public API |
 | commit to `main` or `master` | branch using `YYYYMMDD-adjective-noun` format |
 | commit secrets or credentials | stop immediately if any token/key is detected in staged files |
-| skip linting before commit | run `npx eslint soluna.js` as part of pre-commit |
+| skip linting before commit | run `make test` (runs Biome + node:test) before commit |
 
 ---
 
@@ -45,13 +46,13 @@ see [SPEC.md](SPEC.md) for architecture, data model, core algorithms, and roadma
 
 ```bash
 make install      # install dev dependencies
-make test         # run full test suite (AVA) — mandatory before any commit
+make test         # run full test suite (Biome lint + node:test), mandatory before any commit
 make today        # quick sanity check: lunar + BaZi for right now
 make run          # 3-day demo output
 make ui           # open visual test UI in browser
 ```
 
-test runner: AVA. node.js >= 14 required.
+test runner: node:test (built-in). node.js >= 22 required.
 
 ---
 
