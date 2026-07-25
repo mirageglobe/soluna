@@ -9,6 +9,10 @@ Versioning follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
 
+---
+
+## [2.6.1] - 2026-07-25
+
 ### Fixed
 
 - **Day pillar (日柱) off by 16 positions in the sexagenary cycle.** The day stem-branch used a wrong epoch (anchored 2000-01-01 to 甲戌); every day pillar, and the hour pillar derived from it, was 16 cycle positions ahead of the true value. Corrected the offset so 2000-01-01 = 戊午 and 2000-01-07 = 甲子, matching the Hong Kong Observatory almanac. This changes day/hour pillar output for all dates; year and month pillars are unaffected
