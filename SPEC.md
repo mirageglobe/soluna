@@ -12,6 +12,8 @@ supports node.js (CommonJS) and browser (window global).
 
 ```
 soluna/
+├── bin/
+│   └── soluna.js        # CLI wrapper (npx soluna <date>)
 ├── examples/
 │   ├── run.js           # dev runner (3-day view)
 │   └── test-ui.html     # browser-based visual test UI
@@ -20,9 +22,15 @@ soluna/
 │   └── yalunar-legacy-refactor.js
 ├── test/
 │   └── soluna.test.mjs  # node:test suite
-├── soluna.js            # entire library — constants, utilities, core, public API
+├── soluna.js            # entire library, constants, utilities, core, public API
+├── soluna.d.ts          # TypeScript type definitions
+├── biome.json           # linter/formatter config
 ├── Makefile             # build/dev targets
-└── package.json         # node metadata, npm publish files list
+├── package.json         # node metadata, npm publish files list
+├── CHANGELOG.md         # release history
+├── LICENSE.md           # BUSL-1.1 license text
+├── ai.txt               # AI-crawler opt-out declaration (RSL, matches BUSL-1.1)
+└── robots.txt           # disallows AI-training crawlers
 ```
 
 ### module layout (within soluna.js)
@@ -204,11 +212,11 @@ npm publish --access public
 
 ### near term
 
+- [ ] `[soluna]` higher-precision solar terms: replace the ±1 day formula (or extend `SOLAR_TERM_INFO` past 2099) with VSOP87-derived or precomputed term dates, since 立春/节 boundaries set the year and month pillars; add golden-data tests against known 立春 dates `[hard]`
 - [x] `[soluna]` moon phase (月相) — astronomical primitive derived from lunar day `[medium]`
 
 ### ideas
 
-- [ ] `[soluna]` higher-precision solar terms: replace the ±1 day formula (or extend `SOLAR_TERM_INFO` past 2099) with VSOP87-derived or precomputed term dates, since 立春/节 boundaries set the year and month pillars; add golden-data tests against known 立春 dates `[hard]`
 - [ ] `[soluna-go]` Go port of the soluna library — expose the same public API (`SolarToLunar`, `LunarToSolar`, `GetSolarTermsForYear`) as a native Go module; zero CGo, pure Go, suitable for server-side and FFI/gRPC use `[hard]`
 
 ### done
