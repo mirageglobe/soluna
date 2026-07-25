@@ -212,6 +212,9 @@ npm publish --access public
 
 ### near term
 
+- [ ] `[soluna]` fix npm publish files list: `package.json` `files` references `LICENSE`, actual file is `LICENSE.md`, so license text is silently omitted from the published npm package `[easy]`
+- [ ] `[soluna]` remove dead `.eslintrc.json`: leftover from before the Biome switch, no eslint devDependency, unused by CI or Makefile `[easy]`
+- [ ] `[soluna]` cut a patch release for the day-pillar epoch fix: `[Unreleased]` in CHANGELOG.md has the fix already merged to main, but `package.json` and the latest tag are still at 2.6.0, so npm installs still get the wrong day/hour pillars `[easy]`
 - [ ] `[soluna]` higher-precision solar terms: replace the ±1 day formula (or extend `SOLAR_TERM_INFO` past 2099) with VSOP87-derived or precomputed term dates, since 立春/节 boundaries set the year and month pillars; add golden-data tests against known 立春 dates `[hard]`
 - [x] `[soluna]` moon phase (月相) — astronomical primitive derived from lunar day `[medium]`
 
