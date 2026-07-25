@@ -12,7 +12,7 @@
     "soluna.d.ts",
     "bin/soluna.js",
     "README.md",
-    "LICENSE"
+    "LICENSE.md"
   ],
   "scripts": {
     "lint": "biome check soluna.js test/soluna.test.mjs examples/run.js",
