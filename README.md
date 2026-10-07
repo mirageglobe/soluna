@@ -19,12 +19,19 @@ Bidirectional Gregorian ↔ Chinese lunar calendar conversion for JavaScript. Ze
 
 ## install
 
-No npm package yet — copy `soluna.js` directly into your project.
+Install from npm:
+
+```bash
+npm install soluna
+```
+
+or copy `soluna.js` directly into your project (single file, zero dependencies).
 
 ### Node.js
 
 ```js
-const { solarToLunar, lunarToSolar } = require('./soluna.js');
+const { solarToLunar, lunarToSolar } = require('soluna');      // from npm
+// const { solarToLunar, lunarToSolar } = require('./soluna.js'); // or the copied file
 ```
 
 ### Browser
