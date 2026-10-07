@@ -4,7 +4,7 @@
 
 Bidirectional Gregorian ↔ Chinese lunar calendar conversion for JavaScript. Zero dependencies. Single file. Node.js and browser.
 
-**Range:** 1900–2100 &nbsp;·&nbsp; **License:** BUSL-1.1
+**Range:** 1900–2100 &nbsp;·&nbsp; **License:** BUSL-1.1 &nbsp;·&nbsp; **Website:** [mirageglobe.github.io/soluna](https://mirageglobe.github.io/soluna/)
 
 ---
 
