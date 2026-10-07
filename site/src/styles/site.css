@@ -1,0 +1,29 @@
+/* site additions on top of the hat html style guide (base.css). nodes made by script live here, global. */
+:root { --cjk: "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", "STSong", "SimSun", serif; }
+
+.page { max-width: 880px; gap: 48px; }
+a { text-underline-offset: 3px; }
+.cjk { font-family: var(--cjk); }
+
+/* shared card for the two converters */
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 16px; }
+.card h3 { margin: 0; font-family: var(--mono); font-size: 0.78rem; font-weight: 500; letter-spacing: 0.04em; color: var(--text-dim); }
+.row { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; }
+.row label { display: flex; align-items: center; gap: 8px; font-size: 0.88rem; color: var(--text-dim); }
+.row input { font: inherit; color: var(--text); background: var(--surface-2); border: 1px solid var(--border); border-radius: 6px; padding: 5px 9px; }
+.row input[type="number"] { width: 5.5rem; }
+.row input:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+/* result blocks (built by script, so global) */
+.out { display: flex; flex-direction: column; gap: 14px; min-height: 5rem; }
+.lunar-head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; }
+.lunar-date { font-family: var(--cjk); font-size: clamp(1.8rem, 5vw, 2.5rem); font-weight: 600; letter-spacing: 0.04em; line-height: 1.1; }
+.lunar-sub { font-family: var(--mono); font-size: 0.78rem; color: var(--text-dim); }
+.pillars { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.pillar { background: var(--surface-2); border: 1px solid var(--border); border-radius: 10px; padding: 12px 4px 9px; text-align: center; display: flex; flex-direction: column; gap: 5px; }
+.pillar b { font-family: var(--cjk); font-size: clamp(1.2rem, 4.5vw, 1.7rem); font-weight: 600; letter-spacing: 0.06em; }
+.pillar span { font-family: var(--mono); font-size: 0.66rem; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.06em; }
+.chips { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.chips li { font-size: 0.82rem; border: 1px solid var(--border); background: var(--accent-soft); border-radius: 999px; padding: 3px 11px; }
+.chips .k { font-family: var(--mono); font-size: 0.66rem; color: var(--text-dim); margin-right: 7px; text-transform: uppercase; letter-spacing: 0.05em; }
+.fail { font-family: var(--mono); font-size: 0.85rem; color: var(--red); }

@@ -1,17 +1,60 @@
 <section class="hero">
-  <p class="eyebrow">calendar library</p>
-  <h1>soluna</h1>
-  <p class="dek">
-    bidirectional gregorian and chinese lunar calendar conversion for javascript. zero dependencies, one file,
-    node.js and browser, 1900 to 2100.
-  </p>
-  <nav class="links">
-    <a href="https://github.com/mirageglobe/soluna">github</a>
-    <a href="https://github.com/mirageglobe/soluna/blob/main/SPEC.md">spec</a>
-    <a href="https://github.com/mirageglobe/soluna/blob/main/CHANGELOG.md">changelog</a>
-  </nav>
+  <svg class="moon" viewBox="-52 -52 104 104" role="img" aria-label="today's moon phase">
+    <circle class="dark" r="46"></circle>
+    <path id="moon-lit" class="lit" d=""></path>
+  </svg>
+  <div class="title">
+    <p class="eyebrow">calendar library</p>
+    <h1>soluna <span class="cjk zh">月</span></h1>
+    <p class="dek">
+      bidirectional gregorian and chinese lunar calendar conversion for javascript. zero dependencies, one file,
+      node.js and browser, 1900 to 2100.
+    </p>
+    <p id="today" class="today"></p>
+    <nav class="links">
+      <a href="https://github.com/mirageglobe/soluna">github</a>
+      <a href="https://github.com/mirageglobe/soluna/blob/main/SPEC.md">spec</a>
+      <a href="https://github.com/mirageglobe/soluna/blob/main/CHANGELOG.md">changelog</a>
+    </nav>
+  </div>
 </section>
 
+<script is:inline>
+  (function () {
+    var S = window.Soluna;
+    if (!S) return;
+    var r = S.solarToLunar(new Date());
+
+    // lit part of the moon as an svg path: outer arc plus the terminator ellipse
+    function moonPath(name) {
+      var order = ['New Moon', 'Waxing Crescent', 'First Quarter', 'Waxing Gibbous', 'Full Moon', 'Waning Gibbous', 'Last Quarter', 'Waning Crescent'];
+      var i = Math.max(0, order.indexOf(name));
+      var R = 46;
+      if (i === 0) return '';
+      if (i === 4) return 'M0,-46 A46,46 0 1 1 0,46 A46,46 0 1 1 0,-46 Z';
+      var k = Math.cos((2 * Math.PI * i) / 8);
+      var rx = Math.abs(k) * R;
+      var waxing = i < 4;
+      var outer = waxing ? 1 : 0;
+      var term = waxing ? (k > 0 ? 0 : 1) : (k > 0 ? 1 : 0);
+      return 'M0,-46 A46,46 0 0 ' + outer + ' 0,46 A' + rx.toFixed(2) + ',46 0 0 ' + term + ' 0,-46 Z';
+    }
+
+    document.getElementById('moon-lit').setAttribute('d', moonPath(r.moonPhase.name));
+    document.getElementById('today').textContent =
+      'today: ' + r.stemBranch.year + '年 ' + (r.lunar.isLeapMonth ? '闰' : '') + r.lunar.monthName + '月' + r.lunar.dayName + ' · ' + r.moonPhase.nameZh;
+  })();
+</script>
+
 <style>
-  .links { display: flex; gap: 18px; font-family: var(--mono); font-size: 0.85rem; }
+  .hero { flex-direction: row; align-items: center; gap: 36px; flex-wrap: wrap; }
+  .moon { width: 132px; height: 132px; flex: none; filter: drop-shadow(0 0 18px var(--accent-soft)); }
+  /* fixed colours so the moon reads as a moon in both themes */
+  .dark { fill: #23262a; stroke: #33363b; stroke-width: 1.5; }
+  .lit { fill: #eae8e2; }
+  .title { flex: 1 1 320px; display: flex; flex-direction: column; gap: 4px; }
+  h1 { font-size: clamp(2.4rem, 7vw, 3.4rem); margin: 4px 0 6px; letter-spacing: -0.02em; }
+  .zh { font-size: 0.6em; color: var(--accent); margin-left: 4px; font-weight: 400; }
+  .today { font-family: var(--cjk); font-size: 0.95rem; color: var(--accent); margin: 8px 0 2px; min-height: 1.4em; }
+  .links { display: flex; gap: 18px; font-family: var(--mono); font-size: 0.85rem; margin-top: 8px; }
 </style>

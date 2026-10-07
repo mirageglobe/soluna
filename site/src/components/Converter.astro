@@ -1,30 +1,27 @@
----
-// the library is copied to site/public/soluna.js at build time; load it base-aware
-const base = import.meta.env.BASE_URL.replace(/\/$/, '');
-const lib = `${base}/soluna.js`;
----
-
 <section id="converter">
-  <h2 class="section-title">try it</h2>
-  <div class="grid">
-    <form id="s2l" onsubmit="return false">
+  <h2 class="section-title">convert</h2>
+  <div class="cards">
+    <form id="s2l" class="card" onsubmit="return false">
       <h3>gregorian to lunar</h3>
-      <label>date <input id="s-date" type="date" min="1900-01-31" max="2100-12-31" /></label>
-      <label>time <input id="s-time" type="time" value="12:00" /></label>
-      <dl id="s2l-out"></dl>
+      <div class="row">
+        <label>date <input id="s-date" type="date" min="1900-01-31" max="2100-12-31" /></label>
+        <label>time <input id="s-time" type="time" value="12:00" /></label>
+      </div>
+      <div id="s2l-out" class="out" aria-live="polite"></div>
     </form>
-    <form id="l2s" onsubmit="return false">
+    <form id="l2s" class="card" onsubmit="return false">
       <h3>lunar to gregorian</h3>
-      <label>year <input id="l-year" type="number" min="1900" max="2100" /></label>
-      <label>month <input id="l-month" type="number" min="1" max="12" /></label>
-      <label>day <input id="l-day" type="number" min="1" max="30" /></label>
-      <label class="check"><input id="l-leap" type="checkbox" /> leap month</label>
-      <dl id="l2s-out"></dl>
+      <div class="row">
+        <label>year <input id="l-year" type="number" min="1900" max="2100" /></label>
+        <label>month <input id="l-month" type="number" min="1" max="12" /></label>
+        <label>day <input id="l-day" type="number" min="1" max="30" /></label>
+        <label><input id="l-leap" type="checkbox" /> leap month</label>
+      </div>
+      <div id="l2s-out" class="out" aria-live="polite"></div>
     </form>
   </div>
 </section>
 
-<script is:inline src={lib}></script>
 <script is:inline>
   (function () {
     var S = window.Soluna;
@@ -32,21 +29,27 @@ const lib = `${base}/soluna.js`;
     var l2sOut = document.getElementById('l2s-out');
     var val = function (id) { return document.getElementById(id).value; };
     var pad = function (n) { return String(n).padStart(2, '0'); };
-    var pillar = function (p) { return p.stem + p.branch; };
 
-    // fill a definition list from [label, text] rows (textContent only, no html)
-    function rows(el, list) {
-      el.textContent = '';
-      list.forEach(function (row) {
-        var dt = document.createElement('dt');
-        var dd = document.createElement('dd');
-        dt.textContent = row[0];
-        dd.textContent = row[1];
-        el.appendChild(dt);
-        el.appendChild(dd);
-      });
+    // tiny dom helper: textContent only, so nothing from the library is parsed as html
+    function el(tag, cls, text) {
+      var e = document.createElement(tag);
+      if (cls) e.className = cls;
+      if (text !== undefined) e.textContent = text;
+      return e;
     }
-    var fail = function (el, msg) { rows(el, [['status', '[ FAIL ] ' + msg]]); };
+    function head(date, sub) {
+      var h = el('div', 'lunar-head');
+      h.appendChild(el('span', 'lunar-date', date));
+      h.appendChild(el('span', 'lunar-sub', sub));
+      return h;
+    }
+    function chip(list, key, text) {
+      var li = el('li');
+      li.appendChild(el('span', 'k', key));
+      li.appendChild(document.createTextNode(text));
+      list.appendChild(li);
+    }
+    var fail = function (out, msg) { out.replaceChildren(el('p', 'fail', '[ FAIL ] ' + msg)); };
 
     function solarToLunar() {
       var d = val('s-date').split('-').map(Number);
@@ -55,29 +58,34 @@ const lib = `${base}/soluna.js`;
       try {
         var r = S.solarToLunar(d[0], d[1], d[2], t[0], t[1], 0);
         var f = r.festivals;
-        var fest = [(f.lunar && f.lunar.name), (f.solar && f.solar.name), (f.sanniangSha && '三娘煞日')]
-          .filter(Boolean).join(', ') || '-';
-        rows(s2lOut, [
-          ['lunar', r.lunar.year + ' ' + (r.lunar.isLeapMonth ? '闰' : '') + r.lunar.monthName + '月 ' + r.lunar.dayName],
-          ['zodiac', r.lunar.zodiac],
-          ['stem-branch', r.stemBranch.year + ' ' + r.stemBranch.month + ' ' + r.stemBranch.day],
-          ['bazi', ['year', 'month', 'day', 'hour'].map(function (k) { return pillar(r.baZi[k]); }).join(' ')],
-          ['time period', r.timePeriod ? r.timePeriod.name + ' ' + r.timePeriod.period : '-'],
-          ['festival', fest],
-          ['moon', r.moonPhase.name + ' ' + r.moonPhase.nameZh]
-        ]);
+        var l = r.lunar;
+        var pillars = el('div', 'pillars');
+        [['year', '年', r.baZi.year], ['month', '月', r.baZi.month], ['day', '日', r.baZi.day], ['hour', '时', r.baZi.hour]].forEach(function (p) {
+          var b = el('div', 'pillar');
+          b.appendChild(el('b', null, p[2].stem + p[2].branch));
+          b.appendChild(el('span', null, p[0] + ' ' + p[1]));
+          pillars.appendChild(b);
+        });
+        var chips = el('ul', 'chips');
+        chip(chips, 'hour', r.timePeriod ? r.timePeriod.name + ' ' + r.timePeriod.period : '-');
+        chip(chips, 'festival', [(f.lunar && f.lunar.name), (f.solar && f.solar.name), (f.sanniangSha && '三娘煞日')].filter(Boolean).join(', ') || '-');
+        chip(chips, 'moon', r.moonPhase.nameZh + ' ' + r.moonPhase.name);
+        s2lOut.replaceChildren(
+          head((l.isLeapMonth ? '闰' : '') + l.monthName + '月 ' + l.dayName, l.year + ' · ' + r.stemBranch.year + '年 · ' + l.zodiac),
+          pillars,
+          chips
+        );
         return r;
       } catch (e) { fail(s2lOut, e.message); }
     }
 
     function lunarToSolar() {
       var y = +val('l-year'), m = +val('l-month'), d = +val('l-day');
-      var leap = document.getElementById('l-leap').checked;
       if (!y || !m || !d) return fail(l2sOut, 'enter year, month and day');
       try {
-        var r = S.lunarToSolar(y, m, d, leap, 12, 0, 0);
+        var r = S.lunarToSolar(y, m, d, document.getElementById('l-leap').checked, 12, 0, 0);
         if (!r) return fail(l2sOut, 'not a valid lunar date');
-        rows(l2sOut, [['gregorian', r.solar.year + '-' + pad(r.solar.month) + '-' + pad(r.solar.day)], ['weekday', r.solar.weekDay]]);
+        l2sOut.replaceChildren(head(r.solar.year + '-' + pad(r.solar.month) + '-' + pad(r.solar.day), '周' + r.solar.weekDay));
       } catch (e) { fail(l2sOut, 'not a valid lunar date'); }
     }
 
@@ -98,13 +106,5 @@ const lib = `${base}/soluna.js`;
 </script>
 
 <style>
-  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
-  form { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; display: flex; flex-direction: column; gap: 10px; }
-  h3 { margin: 0; font-family: var(--mono); font-size: 0.8rem; font-weight: 500; color: var(--text-dim); }
-  label { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 0.9rem; }
-  .check { justify-content: flex-start; }
-  input { font: inherit; color: var(--text); background: var(--surface-2); border: 1px solid var(--border); border-radius: 4px; padding: 4px 8px; }
-  dl { margin: 6px 0 0; display: grid; grid-template-columns: max-content 1fr; gap: 4px 14px; font-size: 0.9rem; }
-  dt { font-family: var(--mono); font-size: 0.74rem; color: var(--text-dim); padding-top: 2px; }
-  dd { margin: 0; }
+  .cards { display: flex; flex-direction: column; gap: 16px; }
 </style>
