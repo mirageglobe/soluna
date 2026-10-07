@@ -2,7 +2,8 @@
 # ===== Configuration =====
 
 .DEFAULT_GOAL := help
-.PHONY: help install run ui today test test-watch clean release-patch release-minor release-major site-install site-build site-dev site-preview _site-prep
+MAIN_BRANCH ?= main
+.PHONY: help install run ui today test test-watch clean release-patch release-minor release-major release-tag _release-prep site-install site-build site-dev site-preview _site-prep
 
 # ===== Helpers =====
 
@@ -49,26 +50,46 @@ today: ## Show lunar and BaZi info for today's date
 	if (r.festivals.sanniangSha) console.log('  ⚠️  Warning: Sanniang Sha Day (三娘煞)'); \
 	console.log('');"
 
-release-patch: ## Bump patch version and publish (e.g. 2.4.0 → 2.4.1)
-	$(eval TAG := $(shell node -p "const [a,b,c] = require('./package.json').version.split('.').map(Number); a+'.'+b+'.'+(c+1)"))
-	@$(MAKE) _release TAG=$(TAG)
+# ===== Release (never commits to main) =====
+# flow: on a branch run make release-<kind> (tests, bump, rebuild site, commit, push the branch)
+# then open a PR and merge it; then on main run make release-tag; then npm publish by hand
 
-release-minor: ## Bump minor version and publish (e.g. 2.4.0 → 2.5.0)
-	$(eval TAG := $(shell node -p "const [a,b,c] = require('./package.json').version.split('.').map(Number); a+'.'+(b+1)+'.0'"))
-	@$(MAKE) _release TAG=$(TAG)
+release-patch: ## On a branch: bump patch (2.4.0 to 2.4.1), rebuild the site, push the branch
+	@$(MAKE) _release-prep KIND=patch
 
-release-major: ## Bump major version and publish (e.g. 2.4.0 → 3.0.0)
-	$(eval TAG := $(shell node -p "const [a,b,c] = require('./package.json').version.split('.').map(Number); (a+1)+'.0.0'"))
-	@$(MAKE) _release TAG=$(TAG)
+release-minor: ## On a branch: bump minor (2.4.0 to 2.5.0), rebuild the site, push the branch
+	@$(MAKE) _release-prep KIND=minor
 
-_release:
-	@echo "releasing v$(TAG)"
-	npm version $(TAG) --no-git-tag-version
-	git add package.json package-lock.json
-	git commit -m "chore: bump version to $(TAG)"
-	git tag v$(TAG)
-	git push origin HEAD
-	git push origin v$(TAG)
+release-major: ## On a branch: bump major (2.4.0 to 3.0.0), rebuild the site, push the branch
+	@$(MAKE) _release-prep KIND=major
+
+_release-prep:
+	@branch="$$(git rev-parse --abbrev-ref HEAD)"; \
+	case "$$branch" in main|master|$(MAIN_BRANCH)) echo "[ FAIL ] run release-$(KIND) on a branch, not on $$branch"; exit 1;; esac; \
+	[ -z "$$(git status --porcelain)" ] || { echo "[ FAIL ] working tree is not clean"; exit 1; }
+	@$(MAKE) test
+	@version="$$(node -p "const [a,b,c]=require('./package.json').version.split('.').map(Number); ({patch:a+'.'+b+'.'+(c+1),minor:a+'.'+(b+1)+'.0',major:(a+1)+'.0.0'})['$(KIND)']")"; \
+	if git ls-remote --exit-code --tags origin "refs/tags/v$$version" >/dev/null 2>&1; then echo "[ FAIL ] tag v$$version already exists on origin"; exit 1; fi; \
+	grep -q "^## \[$$version\]" CHANGELOG.md || echo "[ WARN ] CHANGELOG.md has no entry for $$version"; \
+	echo "releasing v$$version"; \
+	npm version "$$version" --no-git-tag-version >/dev/null && \
+	git add package.json package-lock.json && \
+	git commit -q -m "chore: bump version to $$version" && \
+	$(MAKE) site-build && \
+	git add docs && \
+	git commit -q -m "chore(site): rebuild docs for $$version" && \
+	git push -u origin HEAD && \
+	echo "[ OK ] pushed the branch for v$$version; open a PR, merge it, then run: make release-tag"
+
+release-tag: ## On main after the release PR is merged: tag the version and push the tag
+	@[ "$$(git rev-parse --abbrev-ref HEAD)" = "$(MAIN_BRANCH)" ] || { echo "[ FAIL ] run release-tag on $(MAIN_BRANCH)"; exit 1; }
+	@git fetch -q origin $(MAIN_BRANCH) && [ "$$(git rev-parse HEAD)" = "$$(git rev-parse origin/$(MAIN_BRANCH))" ] || { echo "[ FAIL ] $(MAIN_BRANCH) is not at origin/$(MAIN_BRANCH); git pull first"; exit 1; }
+	@[ -z "$$(git status --porcelain)" ] || { echo "[ FAIL ] working tree is not clean"; exit 1; }
+	@cmp -s soluna.js docs/soluna.js || { echo "[ FAIL ] docs/soluna.js differs from soluna.js; run make site-build in the release PR"; exit 1; }
+	@version="$$(node -p "require('./package.json').version")"; \
+	if git ls-remote --exit-code --tags origin "refs/tags/v$$version" >/dev/null 2>&1; then echo "[ FAIL ] tag v$$version already exists on origin"; exit 1; fi; \
+	git tag "v$$version" && git push origin "v$$version" && \
+	echo "[ OK ] tagged v$$version; now publish by hand: npm publish --access public"
 
 # ===== Site (astro in site/, built output in docs/, served by github pages from main /docs) =====
 
@@ -82,7 +103,10 @@ site-install: ## Install site dependencies
 site-dev: _site-prep ## Start the site dev server (hot reload)
 	cd site && npm run dev
 
-site-build: _site-prep ## Build the site into docs/ (commit docs/ to deploy)
+site/node_modules:
+	cd site && npm install
+
+site-build: site/node_modules _site-prep ## Build the site into docs/ (commit docs/ to deploy)
 	cd site && npm run build
 
 site-preview: site-build ## Build, then serve docs/ locally
