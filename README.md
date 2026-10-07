@@ -148,3 +148,5 @@ See [SPEC.md](SPEC.md) for architecture, algorithm detail, and roadmap.
 ## license
 
 BUSL-1.1 — see [LICENSE.md](LICENSE.md)
+
+[buy me a coffee](https://buymeacoffee.com/mirageglobe)
