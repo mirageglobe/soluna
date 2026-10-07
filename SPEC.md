@@ -167,16 +167,14 @@ main branch (after merge)
   └── make release-major    # x.y.z → (x+1).0.0  breaking changes
 ```
 
-the release target bumps `package.json`, commits directly to `main`, creates a `v*` tag, and pushes. after that, publish to npm manually:
+the release target bumps `package.json`, commits directly to `main`, creates a `v*` tag, and pushes. the tag push runs `.github/workflows/publish.yml`, which publishes to npm with trusted publishing (oidc, no stored token; provenance is automatic). it checks that the tag matches `package.json` and that npm is 11.5.1 or newer before publishing.
 
-```bash
-npm publish --access public
-```
+one-time setup on npmjs.com (package `soluna`, settings, trusted publisher, github actions): user `mirageglobe`, repository `soluna`, workflow filename `publish.yml`, environment `npm`. if the workflow ever fails, the fallback is a manual `npm publish` from a clean `main`.
 
 **rules:**
 - only run `make release-*` on `main` after pulling
 - run it once — each call creates a new version and tag
-- run `npm publish` locally after the release target completes
+- the tag triggers the publish; check the Publish run, and publish by hand only if it failed
 
 ---
 
