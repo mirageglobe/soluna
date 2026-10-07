@@ -1,7 +1,7 @@
 /* site additions on top of the hat html style guide (base.css). nodes made by script live here, global. */
 :root { --cjk: "Songti SC", "Noto Serif CJK SC", "Source Han Serif SC", "STSong", "SimSun", serif; }
 
-.page { max-width: 880px; gap: 48px; }
+.page { max-width: 880px; gap: 48px; position: relative; }
 a { text-underline-offset: 3px; }
 .cjk { font-family: var(--cjk); }
 
