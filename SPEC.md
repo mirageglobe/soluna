@@ -156,29 +156,28 @@ pre-PR checklist: `make test` (runs Biome + node:test).
 ```
 feature branch
   └── commit changes
-  └── update CHANGELOG.md with new version entry
-  └── git push origin <branch>
-  └── open PR and merge to main
+  └── update CHANGELOG.md with the new version entry
+  └── make release-patch   # x.y.z → x.y.(z+1)  bug fixes
+      make release-minor   # x.y.z → x.(y+1).0  new features
+      make release-major   # x.y.z → (x+1).0.0  breaking changes
+  └── open a PR and merge it to main
 
-main branch (after merge)
+main branch (after the merge)
   └── git checkout main && git pull
-  └── make release-patch    # x.y.z → x.y.(z+1)  bug fixes
-  └── make release-minor    # x.y.z → x.(y+1).0  new features
-  └── make release-major    # x.y.z → (x+1).0.0  breaking changes
+  └── make release-tag            # tags v<version> and pushes the tag
+  └── npm publish --access public # by hand, from the clean main
 ```
 
-the release target bumps `package.json`, commits directly to `main`, creates a `v*` tag, and pushes. no workflow publishes: after that, publish to npm by hand from a clean `main` (needs the npm login):
+`release-*` run `make test`, bump `package.json`, rebuild `docs/` and push the branch as two commits (the bump, then the rebuilt docs, so the site stamp names a clean commit). they never commit to `main`, and refuse to run on `main`, `master` or a dirty tree. they warn when `CHANGELOG.md` has no entry for the new version.
 
-```bash
-npm publish --access public
-```
+`release-tag` refuses unless it is on `main`, level with `origin/main`, with a clean tree, `docs/soluna.js` equal to `soluna.js`, and the tag unused. `MAIN_BRANCH=name` overrides the branch name (default `main`).
 
-an earlier `publish.yml` tried oidc trusted publishing and failed on every tag, so it was removed on 2026-10-07. trusted publishing (node 24 for npm 11.5.1+, a trusted publisher set on npmjs.com) can be added later if wanted.
+no workflow publishes: publish to npm by hand after the tag (needs the npm login). an earlier `publish.yml` tried oidc trusted publishing and failed on every tag, so it was removed on 2026-10-07; trusted publishing (node 24 for npm 11.5.1+, a trusted publisher set on npmjs.com) can be added later if wanted.
 
 **rules:**
-- only run `make release-*` on `main` after pulling
-- run it once — each call creates a new version and tag
-- run `npm publish` locally after the release target completes
+- run `make release-*` on a branch, once per release; each call makes a new version commit
+- merge the release PR before `make release-tag`
+- run `npm publish` locally after the tag is pushed
 
 ---
 
