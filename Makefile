@@ -2,7 +2,7 @@
 # ===== Configuration =====
 
 .DEFAULT_GOAL := help
-.PHONY: help install run ui today test test-watch clean release-patch release-minor release-major
+.PHONY: help install run ui today test test-watch clean release-patch release-minor release-major site-install site-build site-dev site-preview _site-prep
 
 # ===== Helpers =====
 
@@ -69,6 +69,24 @@ _release:
 	git tag v$(TAG)
 	git push origin HEAD
 	git push origin v$(TAG)
+
+# ===== Site (astro in site/, built output in docs/, served by github pages from main /docs) =====
+
+_site-prep:
+	cp soluna.js site/public/soluna.js
+	printf '{"version":"%s","source":"%s","built":"%s"}\n' "$$(node -p "require('./package.json').version")" "$$(git rev-parse --short HEAD)" "$$(date -u +%Y-%m-%dT%H:%M:%SZ)" > site/public/version.json
+
+site-install: ## Install site dependencies
+	cd site && npm install
+
+site-dev: _site-prep ## Start the site dev server (hot reload)
+	cd site && npm run dev
+
+site-build: _site-prep ## Build the site into docs/ (commit docs/ to deploy)
+	cd site && npm run build
+
+site-preview: site-build ## Build, then serve docs/ locally
+	cd site && npm run preview
 
 clean: ## Remove node_modules and logs
 	rm -rf node_modules

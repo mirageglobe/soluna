@@ -1,0 +1,25 @@
+---
+// what the library gives you, from the readme
+const features = [
+  ['solarToLunar', 'gregorian to lunar date, zodiac, stem-branch (干支), bazi four pillars, time period (时辰), festivals'],
+  ['lunarToSolar', 'lunar to gregorian, leap month aware'],
+  ['month pillar', 'taken from the actual solar term boundary, not the gregorian month edge'],
+  ['festivals', 'public holidays, buddhist and taoist dates, folk traditions, 三娘煞日'],
+  ['moon phase and solar terms', 'returned with every conversion'],
+  ['zero dependencies', 'a single file that runs in node.js and in the browser'],
+];
+---
+
+<section>
+  <h2 class="section-title">what it does</h2>
+  <ul class="features">
+    {features.map(([name, detail]) => (
+      <li><code>{name}</code><span class="mut">{detail}</span></li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .features { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+  .features li { display: flex; flex-direction: column; gap: 2px; }
+</style>

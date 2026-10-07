@@ -1,0 +1,50 @@
+/* base look for generated html in this hat: fonts, text, titles, backgrounds, colour tokens. dark is the default; light is opt-in with <html data-theme="light"> (the morning-brief look). from weekly-brain-optimisation/audit.html.
+   components (cards, pills, tables) are not here; each generator builds its own from these tokens. inline into each output; falls back to system fonts offline. */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap');
+
+:root {
+  /* backgrounds and lines */
+  --bg: #15171a; --surface: #1c1f22; --surface-2: #23262a; --border: #33363b;
+  /* text */
+  --text: #eae8e2; --text-dim: #9b988f;
+  /* status colours, each with a soft background tint */
+  --accent: #5fb39d; --accent-soft: rgba(95, 179, 157, 0.14);
+  --amber: #d9a94e; --amber-soft: rgba(217, 169, 78, 0.14);
+  --red: #e5877c; --red-soft: rgba(229, 135, 124, 0.14);
+  --blue: #7fb0e8; --blue-soft: rgba(127, 176, 232, 0.14);
+  /* fonts */
+  --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --sans: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  color-scheme: dark;
+}
+
+/* light theme: same token names, so every component follows without changes */
+:root[data-theme="light"] {
+  --bg: #fcfcfb; --surface: #f9f9f7; --surface-2: #f1f1ed; --border: #e1e1df;
+  --text: #2e2c27; --text-dim: #6b6a63;
+  --accent: #2f7d68; --accent-soft: rgba(47, 125, 104, 0.12);
+  --amber: #a06c14; --amber-soft: rgba(160, 108, 20, 0.12);
+  --red: #b8483c; --red-soft: rgba(184, 72, 60, 0.12);
+  --blue: #2f6aa8; --blue-soft: rgba(47, 106, 168, 0.12);
+  color-scheme: light;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--sans); line-height: 1.55; padding-inline: 20px; }
+.page { max-width: 720px; margin: 0 auto; padding-block: 48px 64px; display: flex; flex-direction: column; gap: 36px; }
+section { display: flex; flex-direction: column; gap: 14px; }
+p { margin: 0; }
+a { color: var(--accent); }
+code { font-family: var(--mono); font-size: 0.9em; }
+
+/* title block: eyebrow, h1, dek */
+.eyebrow { font-family: var(--mono); font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-dim); }
+h1 { font-size: clamp(1.7rem, 4vw, 2.3rem); margin: 6px 0 8px; font-weight: 600; text-wrap: balance; letter-spacing: -0.01em; }
+.dek { color: var(--text-dim); font-size: 0.98rem; max-width: 60ch; }
+
+/* section title: mono caps with a rule */
+.section-title { font-family: var(--mono); font-size: 0.78rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-dim); display: flex; align-items: baseline; gap: 10px; }
+.section-title::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+
+.mut { color: var(--text-dim); font-size: 0.9rem; }
+footer { font-family: var(--mono); font-size: 0.74rem; color: var(--text-dim); border-top: 1px solid var(--border); padding-top: 16px; }

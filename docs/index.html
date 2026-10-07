@@ -1,0 +1,89 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><meta name="description" content="gregorian and chinese lunar calendar conversion for javascript. zero dependencies, one file."><title>soluna</title><style>@import "https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap";:root{--bg:#15171a;--surface:#1c1f22;--surface-2:#23262a;--border:#33363b;--text:#eae8e2;--text-dim:#9b988f;--accent:#5fb39d;--accent-soft:#5fb39d24;--amber:#d9a94e;--amber-soft:#d9a94e24;--red:#e5877c;--red-soft:#e5877c24;--blue:#7fb0e8;--blue-soft:#7fb0e824;--mono:"IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;--sans:"IBM Plex Sans", -apple-system, BlinkMacSystemFont, sans-serif;color-scheme:dark}:root[data-theme=light]{--bg:#fcfcfb;--surface:#f9f9f7;--surface-2:#f1f1ed;--border:#e1e1df;--text:#2e2c27;--text-dim:#6b6a63;--accent:#2f7d68;--accent-soft:#2f7d681f;--amber:#a06c14;--amber-soft:#a06c141f;--red:#b8483c;--red-soft:#b8483c1f;--blue:#2f6aa8;--blue-soft:#2f6aa81f;color-scheme:light}*{box-sizing:border-box}body{background:var(--bg);color:var(--text);font-family:var(--sans);margin:0;padding-inline:20px;line-height:1.55}.page{flex-direction:column;gap:36px;max-width:720px;margin:0 auto;padding-block:48px 64px;display:flex}section{flex-direction:column;gap:14px;display:flex}p{margin:0}a{color:var(--accent)}code{font-family:var(--mono);font-size:.9em}.eyebrow{font-family:var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--text-dim);font-size:.72rem}h1{text-wrap:balance;letter-spacing:-.01em;margin:6px 0 8px;font-size:clamp(1.7rem,4vw,2.3rem);font-weight:600}.dek{color:var(--text-dim);max-width:60ch;font-size:.98rem}.section-title{font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--text-dim);align-items:baseline;gap:10px;font-size:.78rem;display:flex}.section-title:after{content:"";background:var(--border);flex:1;height:1px}.mut{color:var(--text-dim);font-size:.9rem}footer{font-family:var(--mono);color:var(--text-dim);border-top:1px solid var(--border);padding-top:16px;font-size:.74rem}.links[data-astro-cid-ge2uvauf]{font-family:var(--mono);gap:18px;font-size:.85rem;display:flex}.grid[data-astro-cid-dcfojrq3]{grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;display:grid}form[data-astro-cid-dcfojrq3]{background:var(--surface);border:1px solid var(--border);border-radius:8px;flex-direction:column;gap:10px;padding:16px;display:flex}h3[data-astro-cid-dcfojrq3]{font-family:var(--mono);color:var(--text-dim);margin:0;font-size:.8rem;font-weight:500}label[data-astro-cid-dcfojrq3]{justify-content:space-between;align-items:center;gap:10px;font-size:.9rem;display:flex}.check[data-astro-cid-dcfojrq3]{justify-content:flex-start}input[data-astro-cid-dcfojrq3]{font:inherit;color:var(--text);background:var(--surface-2);border:1px solid var(--border);border-radius:4px;padding:4px 8px}dl[data-astro-cid-dcfojrq3]{grid-template-columns:max-content 1fr;gap:4px 14px;margin:6px 0 0;font-size:.9rem;display:grid}dt[data-astro-cid-dcfojrq3]{font-family:var(--mono);color:var(--text-dim);padding-top:2px;font-size:.74rem}dd[data-astro-cid-dcfojrq3]{margin:0}.features[data-astro-cid-cognygiv]{flex-direction:column;gap:10px;margin:0;padding:0;list-style:none;display:flex}.features[data-astro-cid-cognygiv] li[data-astro-cid-cognygiv]{flex-direction:column;gap:2px;display:flex}pre[data-astro-cid-lcdefpme]{background:var(--surface);border:1px solid var(--border);border-radius:8px;margin:0;padding:14px 16px;font-size:.82rem;line-height:1.5;overflow-x:auto}
+</style></head><body><main class="page" data-astro-cid-lcdefpme><section class="hero" data-astro-cid-ge2uvauf><p class="eyebrow" data-astro-cid-ge2uvauf>calendar library</p><h1 data-astro-cid-ge2uvauf>soluna</h1><p class="dek" data-astro-cid-ge2uvauf>bidirectional gregorian and chinese lunar calendar conversion for javascript. zero dependencies, one file, node.js and browser, 1900 to 2100.</p><nav class="links" data-astro-cid-ge2uvauf><a href="https://github.com/mirageglobe/soluna" data-astro-cid-ge2uvauf>github</a><a href="https://github.com/mirageglobe/soluna/blob/main/SPEC.md" data-astro-cid-ge2uvauf>spec</a><a href="https://github.com/mirageglobe/soluna/blob/main/CHANGELOG.md" data-astro-cid-ge2uvauf>changelog</a></nav></section><section data-astro-cid-lcdefpme><h2 class="section-title" data-astro-cid-lcdefpme>install</h2><p class="mut" data-astro-cid-lcdefpme>no npm package yet: copy <code data-astro-cid-lcdefpme>soluna.js</code> into your project.</p><pre data-astro-cid-lcdefpme><code data-astro-cid-lcdefpme>// node.js
+const &#123; solarToLunar, lunarToSolar &#125; = require('./soluna.js');
+
+// browser
+&lt;script src="soluna.js"&gt;&lt;/script&gt;
+const &#123; solarToLunar, lunarToSolar &#125; = window.Soluna;
+
+solarToLunar(2024, 12, 28, 15, 30, 0);   // gregorian to lunar
+lunarToSolar(2012, 4, 7, false, 12, 0, 0); // lunar to gregorian (4th arg: leap month)</code></pre></section><section id="converter" data-astro-cid-dcfojrq3><h2 class="section-title" data-astro-cid-dcfojrq3>try it</h2><div class="grid" data-astro-cid-dcfojrq3><form id="s2l" onsubmit="return false" data-astro-cid-dcfojrq3><h3 data-astro-cid-dcfojrq3>gregorian to lunar</h3><label data-astro-cid-dcfojrq3>date <input id="s-date" type="date" min="1900-01-31" max="2100-12-31" data-astro-cid-dcfojrq3></label><label data-astro-cid-dcfojrq3>time <input id="s-time" type="time" value="12:00" data-astro-cid-dcfojrq3></label><dl id="s2l-out" data-astro-cid-dcfojrq3></dl></form><form id="l2s" onsubmit="return false" data-astro-cid-dcfojrq3><h3 data-astro-cid-dcfojrq3>lunar to gregorian</h3><label data-astro-cid-dcfojrq3>year <input id="l-year" type="number" min="1900" max="2100" data-astro-cid-dcfojrq3></label><label data-astro-cid-dcfojrq3>month <input id="l-month" type="number" min="1" max="12" data-astro-cid-dcfojrq3></label><label data-astro-cid-dcfojrq3>day <input id="l-day" type="number" min="1" max="30" data-astro-cid-dcfojrq3></label><label class="check" data-astro-cid-dcfojrq3><input id="l-leap" type="checkbox" data-astro-cid-dcfojrq3> leap month</label><dl id="l2s-out" data-astro-cid-dcfojrq3></dl></form></div></section><script src="/soluna/soluna.js"></script><script>
+  (function () {
+    var S = window.Soluna;
+    var s2lOut = document.getElementById('s2l-out');
+    var l2sOut = document.getElementById('l2s-out');
+    var val = function (id) { return document.getElementById(id).value; };
+    var pad = function (n) { return String(n).padStart(2, '0'); };
+    var pillar = function (p) { return p.stem + p.branch; };
+
+    // fill a definition list from [label, text] rows (textContent only, no html)
+    function rows(el, list) {
+      el.textContent = '';
+      list.forEach(function (row) {
+        var dt = document.createElement('dt');
+        var dd = document.createElement('dd');
+        dt.textContent = row[0];
+        dd.textContent = row[1];
+        el.appendChild(dt);
+        el.appendChild(dd);
+      });
+    }
+    var fail = function (el, msg) { rows(el, [['status', '[ FAIL ] ' + msg]]); };
+
+    function solarToLunar() {
+      var d = val('s-date').split('-').map(Number);
+      var t = (val('s-time') || '00:00').split(':').map(Number);
+      if (d.length < 3 || d.some(isNaN)) return fail(s2lOut, 'enter a date');
+      try {
+        var r = S.solarToLunar(d[0], d[1], d[2], t[0], t[1], 0);
+        var f = r.festivals;
+        var fest = [(f.lunar && f.lunar.name), (f.solar && f.solar.name), (f.sanniangSha && '三娘煞日')]
+          .filter(Boolean).join(', ') || '-';
+        rows(s2lOut, [
+          ['lunar', r.lunar.year + ' ' + (r.lunar.isLeapMonth ? '闰' : '') + r.lunar.monthName + '月 ' + r.lunar.dayName],
+          ['zodiac', r.lunar.zodiac],
+          ['stem-branch', r.stemBranch.year + ' ' + r.stemBranch.month + ' ' + r.stemBranch.day],
+          ['bazi', ['year', 'month', 'day', 'hour'].map(function (k) { return pillar(r.baZi[k]); }).join(' ')],
+          ['time period', r.timePeriod ? r.timePeriod.name + ' ' + r.timePeriod.period : '-'],
+          ['festival', fest],
+          ['moon', r.moonPhase.name + ' ' + r.moonPhase.nameZh]
+        ]);
+        return r;
+      } catch (e) { fail(s2lOut, e.message); }
+    }
+
+    function lunarToSolar() {
+      var y = +val('l-year'), m = +val('l-month'), d = +val('l-day');
+      var leap = document.getElementById('l-leap').checked;
+      if (!y || !m || !d) return fail(l2sOut, 'enter year, month and day');
+      try {
+        var r = S.lunarToSolar(y, m, d, leap, 12, 0, 0);
+        if (!r) return fail(l2sOut, 'not a valid lunar date');
+        rows(l2sOut, [['gregorian', r.solar.year + '-' + pad(r.solar.month) + '-' + pad(r.solar.day)], ['weekday', r.solar.weekDay]]);
+      } catch (e) { fail(l2sOut, 'not a valid lunar date'); }
+    }
+
+    // start from today (local), then seed the lunar form from the result
+    var now = new Date();
+    document.getElementById('s-date').value = now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate());
+    var today = solarToLunar();
+    if (today) {
+      document.getElementById('l-year').value = today.lunar.year;
+      document.getElementById('l-month').value = today.lunar.month;
+      document.getElementById('l-day').value = today.lunar.day;
+      document.getElementById('l-leap').checked = today.lunar.isLeapMonth;
+      lunarToSolar();
+    }
+    document.getElementById('s2l').addEventListener('input', solarToLunar);
+    document.getElementById('l2s').addEventListener('input', lunarToSolar);
+  })();
+</script><section data-astro-cid-cognygiv><h2 class="section-title" data-astro-cid-cognygiv>what it does</h2><ul class="features" data-astro-cid-cognygiv><li data-astro-cid-cognygiv><code data-astro-cid-cognygiv>solarToLunar</code><span class="mut" data-astro-cid-cognygiv>gregorian to lunar date, zodiac, stem-branch (干支), bazi four pillars, time period (时辰), festivals</span></li><li data-astro-cid-cognygiv><code data-astro-cid-cognygiv>lunarToSolar</code><span class="mut" data-astro-cid-cognygiv>lunar to gregorian, leap month aware</span></li><li data-astro-cid-cognygiv><code data-astro-cid-cognygiv>month pillar</code><span class="mut" data-astro-cid-cognygiv>taken from the actual solar term boundary, not the gregorian month edge</span></li><li data-astro-cid-cognygiv><code data-astro-cid-cognygiv>festivals</code><span class="mut" data-astro-cid-cognygiv>public holidays, buddhist and taoist dates, folk traditions, 三娘煞日</span></li><li data-astro-cid-cognygiv><code data-astro-cid-cognygiv>moon phase and solar terms</code><span class="mut" data-astro-cid-cognygiv>returned with every conversion</span></li><li data-astro-cid-cognygiv><code data-astro-cid-cognygiv>zero dependencies</code><span class="mut" data-astro-cid-cognygiv>a single file that runs in node.js and in the browser</span></li></ul></section><footer data-astro-cid-lcdefpme>soluna is source-available under BUSL-1.1, see<a href="https://github.com/mirageglobe/soluna/blob/main/LICENSE.md" data-astro-cid-lcdefpme>LICENSE.md</a>.<span id="stamp" data-astro-cid-lcdefpme></span></footer></main><script>(function(){const base = "/soluna";
+
+    // build stamp: which source commit and time the live site was built from
+    fetch(base + '/version.json')
+      .then(function (r) { return r.json(); })
+      .then(function (v) {
+        document.getElementById('stamp').textContent = 'v' + v.version + ' [ built ' + v.source + ' ' + v.built + ' ]';
+      })
+      .catch(function () {});
+  })();</script></body></html>

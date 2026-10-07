@@ -1,0 +1,51 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import Converter from '../components/Converter.astro';
+import Features from '../components/Features.astro';
+
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+---
+
+<Base title="soluna" description="gregorian and chinese lunar calendar conversion for javascript. zero dependencies, one file.">
+  <main class="page">
+    <Hero />
+
+    <section>
+      <h2 class="section-title">install</h2>
+      <p class="mut">no npm package yet: copy <code>soluna.js</code> into your project.</p>
+      <pre><code>// node.js
+const &#123; solarToLunar, lunarToSolar &#125; = require('./soluna.js');
+
+// browser
+&lt;script src="soluna.js"&gt;&lt;/script&gt;
+const &#123; solarToLunar, lunarToSolar &#125; = window.Soluna;
+
+solarToLunar(2024, 12, 28, 15, 30, 0);   // gregorian to lunar
+lunarToSolar(2012, 4, 7, false, 12, 0, 0); // lunar to gregorian (4th arg: leap month)</code></pre>
+    </section>
+
+    <Converter />
+    <Features />
+
+    <footer>
+      soluna is source-available under BUSL-1.1, see
+      <a href="https://github.com/mirageglobe/soluna/blob/main/LICENSE.md">LICENSE.md</a>.
+      <span id="stamp"></span>
+    </footer>
+  </main>
+
+  <script is:inline define:vars={{ base }}>
+    // build stamp: which source commit and time the live site was built from
+    fetch(base + '/version.json')
+      .then(function (r) { return r.json(); })
+      .then(function (v) {
+        document.getElementById('stamp').textContent = 'v' + v.version + ' [ built ' + v.source + ' ' + v.built + ' ]';
+      })
+      .catch(function () {});
+  </script>
+</Base>
+
+<style>
+  pre { margin: 0; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 14px 16px; overflow-x: auto; font-size: 0.82rem; line-height: 1.5; }
+</style>
