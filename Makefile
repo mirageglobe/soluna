@@ -25,7 +25,7 @@ ui: ## Launch the test UI in the default browser
 	open examples/test-ui.html
 
 test: ## Run lint (Biome) and tests (node:test)
-	npx biome check soluna.js test/soluna.test.mjs examples/run.js
+	npm run lint
 	npm test
 
 test-watch: ## Run tests in watch mode (node:test)
@@ -92,10 +92,12 @@ release-tag: ## On main after the release PR is merged: tag the version and push
 	echo "[ OK ] tagged v$$version; now publish by hand: npm publish --access public"
 
 # ===== Site (astro in site/, built output in docs/, served by github pages from main /docs) =====
+# docs/ is build output only: astro empties it on every build, so never put hand-written files there.
+# the stamp in docs/version.json ends in -dirty when the build ran with uncommitted changes.
 
 _site-prep:
 	cp soluna.js site/public/soluna.js
-	printf '{"version":"%s","source":"%s","built":"%s"}\n' "$$(node -p "require('./package.json').version")" "$$(git rev-parse --short HEAD)" "$$(date -u +%Y-%m-%dT%H:%M:%SZ)" > site/public/version.json
+	printf '{"version":"%s","source":"%s","built":"%s"}\n' "$$(node -p "require('./package.json').version")" "$$(git rev-parse --short HEAD)$$(git diff --quiet HEAD || echo -dirty)" "$$(date -u +%Y-%m-%dT%H:%M:%SZ)" > site/public/version.json
 
 site-install: ## Install site dependencies
 	cd site && npm install
@@ -112,7 +114,7 @@ site-build: site/node_modules _site-prep ## Build the site into docs/ (commit do
 site-preview: site-build ## Build, then serve docs/ locally
 	cd site && npm run preview
 
-clean: ## Remove node_modules and logs
-	rm -rf node_modules
+clean: ## Remove node_modules, site build copies and logs
+	rm -rf node_modules site/node_modules site/.astro site/public/soluna.js site/public/version.json
 	rm -rf *.log
 	rm -rf npm-debug.log*
