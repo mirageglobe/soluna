@@ -213,6 +213,7 @@ no workflow publishes: publish to npm by hand after the tag (needs the npm login
 
 ### near term
 
+- [ ] `[soluna]` day pillar is empty before 1970: in `soluna.js` the stem-branch function takes `dayOffset % 60` where `dayOffset = Math.floor(Date.UTC(...) / MILLISECONDS_PER_DAY) + 17`, which is negative before about 1969-12-15, and JS `%` keeps the sign, so the stem and branch lookups return undefined and `baZi.day` (and the hour pillar built on it) comes back as `{}`; the year and month pillars are fine. fix with a non-negative modulo (`((n % 60) + 60) % 60`), check `yearIdx` and `monthIdx` for the same pattern, add tests with pre-1970 dates checked against an independent source, then cut a release so consumers can re-vendor (the forest origin app vendors a copy). found 2026-10-10 while testing the app almanac prototype `[easy]`
 - [ ] `[soluna]` fix npm publish files list: `package.json` `files` references `LICENSE`, actual file is `LICENSE.md`, so license text is silently omitted from the published npm package `[easy]`
 - [ ] `[soluna]` remove dead `.eslintrc.json`: leftover from before the Biome switch, no eslint devDependency, unused by CI or Makefile `[easy]`
 - [ ] `[soluna]` cut a patch release for the day-pillar epoch fix: `[Unreleased]` in CHANGELOG.md has the fix already merged to main, but `package.json` and the latest tag are still at 2.6.0, so npm installs still get the wrong day/hour pillars `[easy]`
